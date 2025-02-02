@@ -1,2 +1,5 @@
-rootProject.name = 'ecsimsw-spring-skeleton'
+rootProject.name = 'ecsimsw-skeleton'
+include 'api-common'
+include 'api-account'
+include 'api-notification'
 
