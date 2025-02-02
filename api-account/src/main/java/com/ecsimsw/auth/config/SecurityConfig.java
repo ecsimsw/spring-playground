@@ -30,7 +30,6 @@ import static com.ecsimsw.auth.config.Urls.*;
 
 @RequiredArgsConstructor
 @Configuration
-//@EnableWebSecurity(debug = true)
 @EnableMethodSecurity
 public class SecurityConfig {
 
@@ -48,8 +47,7 @@ public class SecurityConfig {
             .authorizeHttpRequests((auth) -> auth
                 .requestMatchers(PERMIT_URLS).permitAll()
                 .requestMatchers(ADMIN_URLS).hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
+                .anyRequest().authenticated())
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler()))
