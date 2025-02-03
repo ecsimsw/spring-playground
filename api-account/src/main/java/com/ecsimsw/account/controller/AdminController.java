@@ -10,6 +10,7 @@ import com.ecsimsw.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public class AdminController {
     public ApiResponse<Void> deleteUser(@PathVariable Long userId) {
         adminService.deleteUser(userId);
         authService.blockUser(userId);
+        SecurityContextHolder.getContext().setAuthentication(null);
         return ApiResponse.success();
     }
 }

@@ -1,18 +1,18 @@
 package com.ecsimsw.auth.service;
 
+import com.ecsimsw.auth.config.TokenConfig;
 import com.ecsimsw.auth.domain.AccessToken;
 import com.ecsimsw.auth.domain.BlockedTokenRepository;
 import com.ecsimsw.auth.domain.BlockedUserRepository;
 import com.ecsimsw.auth.domain.CustomUserDetail;
-import com.ecsimsw.auth.exception.AuthException;
-import com.ecsimsw.auth.utils.TokenUtils;
+import com.ecsimsw.error.AuthException;
+import com.ecsimsw.common.support.TokenUtils;
 import com.ecsimsw.common.error.ErrorType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -25,10 +25,8 @@ import java.io.IOException;
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
-    @Value("${jwt.secret.key}")
-    private String secretKey;
-
     private final AuthService authService;
+    private final TokenConfig tokenConfig;
     private final BlockedTokenRepository blockedTokenRepository;
     private final BlockedUserRepository blockedUserRepository;
 
@@ -56,7 +54,7 @@ public class TokenFilter extends OncePerRequestFilter {
     }
 
     private CustomUserDetail userDetailFromToken(String token) {
-        var accessToken = AccessToken.fromToken(secretKey, token);
+        var accessToken = AccessToken.fromToken(tokenConfig.secretKey, token);
         var roles = authService.roleNames(accessToken.username());
         return CustomUserDetail.builder()
             .username(accessToken.username())

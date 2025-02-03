@@ -1,11 +1,11 @@
 package com.ecsimsw.auth.domain;
 
 import com.ecsimsw.account.domain.User;
-import com.ecsimsw.auth.utils.JwtUtils;
+import com.ecsimsw.common.support.JwtUtils;
 
 import java.util.Map;
 
-import static com.ecsimsw.auth.config.SecurityConfig.REFRESH_TOKEN_EXPIRED_TIME;
+import static com.ecsimsw.auth.config.TokenConfig.REFRESH_TOKEN_EXPIRED_TIME;
 
 public record RefreshToken(
     String username

@@ -1,4 +1,4 @@
-package com.ecsimsw.account.exception;
+package com.ecsimsw.error;
 
 import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;

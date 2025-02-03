@@ -1,4 +1,4 @@
-package com.ecsimsw.auth.utils;
+package com.ecsimsw.support;
 
 import java.security.SecureRandom;
 

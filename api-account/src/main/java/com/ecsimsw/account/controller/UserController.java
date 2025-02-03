@@ -7,7 +7,7 @@ import com.ecsimsw.account.dto.UserInfoResponse;
 import com.ecsimsw.account.service.UserService;
 import com.ecsimsw.auth.domain.CustomUserDetail;
 import com.ecsimsw.auth.service.AuthService;
-import com.ecsimsw.auth.utils.TokenUtils;
+import com.ecsimsw.common.support.TokenUtils;
 import com.ecsimsw.common.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,11 @@ public class UserController {
     @PostMapping("/api/user/signup")
     public ApiResponse<SignUpResponse> user(@RequestBody SignUpRequest request) {
         var id = userService.create(request);
+//        emailService.outbox(
+//            user.getEmail(),
+//            EmailType.SIGN_UP,
+//            user.getUsername()
+//        );
         return ApiResponse.success(new SignUpResponse(id));
     }
 

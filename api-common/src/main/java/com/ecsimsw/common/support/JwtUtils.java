@@ -1,4 +1,4 @@
-package com.ecsimsw.auth.utils;
+package com.ecsimsw.common.support;
 
 import com.ecsimsw.auth.exception.AuthException;
 import com.ecsimsw.common.error.ErrorType;

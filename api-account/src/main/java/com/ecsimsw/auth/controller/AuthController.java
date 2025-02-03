@@ -6,7 +6,7 @@ import com.ecsimsw.auth.dto.LogInResponse;
 import com.ecsimsw.auth.dto.ReissueRequest;
 import com.ecsimsw.auth.dto.Tokens;
 import com.ecsimsw.auth.service.AuthService;
-import com.ecsimsw.auth.utils.TokenUtils;
+import com.ecsimsw.common.support.TokenUtils;
 import com.ecsimsw.common.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

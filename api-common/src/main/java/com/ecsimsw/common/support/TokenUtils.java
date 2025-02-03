@@ -1,4 +1,4 @@
-package com.ecsimsw.auth.utils;
+package com.ecsimsw.common.support;
 
 import jakarta.servlet.http.HttpServletRequest;
 

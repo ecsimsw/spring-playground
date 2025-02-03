@@ -1,10 +1,12 @@
 package com.ecsimsw.auth.config;
 
+import com.ecsimsw.auth.controller.CustomAccessDeniedHandler;
+import com.ecsimsw.auth.controller.CustomAuthenticationEntryPoint;
 import com.ecsimsw.auth.service.CustomAuthenticationProvider;
 import com.ecsimsw.auth.service.CustomUserDetailService;
 import com.ecsimsw.auth.service.TokenFilter;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,9 +19,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,13 +31,12 @@ import static com.ecsimsw.auth.config.Urls.*;
 @RequiredArgsConstructor
 @Configuration
 @EnableMethodSecurity
-public class SecurityConfig {
-
-    public static final Integer ACCESS_TOKEN_EXPIRED_TIME = 30 * 60 * 1000;
-    public static final Integer REFRESH_TOKEN_EXPIRED_TIME = 14 * 24 * 60 * 60 * 1000;
+public class SpringSecurityConfig {
 
     private final TokenFilter tokenFilter;
     private final CustomUserDetailService userDetailService;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -49,8 +48,8 @@ public class SecurityConfig {
                 .requestMatchers(ADMIN_URLS).hasRole("ADMIN")
                 .anyRequest().authenticated())
             .exceptionHandling(exception -> exception
-                .authenticationEntryPoint(authenticationEntryPoint())
-                .accessDeniedHandler(accessDeniedHandler()))
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler))
             .sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -70,8 +69,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring()
-            .requestMatchers(CONTENT_URLS);
+        return web -> web.ignoring().requestMatchers(CONTENT_URLS);
     }
 
     @Bean
@@ -82,24 +80,6 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         return new CustomAuthenticationProvider(userDetailService, passwordEncoder());
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return (request, response, authException) -> {
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\": \"Authentication required\"}");
-        };
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return (request, response, accessDeniedException) -> {
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Access denied\"}");
-        };
     }
 
     @Bean

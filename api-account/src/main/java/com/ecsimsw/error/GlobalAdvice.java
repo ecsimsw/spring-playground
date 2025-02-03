@@ -1,4 +1,4 @@
-package com.ecsimsw.account.controller;
+package com.ecsimsw.error;
 
 import com.ecsimsw.common.dto.ApiErrorResult;
 import com.ecsimsw.common.dto.ApiResponse;

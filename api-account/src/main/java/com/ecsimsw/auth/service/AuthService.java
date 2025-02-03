@@ -3,14 +3,14 @@ package com.ecsimsw.auth.service;
 import com.ecsimsw.account.domain.User;
 import com.ecsimsw.account.domain.UserRepository;
 import com.ecsimsw.account.domain.UserRoleRepository;
+import com.ecsimsw.auth.config.TokenConfig;
 import com.ecsimsw.auth.domain.*;
 import com.ecsimsw.auth.dto.LogInResponse;
 import com.ecsimsw.auth.dto.Tokens;
-import com.ecsimsw.auth.exception.AuthException;
-import com.ecsimsw.auth.utils.JwtUtils;
+import com.ecsimsw.error.AuthException;
+import com.ecsimsw.common.support.JwtUtils;
 import com.ecsimsw.common.error.ErrorType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +20,12 @@ import java.util.List;
 @Service
 public class AuthService {
 
+    private final TokenConfig tokenConfig;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final BlockedTokenRepository blockedTokenRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
-
-    @Value("${jwt.secret.key}")
-    private String secretKey;
 
     public LogInResponse issue(String username) {
         var user = getUserByUsername(username);
@@ -37,7 +35,7 @@ public class AuthService {
     }
 
     public LogInResponse reissue(String refreshToken) {
-        var username = JwtUtils.getClaimValue(secretKey, refreshToken, "username");
+        var username = JwtUtils.getClaimValue(tokenConfig.secretKey, refreshToken, "username");
         var tokenOpt = refreshTokenRepository.findByUsername(username);
         if (tokenOpt.isEmpty()) {
             throw new AuthException(ErrorType.INVALID_TOKEN);
@@ -47,8 +45,8 @@ public class AuthService {
 
     public Tokens createTokens(User user) {
         return new Tokens(
-            AccessToken.of(user).asJwtToken(secretKey),
-            RefreshToken.of(user).asJwtToken(secretKey)
+            AccessToken.of(user).asJwtToken(tokenConfig.secretKey),
+            RefreshToken.of(user).asJwtToken(tokenConfig.secretKey)
         );
     }
 

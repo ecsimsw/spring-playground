@@ -53,6 +53,7 @@ public class TempPasswordForm implements EmailForm {
         "\n" +
         "    <div class=\"container\">\n" +
         "        <h2>임시 비밀번호 안내</h2>\n" +
+        "        <p>가입 요청이 정상 승인되었습니다.</p>\n" +
         "        <p>아래 임시 비밀번호를 사용하여 로그인하세요.</p>\n" +
         "        <div class=\"password-box\"> %s </div>\n" +
         "        <p class=\"notice\">로그인 후 반드시 비밀번호를 변경해 주세요.</p>\n" +

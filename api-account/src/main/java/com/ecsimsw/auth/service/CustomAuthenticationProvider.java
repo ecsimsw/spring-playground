@@ -1,6 +1,6 @@
 package com.ecsimsw.auth.service;
 
-import com.ecsimsw.auth.exception.AuthException;
+import com.ecsimsw.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;

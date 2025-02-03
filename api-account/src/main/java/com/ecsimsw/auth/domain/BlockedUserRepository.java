@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.ecsimsw.auth.config.SecurityConfig.REFRESH_TOKEN_EXPIRED_TIME;
+import static com.ecsimsw.auth.config.SpringSecurityConfig.REFRESH_TOKEN_EXPIRED_TIME;
 
 @Repository
 public class BlockedUserRepository {

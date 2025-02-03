@@ -1,6 +1,6 @@
 package com.ecsimsw.account.domain;
 
-import com.ecsimsw.account.exception.UserException;
+import com.ecsimsw.error.UserException;
 import com.ecsimsw.common.domain.UserStatus;
 import com.ecsimsw.common.error.ErrorType;
 import jakarta.persistence.*;

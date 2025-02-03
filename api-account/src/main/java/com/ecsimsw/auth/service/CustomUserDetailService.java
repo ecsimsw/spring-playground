@@ -3,7 +3,7 @@ package com.ecsimsw.auth.service;
 import com.ecsimsw.account.domain.UserRepository;
 import com.ecsimsw.account.domain.UserRoleRepository;
 import com.ecsimsw.auth.domain.CustomUserDetail;
-import com.ecsimsw.auth.exception.AuthException;
+import com.ecsimsw.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

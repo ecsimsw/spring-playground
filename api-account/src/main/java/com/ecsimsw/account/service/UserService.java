@@ -4,7 +4,7 @@ import com.ecsimsw.account.domain.User;
 import com.ecsimsw.account.domain.UserRepository;
 import com.ecsimsw.account.dto.SignUpRequest;
 import com.ecsimsw.account.dto.UserInfoResponse;
-import com.ecsimsw.account.exception.UserException;
+import com.ecsimsw.error.UserException;
 import com.ecsimsw.common.error.ErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
