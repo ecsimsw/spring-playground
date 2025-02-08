@@ -3,14 +3,14 @@ package com.ecsimsw.account.controller;
 import com.ecsimsw.account.dto.UpdateUserRoleRequest;
 import com.ecsimsw.account.dto.UserInfoAdminResponse;
 import com.ecsimsw.account.service.AdminService;
-import com.ecsimsw.auth.service.AuthService;
+//import com.ecsimsw.auth.service.AuthService;
 import com.ecsimsw.common.domain.RoleType;
 import com.ecsimsw.common.domain.UserStatus;
 import com.ecsimsw.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 public class AdminController {
 
-    private final AuthService authService;
+//    private final AuthService authService;
     private final AdminService adminService;
 
     @GetMapping("/api/admin/users")
@@ -55,8 +55,8 @@ public class AdminController {
     @DeleteMapping("/api/admin/users/{userId}")
     public ApiResponse<Void> deleteUser(@PathVariable Long userId) {
         adminService.deleteUser(userId);
-        authService.blockUser(userId);
-        SecurityContextHolder.getContext().setAuthentication(null);
+//        authService.blockUser(userId);
+//        SecurityContextHolder.getContext().setAuthentication(null);
         return ApiResponse.success();
     }
 }

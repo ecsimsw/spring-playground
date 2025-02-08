@@ -1,15 +1,14 @@
 package com.ecsimsw.account.domain;
 
-import com.ecsimsw.common.support.PasswordUtils;
-import com.ecsimsw.error.UserException;
 import com.ecsimsw.common.domain.UserStatus;
 import com.ecsimsw.common.error.ErrorType;
+import com.ecsimsw.error.UserException;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -52,13 +51,13 @@ public class User {
         }
     }
 
-//    public void createTempPassword(PasswordEncoder passwordEncoder) {
-//        this.password = Password.createRandomly(passwordEncoder);
-//    }
-//
-//    public void changePassword(PasswordEncoder encoder, String password) {
-//        this.password = Password.encode(encoder, password);
-//    }
+    public void createTempPassword(PasswordEncoder passwordEncoder) {
+        this.password = Password.createRandomly(passwordEncoder);
+    }
+
+    public void changePassword(PasswordEncoder encoder, String password) {
+        this.password = Password.encode(encoder, password);
+    }
 
     public String getTempPassword() {
         return password.getTempPassword();

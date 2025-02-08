@@ -7,7 +7,7 @@ import com.ecsimsw.account.dto.UserInfoResponse;
 import com.ecsimsw.error.UserException;
 import com.ecsimsw.common.error.ErrorType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Long create(SignUpRequest request) {
@@ -24,7 +24,7 @@ public class UserService {
             throw new UserException(ErrorType.USER_ALREADY_EXISTS);
         }
         var entity = request.toEntity();
-        entity.createTempPassword(passwordEncoder);
+//        entity.createTempPassword(passwordEncoder);
         userRepository.save(entity);
         return entity.getId();
     }
@@ -45,7 +45,7 @@ public class UserService {
     @Transactional
     public void updatePassword(String username, String password) {
         var user = getByUsername(username);
-        user.changePassword(passwordEncoder, password);
+//        user.changePassword(passwordEncoder, password);
     }
 
     private User getByUsername(String username) {

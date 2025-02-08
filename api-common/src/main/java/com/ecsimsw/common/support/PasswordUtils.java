@@ -1,4 +1,4 @@
-package com.ecsimsw.support;
+package com.ecsimsw.common.support;
 
 import java.security.SecureRandom;
 

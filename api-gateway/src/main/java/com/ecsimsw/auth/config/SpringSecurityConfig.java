@@ -6,7 +6,6 @@ import com.ecsimsw.auth.service.CustomAuthenticationProvider;
 import com.ecsimsw.auth.service.CustomUserDetailService;
 import com.ecsimsw.auth.service.TokenFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
