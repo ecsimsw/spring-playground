@@ -1,5 +1,6 @@
 package com.ecsimsw.business
 
+import com.ecsimsw.common.dto.ApiResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 class HelloController {
 
     @GetMapping("/hello")
-    fun sayHello(@Authen name: String = "World"): Map<String, String> {
-        return mapOf("message" to "Hello, $name!")
+    fun sayHello(name: String = "World"): ApiResponse<String> {
+        return ApiResponse.success("Hello, $name!")
     }
 }

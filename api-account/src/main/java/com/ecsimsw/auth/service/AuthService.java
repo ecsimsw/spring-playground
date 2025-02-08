@@ -35,7 +35,7 @@ public class AuthService {
     }
 
     public LogInResponse reissue(String refreshToken) {
-        var username = JwtUtils.getClaimValue(tokenConfig.secretKey, refreshToken, "username");
+        var username = RefreshToken.fromToken(tokenConfig.secretKey, refreshToken).username();
         var tokenOpt = refreshTokenRepository.findByUsername(username);
         if (tokenOpt.isEmpty()) {
             throw new AuthException(ErrorType.INVALID_TOKEN);

@@ -1,18 +1,17 @@
 package com.ecsimsw.auth.domain;
 
+import com.ecsimsw.auth.config.TokenConfig;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.ecsimsw.auth.config.SpringSecurityConfig.ACCESS_TOKEN_EXPIRED_TIME;
-
 @Repository
 public class BlockedTokenRepository {
 
     private final Cache<String, Object> tokens = Caffeine.newBuilder()
-        .expireAfterWrite(ACCESS_TOKEN_EXPIRED_TIME, TimeUnit.MICROSECONDS)
+        .expireAfterWrite(TokenConfig.REFRESH_TOKEN_EXPIRED_TIME, TimeUnit.MICROSECONDS)
         .build();
 
     public void save(String token) {

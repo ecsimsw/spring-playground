@@ -6,5 +6,5 @@ include 'api-common'
 include 'api-account'
 include 'api-notification'
 include 'api-business'
-include 'api-business'
+include 'api-gateway'
 

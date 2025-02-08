@@ -1,8 +1,10 @@
 package com.ecsimsw.auth.domain;
 
 import com.ecsimsw.account.domain.User;
+import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.support.JwtUtils;
 import com.ecsimsw.common.domain.UserStatus;
+import com.ecsimsw.error.AuthException;
 
 import java.util.Map;
 
@@ -18,11 +20,15 @@ public record AccessToken(
     }
 
     public static AccessToken fromToken(String secretKey, String token) {
-        return new AccessToken(
-            JwtUtils.getClaimValue(secretKey, token, "username"),
-            Boolean.parseBoolean(JwtUtils.getClaimValue(secretKey, token, "isAdmin")),
-            UserStatus.valueOf(JwtUtils.getClaimValue(secretKey, token, "status"))
-        );
+        try {
+            return new AccessToken(
+                JwtUtils.getClaimValue(secretKey, token, "username"),
+                Boolean.parseBoolean(JwtUtils.getClaimValue(secretKey, token, "isAdmin")),
+                UserStatus.valueOf(JwtUtils.getClaimValue(secretKey, token, "status"))
+            );
+        } catch (Exception e) {
+            throw new AuthException(ErrorType.INVALID_TOKEN);
+        }
     }
 
     public String asJwtToken(String secretKey) {

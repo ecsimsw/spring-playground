@@ -1,7 +1,10 @@
 package com.ecsimsw.auth.domain;
 
 import com.ecsimsw.account.domain.User;
+import com.ecsimsw.common.domain.UserStatus;
+import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.support.JwtUtils;
+import com.ecsimsw.error.AuthException;
 
 import java.util.Map;
 
@@ -12,6 +15,14 @@ public record RefreshToken(
 ) {
     public static RefreshToken of(User user) {
         return new RefreshToken(user.getUsername());
+    }
+
+    public static RefreshToken fromToken(String secretKey, String token) {
+        try {
+            return new RefreshToken(JwtUtils.getClaimValue(secretKey, token, "username"));
+        } catch (Exception e) {
+            throw new AuthException(ErrorType.INVALID_TOKEN);
+        }
     }
 
     public String asJwtToken(String secretKey) {

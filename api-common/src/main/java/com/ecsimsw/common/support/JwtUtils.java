@@ -1,7 +1,5 @@
 package com.ecsimsw.common.support;
 
-import com.ecsimsw.auth.exception.AuthException;
-import com.ecsimsw.common.error.ErrorType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -32,13 +30,9 @@ public class JwtUtils {
     }
 
     public static Claims getClaims(String secretKey, String token) {
-        try {
-            return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-        } catch (Exception e) {
-            throw new AuthException(ErrorType.INVALID_TOKEN);
-        }
+        return Jwts.parser()
+            .setSigningKey(secretKey)
+            .parseClaimsJws(token)
+            .getBody();
     }
 }

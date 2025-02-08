@@ -6,7 +6,6 @@ import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,12 +19,6 @@ public class GlobalAdvice {
 
     @ExceptionHandler(ApiException.class)
     public ApiResponse<ApiErrorResult> coreException(ApiException e) {
-        return ApiResponse.error(e);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ApiResponse<ApiErrorResult> accessDenied() {
-        var e = new ApiException(ErrorType.FORBIDDEN);
         return ApiResponse.error(e);
     }
 
