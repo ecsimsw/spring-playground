@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -38,9 +40,20 @@ public class RouteController {
         }
         var port = SERVICE_PORTS.get(service);
         var url = "http://" + HOST_NAME + ":"+ port + request.getRequestURI();
+
+        System.out.println(url);
+
+        Map<String, String> headers = new HashMap<>();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headers.put(headerName, request.getHeader(headerName));
+        }
+
         return webClient
             .method(method)
             .uri(url)
+            .headers(httpHeaders -> headers.forEach(httpHeaders::set))
             .bodyValue(requestBody)
             .retrieve()
             .toEntity(String.class);

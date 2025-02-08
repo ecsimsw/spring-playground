@@ -5,6 +5,7 @@ import com.ecsimsw.auth.domain.AccessToken;
 import com.ecsimsw.auth.domain.BlockedTokenRepository;
 import com.ecsimsw.auth.domain.BlockedUserRepository;
 import com.ecsimsw.auth.domain.CustomUserDetail;
+import com.ecsimsw.auth.dto.RequestWrapper;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.support.TokenUtils;
 import com.ecsimsw.error.AuthException;
@@ -33,14 +34,20 @@ public class TokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            var token = TokenUtils.getToken(request)
-                .orElseThrow(() -> new AuthException(ErrorType.TOKEN_NOT_FOUND));
-            var loginUser = userDetailFromToken(token);
-            checkBlocked(token, loginUser.getUsername());
+//            var token = TokenUtils.getToken(request)
+//                .orElseThrow(() -> new AuthException(ErrorType.TOKEN_NOT_FOUND));
+//            var loginUser = userDetailFromToken(token);
+//            checkBlocked(token, loginUser.getUsername());
+//
+//            var authToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+//            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//            SecurityContextHolder.getContext().setAuthentication(authToken);
 
-            var authToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            System.out.println("sdff");
+            var requestWrapper = new RequestWrapper(request);
+            requestWrapper.addHeader("X-User-Id", "ecsimsw");
+            requestWrapper.addHeader("X-User-Roles", "roles");
+
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             filterChain.doFilter(request, response);

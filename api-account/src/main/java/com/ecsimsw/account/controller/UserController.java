@@ -47,6 +47,13 @@ public class UserController {
 //        return ApiResponse.success(roles);
 //    }
 
+    @GetMapping("/api/user/roles")
+    public ApiResponse<String> roles(
+        @RequestHeader("X-User-Id") String userId
+    ) {
+        return ApiResponse.success(userId);
+    }
+
 //    @PutMapping("/api/user/password")
 //    public ApiResponse<Void> password(@AuthenticationPrincipal UserDetails user, @RequestBody UpdatePasswordRequest request) {
 //        userService.updatePassword(user.getUsername(), request.password());
