@@ -39,16 +39,17 @@ public class TokenFilter extends OncePerRequestFilter {
 //            var loginUser = userDetailFromToken(token);
 //            checkBlocked(token, loginUser.getUsername());
 //
-//            var authToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
-//            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//            SecurityContextHolder.getContext().setAuthentication(authToken);
+            var authToken = new UsernamePasswordAuthenticationToken(
+                "loginUser", null, null
+            );
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
 
-            System.out.println("sdff");
             var requestWrapper = new RequestWrapper(request);
             requestWrapper.addHeader("X-User-Id", "ecsimsw");
             requestWrapper.addHeader("X-User-Roles", "roles");
 
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(requestWrapper, response);
         } catch (Exception e) {
             filterChain.doFilter(request, response);
         }

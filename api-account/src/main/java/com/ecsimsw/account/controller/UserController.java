@@ -49,8 +49,11 @@ public class UserController {
 
     @GetMapping("/api/user/roles")
     public ApiResponse<String> roles(
-        @RequestHeader("X-User-Id") String userId
+        @RequestHeader(value = "X-User-Id", required = false) String userId,
+        @RequestHeader(value = "X-User-Roles", required = false) String roles
     ) {
+        System.out.println(userId);
+        System.out.println(roles);
         return ApiResponse.success(userId);
     }
 
