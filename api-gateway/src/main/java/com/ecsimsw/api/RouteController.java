@@ -42,7 +42,6 @@ public class RouteController {
         }
         var url = url(service, request.getRequestURI());
         var headers = headers(request);
-        System.out.println(headers.get("X-User-Roles"));
         return send(method, url, headers, requestBody).block();
     }
 

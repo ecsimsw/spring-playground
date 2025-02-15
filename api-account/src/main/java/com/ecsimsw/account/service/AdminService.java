@@ -1,15 +1,13 @@
 package com.ecsimsw.account.service;
 
-import com.ecsimsw.account.domain.User;
-import com.ecsimsw.account.domain.UserRepository;
-import com.ecsimsw.account.domain.UserRole;
-import com.ecsimsw.account.domain.UserRoleRepository;
 import com.ecsimsw.account.dto.UpdateUserRoleRequest;
 import com.ecsimsw.account.dto.UserInfoAdminResponse;
-import com.ecsimsw.error.UserException;
-import com.ecsimsw.common.domain.UserStatus;
 import com.ecsimsw.common.error.ErrorType;
-//import com.ecsimsw.notification.service.EmailService;
+import com.ecsimsw.common.error.UserException;
+import com.ecsimsw.domain.User;
+import com.ecsimsw.domain.UserRepository;
+import com.ecsimsw.domain.UserRole;
+import com.ecsimsw.domain.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,28 +25,9 @@ public class AdminService {
     private final UserRoleRepository userRoleRepository;
 
     @Transactional(readOnly = true)
-    public Page<UserInfoAdminResponse> users(UserStatus status, boolean deleted, Pageable pageable) {
-        var users = userRepository.findAllByStatusAndDeleted(status, deleted, pageable);
+    public Page<UserInfoAdminResponse> users(boolean deleted, Pageable pageable) {
+        var users = userRepository.findAllByDeleted(deleted, pageable);
         return users.map(UserInfoAdminResponse::of);
-    }
-
-    @Transactional
-    public void approve(Long userId) {
-        var user = getUserById(userId);
-        user.approve();
-        if (user.isTempPassword()) {
-//            emailService.outbox(
-//                user.getEmail(),
-//                EmailType.TEMP_PASSWORD,
-//                user.getTempPassword()
-//            );
-        }
-    }
-
-    @Transactional
-    public void disapprove(Long userId) {
-        var user = getUserById(userId);
-        user.disapprove();
     }
 
     @Transactional

@@ -1,11 +1,11 @@
 package com.ecsimsw.account.service;
 
-import com.ecsimsw.account.domain.User;
-import com.ecsimsw.account.domain.UserRepository;
 import com.ecsimsw.account.dto.SignUpRequest;
 import com.ecsimsw.account.dto.UserInfoResponse;
-import com.ecsimsw.error.UserException;
+import com.ecsimsw.common.error.UserException;
 import com.ecsimsw.common.error.ErrorType;
+import com.ecsimsw.domain.User;
+import com.ecsimsw.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserInfoResponse userInfo(String username) {
         var user = getByUsername(username);
-        user.checkApproved();
         return UserInfoResponse.of(user);
     }
 

@@ -7,4 +7,6 @@ include 'api-account'
 include 'api-notification'
 include 'api-business'
 include 'api-gateway'
-
+include 'api-auth'
+include 'domain-user'
+include 'domain-token'

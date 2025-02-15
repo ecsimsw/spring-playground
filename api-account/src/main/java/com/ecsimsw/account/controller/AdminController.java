@@ -5,7 +5,6 @@ import com.ecsimsw.account.dto.UserInfoAdminResponse;
 import com.ecsimsw.account.service.AdminService;
 //import com.ecsimsw.auth.service.AuthService;
 import com.ecsimsw.common.domain.RoleType;
-import com.ecsimsw.common.domain.UserStatus;
 import com.ecsimsw.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,8 +22,8 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/api/admin/users")
-    public ApiResponse<Page<UserInfoAdminResponse>> users(UserStatus status, boolean deleted, Pageable pageable) {
-        var response = adminService.users(status, deleted, pageable);
+    public ApiResponse<Page<UserInfoAdminResponse>> users(boolean deleted, Pageable pageable) {
+        var response = adminService.users(deleted, pageable);
         return ApiResponse.success(response);
     }
 
@@ -37,18 +36,6 @@ public class AdminController {
     @PutMapping("/api/admin/users/{userId}/role")
     public ApiResponse<Void> updateUserRole(@PathVariable Long userId, @RequestBody List<UpdateUserRoleRequest> request) {
         adminService.updateUserRole(userId, request);
-        return ApiResponse.success();
-    }
-
-    @PutMapping("/api/admin/users/{userId}/approve")
-    public ApiResponse<Void> approve(@PathVariable Long userId) {
-        adminService.approve(userId);
-        return ApiResponse.success();
-    }
-
-    @PutMapping("/api/admin/users/{userId}/disapprove")
-    public ApiResponse<Void> disapprove(@PathVariable Long userId) {
-        adminService.disapprove(userId);
         return ApiResponse.success();
     }
 

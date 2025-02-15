@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
 
 import java.util.*;
 
+import static java.util.Collections.enumeration;
+
 public class RequestWrapper extends HttpServletRequestWrapper {
     private final Map<String, String> customHeaders = new HashMap<>();
 
@@ -22,16 +24,16 @@ public class RequestWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    public java.util.Enumeration<String> getHeaderNames() {
+    public Enumeration<String> getHeaderNames() {
         List<String> names = new ArrayList<>(customHeaders.keySet());
         names.addAll(Collections.list(super.getHeaderNames()));
-        return Collections.enumeration(names);
+        return enumeration(names);
     }
 
     @Override
-    public java.util.Enumeration<String> getHeaders(String name) {
+    public Enumeration<String> getHeaders(String name) {
         if (customHeaders.containsKey(name)) {
-            return Collections.enumeration(Collections.singletonList(customHeaders.get(name)));
+            return enumeration(Collections.singletonList(customHeaders.get(name)));
         }
         return super.getHeaders(name);
     }

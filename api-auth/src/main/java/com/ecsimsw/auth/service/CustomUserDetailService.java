@@ -1,5 +1,6 @@
 package com.ecsimsw.auth.service;
 
+import com.ecsimsw.auth.domain.CustomUserDetail;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.domain.UserRepository;
