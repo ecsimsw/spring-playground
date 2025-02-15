@@ -1,12 +1,12 @@
 package com.ecsimsw.auth.domain;
 
-import com.ecsimsw.auth.config.TokenConfig;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.common.support.JwtUtils;
 import com.ecsimsw.domain.User;
 
 import java.util.Map;
+
+import static com.ecsimsw.common.config.TokenConfig.REFRESH_TOKEN_EXPIRED_TIME;
 
 public record RefreshToken(
     String username
@@ -24,6 +24,6 @@ public record RefreshToken(
     }
 
     public String asJwtToken(String secretKey) {
-        return JwtUtils.generate(secretKey, TokenConfig.REFRESH_TOKEN_EXPIRED_TIME, Map.of("username", username));
+        return JwtUtils.generate(secretKey, REFRESH_TOKEN_EXPIRED_TIME, Map.of("username", username));
     }
 }

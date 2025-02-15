@@ -1,14 +1,13 @@
 package com.ecsimsw.auth.service;
 
-import com.ecsimsw.auth.config.TokenConfig;
 import com.ecsimsw.auth.domain.*;
+import com.ecsimsw.auth.domain.AccessToken;
 import com.ecsimsw.auth.dto.LogInResponse;
 import com.ecsimsw.auth.dto.Tokens;
+import com.ecsimsw.common.config.TokenConfig;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.domain.User;
-import com.ecsimsw.domain.UserRepository;
-import com.ecsimsw.domain.UserRoleRepository;
+import com.ecsimsw.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

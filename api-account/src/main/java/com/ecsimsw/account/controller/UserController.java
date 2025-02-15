@@ -2,20 +2,14 @@ package com.ecsimsw.account.controller;
 
 import com.ecsimsw.account.dto.SignUpRequest;
 import com.ecsimsw.account.dto.SignUpResponse;
-import com.ecsimsw.account.dto.UpdatePasswordRequest;
-import com.ecsimsw.account.dto.UserInfoResponse;
 import com.ecsimsw.account.service.UserService;
 //import com.ecsimsw.auth.domain.CustomUserDetail;
 //import com.ecsimsw.auth.service.AuthService;
-import com.ecsimsw.common.support.TokenUtils;
 import com.ecsimsw.common.dto.ApiResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
 //import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

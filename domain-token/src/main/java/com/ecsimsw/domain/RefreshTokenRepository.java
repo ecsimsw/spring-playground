@@ -1,6 +1,6 @@
 package com.ecsimsw.domain;
 
-import com.ecsimsw.auth.config.TokenConfig;
+import com.ecsimsw.common.config.TokenConfig;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.stereotype.Repository;

@@ -2,13 +2,11 @@ package com.ecsimsw.auth.domain;
 
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.common.support.JwtUtils;
 import com.ecsimsw.domain.User;
 
 import java.util.Map;
 
-import static com.ecsimsw.auth.config.TokenConfig.ACCESS_TOKEN_EXPIRED_TIME;
-
+import static com.ecsimsw.common.config.TokenConfig.ACCESS_TOKEN_EXPIRED_TIME;
 
 public record AccessToken(
     String username,

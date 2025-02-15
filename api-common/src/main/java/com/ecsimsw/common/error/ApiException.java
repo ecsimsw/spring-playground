@@ -1,6 +1,5 @@
 package com.ecsimsw.common.error;
 
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.HttpStatus;
 
 public class ApiException extends IllegalArgumentException {
@@ -23,9 +22,5 @@ public class ApiException extends IllegalArgumentException {
 
     public String message() {
         return type.getMessage();
-    }
-
-    public LogLevel logLevel() {
-        return type.getLogLevel();
     }
 }

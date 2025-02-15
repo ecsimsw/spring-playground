@@ -2,7 +2,7 @@ package com.ecsimsw.domain;
 
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.error.UserException;
-import com.ecsimsw.common.support.PasswordUtils;
+import com.ecsimsw.domain.support.PasswordUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;

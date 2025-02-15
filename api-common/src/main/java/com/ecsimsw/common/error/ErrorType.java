@@ -1,12 +1,9 @@
 package com.ecsimsw.common.error;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@RequiredArgsConstructor
 public enum ErrorType {
 
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, ErrorCode.E40001),
@@ -18,23 +15,20 @@ public enum ErrorType {
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, ErrorCode.E40007),
     FORBIDDEN(HttpStatus.UNAUTHORIZED, ErrorCode.E40008),
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, ErrorCode.E40009),
-    UNHANDLED(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.E50001, LogLevel.ERROR),
+    UNHANDLED(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.E50001),
     ;
 
     private final HttpStatus status;
     private final ErrorCode code;
     private final String message;
-    private final LogLevel logLevel;
-
-    ErrorType(HttpStatus status, ErrorCode code) {
-        this(status, code, LogLevel.INFO);
-    }
 
     ErrorType(HttpStatus status, ErrorCode code, String message) {
-        this(status, code, message, LogLevel.INFO);
+        this.status = status;
+        this.code = code;
+        this.message = message;
     }
 
-    ErrorType(HttpStatus status, ErrorCode code, LogLevel logLevel) {
+    ErrorType(HttpStatus status, ErrorCode code) {
         var msg = name();
         msg = msg.replace("_", " ");
         msg = msg.toLowerCase();
@@ -42,6 +36,5 @@ public enum ErrorType {
         this.status = status;
         this.code = code;
         this.message = msg;
-        this.logLevel = logLevel;
     }
 }
