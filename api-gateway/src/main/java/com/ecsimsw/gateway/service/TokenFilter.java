@@ -26,7 +26,6 @@ import java.util.Optional;
 public class TokenFilter extends OncePerRequestFilter {
 
     private final AuthService authService;
-    private final TokenConfig tokenConfig;
     private final BlockedTokenRepository blockedTokenRepository;
     private final BlockedUserRepository blockedUserRepository;
 
@@ -61,7 +60,7 @@ public class TokenFilter extends OncePerRequestFilter {
     }
 
     private CustomUserDetail userDetailFromToken(String token) {
-        var accessToken = AccessToken.fromToken(tokenConfig.secretKey, token);
+        var accessToken = AccessToken.fromToken(TokenConfig.secretKey, token);
         var roles = authService.roleNames(accessToken.username());
         return CustomUserDetail.builder()
             .username(accessToken.username())

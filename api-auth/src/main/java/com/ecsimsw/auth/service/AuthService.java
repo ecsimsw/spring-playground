@@ -6,7 +6,7 @@ import com.ecsimsw.auth.dto.LogInResponse;
 import com.ecsimsw.auth.dto.Tokens;
 import com.ecsimsw.common.config.TokenConfig;
 import com.ecsimsw.common.error.AuthException;
-import com.ecsimsw.common.error.ErrorType;
+import com.ecsimsw.domain.error.ErrorType;
 import com.ecsimsw.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 public class AuthService {
 
-    private final TokenConfig tokenConfig;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final BlockedTokenRepository blockedTokenRepository;
@@ -33,7 +32,7 @@ public class AuthService {
     }
 
     public LogInResponse reissue(String refreshToken) {
-        var username = RefreshToken.fromToken(tokenConfig.secretKey, refreshToken).username();
+        var username = RefreshToken.fromToken(TokenConfig.secretKey, refreshToken).username();
         var tokenOpt = refreshTokenRepository.findByUsername(username);
         if (tokenOpt.isEmpty()) {
             throw new AuthException(ErrorType.INVALID_TOKEN);
@@ -43,8 +42,8 @@ public class AuthService {
 
     public Tokens createTokens(User user) {
         return new Tokens(
-            AccessToken.of(user).asJwtToken(tokenConfig.secretKey),
-            RefreshToken.of(user).asJwtToken(tokenConfig.secretKey)
+            AccessToken.of(user).asJwtToken(TokenConfig.secretKey),
+            RefreshToken.of(user).asJwtToken(TokenConfig.secretKey)
         );
     }
 

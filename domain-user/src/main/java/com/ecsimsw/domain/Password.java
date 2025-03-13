@@ -1,7 +1,5 @@
 package com.ecsimsw.domain;
 
-import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.common.error.UserException;
 import com.ecsimsw.domain.support.PasswordUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -20,7 +18,8 @@ public class Password {
 
     private Password(PasswordEncoder encoder, String purePassword, boolean isTemporary) {
         if (purePassword.length() < 5 || purePassword.length() > 20) {
-            throw new UserException(ErrorType.INVALID_PASSWORD);
+//            throw new UserException(ErrorType.INVALID_PASSWORD);
+            throw new IllegalArgumentException();
         }
         if (isTemporary) {
             this.tempPassword = purePassword;

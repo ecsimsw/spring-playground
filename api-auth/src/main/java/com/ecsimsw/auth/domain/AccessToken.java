@@ -1,8 +1,9 @@
 package com.ecsimsw.auth.domain;
 
 import com.ecsimsw.common.error.AuthException;
-import com.ecsimsw.common.error.ErrorType;
+import com.ecsimsw.domain.error.ErrorType;
 import com.ecsimsw.domain.User;
+import com.ecsimsw.domain.support.JwtUtils;
 
 import java.util.Map;
 

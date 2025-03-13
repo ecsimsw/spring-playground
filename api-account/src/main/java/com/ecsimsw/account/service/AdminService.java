@@ -2,8 +2,8 @@ package com.ecsimsw.account.service;
 
 import com.ecsimsw.account.dto.UpdateUserRoleRequest;
 import com.ecsimsw.account.dto.UserInfoAdminResponse;
-import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.common.error.UserException;
+import com.ecsimsw.domain.error.ErrorType;
+import com.ecsimsw.domain.error.UserException;
 import com.ecsimsw.domain.User;
 import com.ecsimsw.domain.UserRepository;
 import com.ecsimsw.domain.UserRole;
