@@ -6,7 +6,7 @@ import com.ecsimsw.auth.dto.LogInResponse;
 import com.ecsimsw.auth.dto.Tokens;
 import com.ecsimsw.common.config.TokenConfig;
 import com.ecsimsw.common.error.AuthException;
-import com.ecsimsw.domain.error.ErrorType;
+import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

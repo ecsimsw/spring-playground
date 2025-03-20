@@ -1,7 +1,7 @@
 package com.ecsimsw.auth.service;
 
 import com.ecsimsw.common.error.AuthException;
-import com.ecsimsw.domain.error.ErrorType;
+import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.domain.UserRepository;
 import com.ecsimsw.domain.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
