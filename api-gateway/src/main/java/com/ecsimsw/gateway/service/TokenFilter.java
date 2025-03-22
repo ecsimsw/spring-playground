@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
-    private final AuthService authService;
     private final BlockedTokenRepository blockedTokenRepository;
     private final BlockedUserRepository blockedUserRepository;
 
@@ -31,12 +31,11 @@ public class TokenFilter extends OncePerRequestFilter {
         try {
             var token = getToken(request).orElseThrow(() -> new AuthException(ErrorType.TOKEN_NOT_FOUND));
             var accessToken = AccessToken.fromToken(TokenConfig.secretKey, token);
-            var roles = authService.roleNames(accessToken.username());
             checkBlocked(token, accessToken.username());
 
             var requestWrapper = new RequestWrapper(request);
             requestWrapper.addHeader("X-User-Id", accessToken.username());
-            requestWrapper.addHeader("X-User-Roles", String.join(",", roles));
+            requestWrapper.addHeader("X-User-Roles", Arrays.toString(accessToken.roles()));
 
             filterChain.doFilter(requestWrapper, response);
         } catch (Exception e) {
