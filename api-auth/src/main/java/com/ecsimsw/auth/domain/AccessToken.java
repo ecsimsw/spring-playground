@@ -2,7 +2,6 @@ package com.ecsimsw.auth.domain;
 
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.domain.User;
 import com.ecsimsw.domain.support.JwtUtils;
 
 import java.util.Map;
@@ -13,10 +12,6 @@ public record AccessToken(
     String username,
     boolean isAdmin
 ) {
-    public static AccessToken of(User user) {
-        return new AccessToken(user.getUsername(), user.isAdmin());
-    }
-
     public static AccessToken fromToken(String secretKey, String token) {
         try {
             return new AccessToken(

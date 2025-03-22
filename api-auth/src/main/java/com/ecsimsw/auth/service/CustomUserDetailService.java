@@ -1,9 +1,9 @@
 package com.ecsimsw.auth.service;
 
+import com.ecsimsw.auth.domain.UserPasswordRepository;
+import com.ecsimsw.auth.domain.UserRoleRepository;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.domain.UserRepository;
-import com.ecsimsw.domain.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,24 +14,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserPasswordRepository userPasswordRepository;
     private final UserRoleRepository userRoleRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByUsername(username)
+        var user = userPasswordRepository.findByUsername(username)
             .orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
-        if (user.isDeleted()) {
-            throw new AuthException(ErrorType.FAILED_TO_AUTHENTICATE);
-        }
-        var authRoles = userRoleRepository.findAllByUserId(user.getId()).stream()
-            .flatMap(role -> role.roleNames().stream())
-            .toList();
+        var role = userRoleRepository.findByUserId(user.userId())
+            .orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
         return CustomUserDetail.builder()
-            .username(user.getUsername())
-            .password(user.getPassword().getEncrypted())
-            .isAdmin(user.isAdmin())
-            .roleNames(authRoles)
+            .username(user.username())
+            .password(user.password())
+            .isAdmin(role.getIsAdmin())
+            .roleNames(role.roleNames())
             .build();
     }
 }

@@ -1,13 +1,12 @@
 package com.ecsimsw.account.service;
 
+import com.ecsimsw.account.domain.User;
+import com.ecsimsw.account.domain.UserRepository;
 import com.ecsimsw.account.dto.SignUpRequest;
 import com.ecsimsw.account.dto.UserInfoResponse;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.error.UserException;
-import com.ecsimsw.domain.User;
-import com.ecsimsw.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Long create(SignUpRequest request) {
@@ -29,8 +27,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserInfoResponse userInfo(String username) {
-        var user = getByUsername(username);
+    public UserInfoResponse userInfo(String userName) {
+        var user = getByUsername(userName);
         return UserInfoResponse.of(user);
     }
 

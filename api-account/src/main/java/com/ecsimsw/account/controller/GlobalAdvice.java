@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -19,7 +20,6 @@ public class GlobalAdvice {
 
     @ExceptionHandler(ApiException.class)
     public ApiResponse<ApiErrorResult> coreException(ApiException e) {
-        System.out.println(e.getMessage());
         return ApiResponse.error(e);
     }
 
@@ -28,10 +28,11 @@ public class GlobalAdvice {
         MethodArgumentTypeMismatchException.class,
         MissingServletRequestPartException.class,
         HttpRequestMethodNotSupportedException.class,
-        HttpMessageNotReadableException.class
+        HttpMessageNotReadableException.class,
+        NoResourceFoundException.class
     })
     public ApiResponse<ApiErrorResult> invalidRequest() {
-        var exception = new ApiException(ErrorType.INVALID_PARAMETER);
+        var exception = new ApiException(ErrorType.INVALID_REQUEST);
         return ApiResponse.error(exception);
     }
 

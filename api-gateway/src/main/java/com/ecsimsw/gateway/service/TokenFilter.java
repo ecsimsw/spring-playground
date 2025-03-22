@@ -12,9 +12,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,18 +30,13 @@ public class TokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             var token = getToken(request).orElseThrow(() -> new AuthException(ErrorType.TOKEN_NOT_FOUND));
-            var loginUser = userDetailFromToken(token);
-            checkBlocked(token, loginUser.getUsername());
-
-            var authToken = new UsernamePasswordAuthenticationToken(
-                "loginUser", null, null
-            );
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            var accessToken = AccessToken.fromToken(TokenConfig.secretKey, token);
+            var roles = authService.roleNames(accessToken.username());
+            checkBlocked(token, accessToken.username());
 
             var requestWrapper = new RequestWrapper(request);
-            requestWrapper.addHeader("X-User-Id", "ecsimsw");
-            requestWrapper.addHeader("X-User-Roles", "roles");
+            requestWrapper.addHeader("X-User-Id", accessToken.username());
+            requestWrapper.addHeader("X-User-Roles", String.join(",", roles));
 
             filterChain.doFilter(requestWrapper, response);
         } catch (Exception e) {
@@ -56,16 +48,6 @@ public class TokenFilter extends OncePerRequestFilter {
         if (blockedTokenRepository.exists(token) || blockedUserRepository.exists(username)) {
             throw new AuthException(ErrorType.USER_NOT_APPROVED_YET);
         }
-    }
-
-    private CustomUserDetail userDetailFromToken(String token) {
-        var accessToken = AccessToken.fromToken(TokenConfig.secretKey, token);
-        var roles = authService.roleNames(accessToken.username());
-        return CustomUserDetail.builder()
-            .username(accessToken.username())
-            .isAdmin(accessToken.isAdmin())
-            .roleNames(roles)
-            .build();
     }
 
     public static Optional<String> getToken(HttpServletRequest request) {

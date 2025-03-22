@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/api/auth/logout")
-    public ApiResponse<Void> logout(@AuthenticationPrincipal UserDetails user, HttpServletRequest request) {
+    public ApiResponse<Void> logout(HttpServletRequest request) {
         getToken(request).ifPresent(authService::blockToken);
         return ApiResponse.success();
     }

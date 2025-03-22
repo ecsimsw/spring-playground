@@ -14,7 +14,7 @@ public enum ErrorType {
     TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, ErrorCode.E40006),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, ErrorCode.E40007),
     FORBIDDEN(HttpStatus.UNAUTHORIZED, ErrorCode.E40008),
-    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, ErrorCode.E40009),
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, ErrorCode.E40009),
     UNHANDLED(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.E50001),
     ;
 

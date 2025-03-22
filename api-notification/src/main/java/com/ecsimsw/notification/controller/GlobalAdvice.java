@@ -30,7 +30,7 @@ public class GlobalAdvice {
         HttpMessageNotReadableException.class
     })
     public ApiResponse<ApiErrorResult> invalidRequest() {
-        var exception = new ApiException(ErrorType.INVALID_PARAMETER);
+        var exception = new ApiException(ErrorType.INVALID_REQUEST);
         return ApiResponse.error(exception);
     }
 

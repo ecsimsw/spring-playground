@@ -4,7 +4,6 @@ version = '1.0.0'
 dependencies {
     // modules
     implementation project(':api-common')
-    implementation project(':domain-user')
     implementation project(':domain-common')
 
     // spring

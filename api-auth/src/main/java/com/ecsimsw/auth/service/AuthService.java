@@ -18,15 +18,16 @@ import java.util.List;
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final UserPasswordRepository userPasswordRepository;
     private final UserRoleRepository userRoleRepository;
     private final BlockedTokenRepository blockedTokenRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
     public LogInResponse issue(String username) {
-        var user = getUserByUsername(username);
-        var tokens = createTokens(user);
+        var userPassword = userPasswordRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+        var userRole = userRoleRepository.findByUserId(userPassword.userId()).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+        var tokens = createTokens(username, userRole.getIsAdmin());
         refreshTokenRepository.save(username, tokens.refreshToken());
         return new LogInResponse(tokens);
     }
@@ -40,38 +41,28 @@ public class AuthService {
         return issue(username);
     }
 
-    public Tokens createTokens(User user) {
+    public Tokens createTokens(String username, boolean isAdmin) {
         return new Tokens(
-            AccessToken.of(user).asJwtToken(TokenConfig.secretKey),
-            RefreshToken.of(user).asJwtToken(TokenConfig.secretKey)
+            new AccessToken(username, isAdmin).asJwtToken(TokenConfig.secretKey),
+            new RefreshToken(username).asJwtToken(TokenConfig.secretKey)
         );
     }
 
-    @Transactional
     public void blockToken(String token) {
         blockedTokenRepository.save(token);
     }
 
-    @Transactional
-    public void blockUser(Long userId) {
-        var user = userRepository.findByIdAndDeletedFalse(userId)
-            .orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
-        blockedUserRepository.save(user.getUsername());
+    public void blockUser(String username) {
+        blockedUserRepository.save(username);
     }
 
     @Transactional(readOnly = true)
     public List<String> roleNames(String username) {
-        var user = getUserByUsername(username);
-        if (user.isAdmin()) {
+        var userPassword = userPasswordRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+        var userRole = userRoleRepository.findByUserId(userPassword.userId()).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+        if (userRole.getIsAdmin()) {
             return List.of("ADMIN");
         }
-        return userRoleRepository.findAllByUserId(user.getId()).stream()
-            .flatMap(role -> role.roleNames().stream())
-            .toList();
-    }
-
-    private User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-            .orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+        return userRole.roleNames();
     }
 }

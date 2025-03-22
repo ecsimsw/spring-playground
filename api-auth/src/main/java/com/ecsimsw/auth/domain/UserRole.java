@@ -1,7 +1,6 @@
-package com.ecsimsw.domain;
+package com.ecsimsw.auth.domain;
 
 import com.ecsimsw.common.domain.RoleType;
-import com.ecsimsw.domain.support.UserRoleConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,20 +16,13 @@ import java.util.Set;
 @Entity
 public class UserRole {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Long id;
-
-    @Column(nullable = false)
     private Long userId;
+
+    private Boolean isAdmin;
 
     @Convert(converter = UserRoleConverter.class)
     private Set<RoleType> roles = new HashSet<>();
-
-    public UserRole(Long userId, Set<RoleType> roles) {
-        this.userId = userId;
-        this.roles = roles;
-    }
 
     public List<String> roleNames() {
         return roles.stream()

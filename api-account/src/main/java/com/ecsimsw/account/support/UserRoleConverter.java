@@ -1,4 +1,4 @@
-package com.ecsimsw.domain.support;
+package com.ecsimsw.account.support;
 
 import com.ecsimsw.common.domain.RoleType;
 import jakarta.persistence.AttributeConverter;

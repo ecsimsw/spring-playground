@@ -3,7 +3,7 @@ version = '1.0.0'
 
 dependencies {
     // spring
-    implementation 'org.springframework:spring-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 tasks.named('test') {
