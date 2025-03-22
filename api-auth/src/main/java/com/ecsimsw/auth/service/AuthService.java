@@ -28,7 +28,7 @@ public class AuthService {
         var user = getUserByUsername(username);
         var tokens = createTokens(user);
         refreshTokenRepository.save(username, tokens.refreshToken());
-        return new LogInResponse(tokens, user.isTempPassword());
+        return new LogInResponse(tokens);
     }
 
     public LogInResponse reissue(String refreshToken) {
