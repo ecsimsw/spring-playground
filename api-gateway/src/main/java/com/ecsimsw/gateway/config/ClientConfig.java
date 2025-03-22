@@ -1,4 +1,4 @@
-package com.ecsimsw.gateway;
+package com.ecsimsw.gateway.config;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;

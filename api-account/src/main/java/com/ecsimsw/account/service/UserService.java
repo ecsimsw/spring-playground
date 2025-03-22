@@ -2,8 +2,8 @@ package com.ecsimsw.account.service;
 
 import com.ecsimsw.account.dto.SignUpRequest;
 import com.ecsimsw.account.dto.UserInfoResponse;
-import com.ecsimsw.domain.error.UserException;
-import com.ecsimsw.domain.error.ErrorType;
+import com.ecsimsw.common.error.ErrorType;
+import com.ecsimsw.common.error.UserException;
 import com.ecsimsw.domain.User;
 import com.ecsimsw.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,6 @@ public class UserService {
             throw new UserException(ErrorType.USER_ALREADY_EXISTS);
         }
         var entity = request.toEntity();
-//        entity.createTempPassword(passwordEncoder);
         userRepository.save(entity);
         return entity.getId();
     }

@@ -1,4 +1,4 @@
-package com.ecsimsw.gateway;
+package com.ecsimsw.gateway.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import java.util.Optional;
 @RestController
 public class RouteController {
 
-    private static final String HOST_NAME = "localhost";
     private static final Map<String, Integer> SERVICE_PORTS = Map.of(
         "account", 8081,
         "user", 8081,
@@ -40,7 +39,8 @@ public class RouteController {
         if (!SERVICE_PORTS.containsKey(service)) {
             return Mono.just(ResponseEntity.status(404).body("Service Not Found")).block();
         }
-        var url = url(service, request.getRequestURI());
+        var port = SERVICE_PORTS.get(service);
+        var url = "http://localhost:"+ port +request.getRequestURI();
         var headers = headers(request);
         return send(method, url, headers, requestBody).block();
     }
@@ -62,11 +62,6 @@ public class RouteController {
             .bodyValue(requestBody)
             .retrieve()
             .toEntity(String.class);
-    }
-
-    private String url(String service, String uri) {
-        var port = SERVICE_PORTS.get(service);
-        return "http://" + HOST_NAME + ":"+ port +uri;
     }
 
     private HashMap<String, String> headers(HttpServletRequest request) {

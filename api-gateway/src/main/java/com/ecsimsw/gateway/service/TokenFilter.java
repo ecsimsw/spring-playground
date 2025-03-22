@@ -32,8 +32,7 @@ public class TokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            var token = getToken(request)
-                .orElseThrow(() -> new AuthException(ErrorType.TOKEN_NOT_FOUND));
+            var token = getToken(request).orElseThrow(() -> new AuthException(ErrorType.TOKEN_NOT_FOUND));
             var loginUser = userDetailFromToken(token);
             checkBlocked(token, loginUser.getUsername());
 
