@@ -19,6 +19,7 @@ public class GlobalAdvice {
 
     @ExceptionHandler(ApiException.class)
     public ApiResponse<ApiErrorResult> coreException(ApiException e) {
+        System.out.println(e.getMessage());
         return ApiResponse.error(e);
     }
 

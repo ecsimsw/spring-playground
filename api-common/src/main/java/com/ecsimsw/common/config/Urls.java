@@ -4,6 +4,7 @@ public class Urls {
 
     // TODO :: 각 모듈에서 허용할 URL을 관리할 수 있는 방법은 없을까.
     public static final String[] PERMIT_URLS = new String[]{
+        "**",
         "/api/user/signup",
         "/api/auth/login",
         "/api/auth/reissue",
