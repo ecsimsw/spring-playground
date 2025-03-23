@@ -2,14 +2,12 @@ package com.ecsimsw.common.service;
 
 import com.ecsimsw.common.support.ClientKeyUtils;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import static com.ecsimsw.common.config.ServiceMesh.SERVICE_PORTS;
+import static com.ecsimsw.common.config.ServiceMesh.GATEWAY;
 
 @Service
 public class InternalCommunicateService {
@@ -23,24 +21,21 @@ public class InternalCommunicateService {
             .build();
     }
 
-    public <T> ResponseEntity<T> request(Class<T> type, HttpMethod method, String path, Object... requestBody) {
-        var serviceName = parseServiceName(path);
-        if (!SERVICE_PORTS.containsKey(serviceName)) {
-            throw new IllegalArgumentException("Service " + serviceName + " not found");
+    public <T> ResponseEntity<T> request(HttpMethod method, String path, Object requestBody, Class<T> type) {
+        try {
+            var url = GATEWAY + path;
+            var headers = new HttpHeaders();
+            headers.set("X-Client-Key", ClientKeyUtils.init());
+            var entity = new HttpEntity<>(requestBody, headers);
+            return restTemplate.exchange(url, method, entity, type);
+        } catch (HttpStatusCodeException ex) {
+            return ResponseEntity.status(ex.getStatusCode())
+                .headers(ex.getResponseHeaders())
+                .body((T) ex.getResponseBodyAsString());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body((T) ("Internal Server Error: " + ex.getMessage()));
         }
-        var port = SERVICE_PORTS.get(serviceName);
-        var url = "http://localhost:" + port + path;
-        var headers = new HttpHeaders();
-        headers.set("X-Client-Key", ClientKeyUtils.init());
-
-        var entity = new HttpEntity<>(requestBody, headers);
-        return restTemplate.exchange(url, method, entity, type);
-    }
-
-    private String parseServiceName(String path) {
-        var indexFrom = path.indexOf("api/") + "api/".length();
-        var indexTo = path.indexOf("/", indexFrom);
-        return path.substring(indexFrom, indexTo);
     }
 }
 

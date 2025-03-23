@@ -16,10 +16,10 @@ public class AuthClient {
     private final InternalCommunicateService internalCommunicateService;
 
     public ResponseEntity<Void> createAuth(AuthCreationRequest request) {
-        return internalCommunicateService.request(Void.class, POST, "/api/auth/user", request);
+        return internalCommunicateService.request(POST, "/api/auth/user", request, Void.class);
     }
 
     public ResponseEntity<Void> updateAuth(AuthUpdateRequest request) {
-        return internalCommunicateService.request(Void.class, PUT, "/api/auth/user", request);
+        return internalCommunicateService.request(PUT, "/api/auth/user", request, Void.class);
     }
 }
