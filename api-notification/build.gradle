@@ -3,7 +3,6 @@ version = '1.0.0'
 
 dependencies {
     implementation project(':api-common')
-    implementation project(':domain-common')
 
     // spring
     implementation 'org.springframework.kafka:spring-kafka:3.3.2'

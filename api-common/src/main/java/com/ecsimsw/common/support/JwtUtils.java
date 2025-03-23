@@ -1,4 +1,4 @@
-package com.ecsimsw.domain.support;
+package com.ecsimsw.common.support;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

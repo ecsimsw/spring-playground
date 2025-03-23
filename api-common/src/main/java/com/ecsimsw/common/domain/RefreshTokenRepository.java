@@ -1,4 +1,4 @@
-package com.ecsimsw.domain;
+package com.ecsimsw.common.domain;
 
 import com.ecsimsw.common.config.TokenConfig;
 import com.github.benmanes.caffeine.cache.Cache;

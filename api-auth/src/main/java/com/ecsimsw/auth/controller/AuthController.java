@@ -7,14 +7,18 @@ import com.ecsimsw.auth.dto.Tokens;
 import com.ecsimsw.auth.service.AuthService;
 import com.ecsimsw.auth.service.CustomUserDetail;
 import com.ecsimsw.common.dto.ApiResponse;
+import com.ecsimsw.common.dto.SignUpRequest;
+import com.ecsimsw.common.support.ClientKeyUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -25,6 +29,15 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
+
+    @PostMapping("/api/auth/user")
+    public ResponseEntity<String> createUser(
+        @RequestBody SignUpRequest request,
+        @RequestHeader("X-Client-Key") String clientKey
+    ) {
+        ClientKeyUtils.validate(clientKey);
+        return ResponseEntity.ok("hi");
+    }
 
     @PostMapping("/api/auth/login")
     public ApiResponse<LogInResponse> login(@RequestBody LogInRequest request) {

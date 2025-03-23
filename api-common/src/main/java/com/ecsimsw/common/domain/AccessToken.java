@@ -1,8 +1,8 @@
-package com.ecsimsw.domain;
+package com.ecsimsw.common.domain;
 
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.domain.support.JwtUtils;
+import com.ecsimsw.common.support.JwtUtils;
 
 public record AccessToken(
     String username,

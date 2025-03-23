@@ -8,6 +8,4 @@ include 'api-notification'
 include 'api-business'
 include 'api-gateway'
 include 'api-auth'
-include 'domain-token'
-include 'domain-common'
 

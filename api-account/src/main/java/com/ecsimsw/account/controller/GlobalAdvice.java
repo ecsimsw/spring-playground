@@ -38,7 +38,7 @@ public class GlobalAdvice {
 
     @ExceptionHandler(Exception.class)
     public ApiResponse<ApiErrorResult> unhandled(Exception e) {
-        e.fillInStackTrace();
+        e.printStackTrace();
         log.error("unhandled : {}", e.getMessage());
         var exception = new ApiException(ErrorType.UNHANDLED);
         return ApiResponse.error(exception);

@@ -1,4 +1,4 @@
-package com.ecsimsw.domain;
+package com.ecsimsw.common.domain;
 
 import com.ecsimsw.common.config.TokenConfig;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -8,17 +8,17 @@ import org.springframework.stereotype.Repository;
 import java.util.concurrent.TimeUnit;
 
 @Repository
-public class BlockedUserRepository {
+public class BlockedTokenRepository {
 
-    private final Cache<String, Object> usernames = Caffeine.newBuilder()
+    private final Cache<String, Object> tokens = Caffeine.newBuilder()
         .expireAfterWrite(TokenConfig.REFRESH_TOKEN_EXPIRED_TIME, TimeUnit.MICROSECONDS)
         .build();
 
-    public void save(String username) {
-        usernames.put(username, null);
+    public void save(String token) {
+        tokens.put(token, null);
     }
 
-    public boolean exists(String username) {
-        return usernames.getIfPresent(username) != null;
+    public boolean exists(String token) {
+        return tokens.getIfPresent(token) != null;
     }
 }

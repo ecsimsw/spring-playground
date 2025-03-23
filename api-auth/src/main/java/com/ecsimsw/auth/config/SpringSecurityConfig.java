@@ -31,39 +31,30 @@ import static com.ecsimsw.common.config.Urls.*;
 @EnableMethodSecurity
 public class SpringSecurityConfig {
 
-//    private final TokenFilter tokenFilter;
     private final CustomUserDetailService userDetailService;
-//    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
-//    private final CustomAccessDeniedHandler accessDeniedHandler;
-//
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//            .csrf(AbstractHttpConfigurer::disable)
-//            .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
-//            .authorizeHttpRequests((auth) -> auth
-//                .requestMatchers(PERMIT_URLS).permitAll()
-//                .requestMatchers(ADMIN_URLS).hasRole("ADMIN")
-//                .anyRequest().authenticated())
-//            .exceptionHandling(exception -> exception
-//                .authenticationEntryPoint(authenticationEntryPoint)
-//                .accessDeniedHandler(accessDeniedHandler))
-//            .sessionManagement((session) -> session
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//        http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//    }
 
-//    private CorsConfigurationSource corsConfigurationSource() {
-//        return request -> {
-//            CorsConfiguration config = new CorsConfiguration();
-//            config.setAllowedHeaders(Collections.singletonList("*"));
-//            config.setAllowedMethods(Collections.singletonList("*"));
-//            config.setAllowedOriginPatterns(Collections.singletonList("*"));
-//            config.setAllowCredentials(true);
-//            return config;
-//        };
-//    }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests((auth) -> auth
+                .requestMatchers("**").permitAll()
+                .requestMatchers(ADMIN_URLS).hasRole("ADMIN")
+                .anyRequest().authenticated());
+        return http.build();
+    }
+
+    private CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedHeaders(Collections.singletonList("*"));
+            config.setAllowedMethods(Collections.singletonList("*"));
+            config.setAllowedOriginPatterns(Collections.singletonList("*"));
+            config.setAllowCredentials(true);
+            return config;
+        };
+    }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {

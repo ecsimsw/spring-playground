@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,19 +15,14 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
+
+import static com.ecsimsw.common.config.ServiceMesh.SERVICE_PORTS;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class RouteController {
-
-    private static final Map<String, Integer> SERVICE_PORTS = Map.of(
-        "account", 8081,
-        "user", 8081,
-        "auth", 8081
-    );
 
     private final WebClient webClient;
 
