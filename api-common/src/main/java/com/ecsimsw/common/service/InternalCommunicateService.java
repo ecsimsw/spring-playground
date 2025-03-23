@@ -23,7 +23,7 @@ public class InternalCommunicateService {
             .build();
     }
 
-    public <T> ResponseEntity<T> request(HttpMethod method, String path, Object requestBody, Class<T> type) {
+    public <T> ResponseEntity<T> request(Class<T> type, HttpMethod method, String path, Object... requestBody) {
         var serviceName = parseServiceName(path);
         if (!SERVICE_PORTS.containsKey(serviceName)) {
             throw new IllegalArgumentException("Service " + serviceName + " not found");

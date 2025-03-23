@@ -1,6 +1,8 @@
 package com.ecsimsw.common.support;
 
 import com.ecsimsw.common.dto.AuthUser;
+import com.ecsimsw.common.error.AuthException;
+import com.ecsimsw.common.error.ErrorType;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -20,8 +22,11 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
         NativeWebRequest webRequest,
         org.springframework.web.bind.support.WebDataBinderFactory binderFactory
     ) {
-        String username = webRequest.getHeader("X-User-Id");
-        String[] roles = webRequest.getHeader("X-User-Roles").split(",");
-        return new AuthUser(username, roles);
+        var username = webRequest.getHeader("X-User-Id");
+        var roles = webRequest.getHeader("X-User-Roles");
+        if(username == null || roles == null) {
+            throw new AuthException(ErrorType.FAILED_TO_AUTHENTICATE);
+        }
+        return new AuthUser(username, roles.split(","));
     }
 }

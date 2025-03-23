@@ -1,7 +1,7 @@
 package com.ecsimsw.account.dto;
 
 import com.ecsimsw.account.domain.User;
-import com.ecsimsw.common.dto.AuthCreationRequest;
+import com.ecsimsw.common.service.dto.AuthCreationRequest;
 
 public record SignUpRequest(
     String username,

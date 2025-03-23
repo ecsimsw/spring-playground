@@ -31,6 +31,13 @@ public class UserPassword {
         this.password = encoder.encode(purePassword);
     }
 
+    public void updatePassword(PasswordEncoder encoder, String purePassword) {
+        if (purePassword.length() < 5 || purePassword.length() > 20) {
+            throw new UserException(ErrorType.INVALID_PASSWORD);
+        }
+        this.password = encoder.encode(purePassword);
+    }
+
     public Long userId() {
         return userId;
     }

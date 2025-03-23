@@ -15,7 +15,6 @@ public class UserController {
 
     private final UserService userService;
 
-
     @PostMapping("/api/user/signup")
     public ApiResponse<Long> user(@RequestBody SignUpRequest request) {
         var id = userService.create(request);

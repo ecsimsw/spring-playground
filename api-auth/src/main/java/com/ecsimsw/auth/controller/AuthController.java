@@ -8,13 +8,15 @@ import com.ecsimsw.auth.service.AuthService;
 import com.ecsimsw.auth.service.CustomUserDetail;
 import com.ecsimsw.common.annotation.InternalHandler;
 import com.ecsimsw.common.dto.ApiResponse;
-import com.ecsimsw.common.dto.AuthCreationRequest;
+import com.ecsimsw.common.service.dto.AuthCreationRequest;
+import com.ecsimsw.common.service.dto.AuthUpdateRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +33,13 @@ public class AuthController {
     @PostMapping("/api/auth/user")
     public ResponseEntity<Void> createUser(@RequestBody AuthCreationRequest request) {
         authService.createUserAuth(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @InternalHandler
+    @PutMapping("/api/auth/user")
+    public ResponseEntity<Void> updateUser(@RequestBody AuthUpdateRequest request) {
+        authService.updateUserAuth(request);
         return ResponseEntity.ok().build();
     }
 
