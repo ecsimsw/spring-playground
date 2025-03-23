@@ -23,7 +23,8 @@ public class InternalCommunicateService {
             .build();
     }
 
-    public <T> ResponseEntity<T> request(String serviceName, HttpMethod method, String path, Object requestBody, Class<T> type) {
+    public <T> ResponseEntity<T> request(HttpMethod method, String path, Object requestBody, Class<T> type) {
+        var serviceName = parseServiceName(path);
         if (!SERVICE_PORTS.containsKey(serviceName)) {
             throw new IllegalArgumentException("Service " + serviceName + " not found");
         }
@@ -34,6 +35,12 @@ public class InternalCommunicateService {
 
         var entity = new HttpEntity<>(requestBody, headers);
         return restTemplate.exchange(url, method, entity, type);
+    }
+
+    private String parseServiceName(String path) {
+        var indexFrom = path.indexOf("api/") + "api/".length();
+        var indexTo = path.indexOf("/", indexFrom);
+        return path.substring(indexFrom, indexTo);
     }
 }
 

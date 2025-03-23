@@ -8,9 +8,11 @@ import com.ecsimsw.common.config.TokenConfig;
 import com.ecsimsw.common.domain.BlockedTokenRepository;
 import com.ecsimsw.common.domain.BlockedUserRepository;
 import com.ecsimsw.common.domain.RefreshTokenRepository;
+import com.ecsimsw.common.dto.AuthCreationRequest;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ public class AuthService {
     private final BlockedTokenRepository blockedTokenRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public LogInResponse issue(String username) {
         var userPassword = userPasswordRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
@@ -66,5 +69,10 @@ public class AuthService {
             return List.of("ADMIN");
         }
         return userRole.roleNames();
+    }
+
+    public void createUserAuth(AuthCreationRequest request) {
+        var userPassword = new UserPassword(passwordEncoder, request.userId(), request.purePassword(), request.purePassword());
+        userPasswordRepository.save(userPassword);
     }
 }

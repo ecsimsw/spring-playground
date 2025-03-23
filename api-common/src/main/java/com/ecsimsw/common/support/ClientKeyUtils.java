@@ -9,12 +9,10 @@ public class ClientKeyUtils {
         return AESUtils.encrypt(SECRET, String.valueOf(now));
     }
 
-    public static void validate(String timeKey) {
+    public static boolean isValid(String timeKey, int validTimeMs) {
         var decrypted = AESUtils.decrypt(SECRET, timeKey);
         var publishedAt = Long.parseLong(decrypted);
         var now = System.currentTimeMillis();
-        if(now - publishedAt > 30_000) {
-            throw new IllegalArgumentException("Invalid key: " + timeKey);
-        }
+        return now - publishedAt <= validTimeMs;
     }
 }
