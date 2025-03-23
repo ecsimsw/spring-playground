@@ -44,6 +44,8 @@ public class RouteController {
 
     private Mono<ResponseEntity<String>> send(HttpMethod method, String url, HashMap<String, String> headers, Optional<Object> requestBody) {
         log.info("Request url : {}", url);
+        log.info("Request headers : {}", headers);
+        log.info("Request body : {}", requestBody);
         return webClient
             .method(method)
             .uri(url)

@@ -29,20 +29,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
 
-    @InternalHandler
-    @PostMapping("/api/auth/user")
-    public ResponseEntity<Void> createUser(@RequestBody AuthCreationRequest request) {
-        authService.createUserAuth(request);
-        return ResponseEntity.ok().build();
-    }
-
-    @InternalHandler
-    @PutMapping("/api/auth/user")
-    public ResponseEntity<Void> updateUser(@RequestBody AuthUpdateRequest request) {
-        authService.updateUserAuth(request);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/api/auth/login")
     public ApiResponse<LogInResponse> login(@RequestBody LogInRequest request) {
         var authentication = authenticationManager.authenticate(

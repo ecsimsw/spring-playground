@@ -1,9 +1,7 @@
 package com.ecsimsw.auth.config;
-//import com.ecsimsw.auth.controller.CustomAccessDeniedHandler;
-//import com.ecsimsw.auth.controller.CustomAuthenticationEntryPoint;
+
 import com.ecsimsw.auth.service.CustomAuthenticationProvider;
 import com.ecsimsw.auth.service.CustomUserDetailService;
-//import com.ecsimsw.auth.service.TokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,17 +12,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
 
-import static com.ecsimsw.common.config.Urls.*;
+import static com.ecsimsw.common.config.Urls.CONTENT_URLS;
 
 @RequiredArgsConstructor
 @Configuration
@@ -40,7 +36,6 @@ public class SpringSecurityConfig {
             .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests((auth) -> auth
                 .requestMatchers("**").permitAll()
-                .requestMatchers(ADMIN_URLS).hasRole("ADMIN")
                 .anyRequest().authenticated());
         return http.build();
     }
