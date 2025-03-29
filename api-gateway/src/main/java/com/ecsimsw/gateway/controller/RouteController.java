@@ -1,5 +1,6 @@
 package com.ecsimsw.gateway.controller;
 
+import com.ecsimsw.gateway.service.RouteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,14 +18,13 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static com.ecsimsw.common.config.ServiceMesh.SERVICE_PORTS;
-
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class RouteController {
 
     private final WebClient webClient;
+    private final RouteService routeService;
 
     @RequestMapping("/api/{service}/**")
     public Mono<ResponseEntity<String>> routeRequest(
@@ -33,11 +33,9 @@ public class RouteController {
         HttpServletRequest request,
         HttpMethod method
     ) {
-        if (!SERVICE_PORTS.containsKey(service)) {
-            return Mono.just(ResponseEntity.status(404).body("Service Not Found"));
-        }
-        var port = SERVICE_PORTS.get(service);
-        var url = "http://localhost:" + port + request.getRequestURI();
+        var endPoint = routeService.getEndPoint(service);
+        var url = "http://" + endPoint.getHostName() + ":" + endPoint.getPort() + request.getRequestURI();
+        log.info("Request url : {}", url);
         var headers = headers(request);
         return send(method, url, headers, requestBody);
     }

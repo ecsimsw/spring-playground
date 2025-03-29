@@ -6,17 +6,12 @@ import com.ecsimsw.auth.dto.ReissueRequest;
 import com.ecsimsw.auth.dto.Tokens;
 import com.ecsimsw.auth.service.AuthService;
 import com.ecsimsw.auth.service.CustomUserDetail;
-import com.ecsimsw.common.annotation.InternalHandler;
 import com.ecsimsw.common.dto.ApiResponse;
-import com.ecsimsw.common.service.dto.AuthCreationRequest;
-import com.ecsimsw.common.service.dto.AuthUpdateRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +23,14 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
+
+    private static Optional<String> getToken(HttpServletRequest request) {
+        var authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return Optional.empty();
+        }
+        return Optional.of(authHeader.substring("Bearer ".length()));
+    }
 
     @PostMapping("/api/auth/login")
     public ApiResponse<LogInResponse> login(@RequestBody LogInRequest request) {
@@ -49,13 +52,5 @@ public class AuthController {
     public ApiResponse<Void> logout(HttpServletRequest request) {
         getToken(request).ifPresent(authService::blockToken);
         return ApiResponse.success();
-    }
-
-    private static Optional<String> getToken(HttpServletRequest request) {
-        var authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return Optional.empty();
-        }
-        return Optional.of(authHeader.substring("Bearer ".length()));
     }
 }
