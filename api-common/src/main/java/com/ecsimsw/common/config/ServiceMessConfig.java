@@ -34,10 +34,9 @@ public class ServiceMessConfig {
             return;
         }
         var result = gatewayClient.registerService(service, port);
-        System.out.println(result.getStatusCode());
-//        if(result.getStatusCode() != HttpStatus.OK) {
-//            throw new IllegalArgumentException("Failed to register service " + serviceName);
-//        }
+        if(result.getStatusCode() != HttpStatus.OK) {
+            throw new IllegalArgumentException("Failed to register service " + serviceName);
+        }
         log.info("try register service : {}", service);
     }
 
