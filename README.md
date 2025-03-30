@@ -6,6 +6,10 @@
 - 서비스 별 라우팅 경로를 갖고 있는 중간상을 구현하여 스케일 아웃에도 대응하고 직접 상대 포트를 몰라도 되게 만들자.
 - 참고로 내부 서비스간 통신은 요청 시간이 암호화된 코드를 공유해서 복호화가 안되거나, 일정 시간 이상이면 응답하지 않는다.
 
+- [RouteService](https://github.com/ecsimsw/my-spring-playground/blob/main/api-gateway/src/main/java/com/ecsimsw/gateway/service/RouteService.java)
+- [ServiceMeshConfig](https://github.com/ecsimsw/my-spring-playground/blob/main/api-common/src/main/java/com/ecsimsw/common/config/ServiceMessConfig.java)
+- [RouteController](https://github.com/ecsimsw/my-spring-playground/blob/main/api-gateway/src/main/java/com/ecsimsw/gateway/controller/RouteController.java)
+
 #### 사용 시나리오
 ```
 1. 각 프로젝트 application.properties에 service.name, server.port, 연결할 gateway 주소 선언한다.
