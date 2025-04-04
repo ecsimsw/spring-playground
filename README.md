@@ -1,11 +1,32 @@
-## ecsimsw spring playground
+# Playground
 
-### 1. 설 연휴 동안 Spring security 연습
+## 2. Service discovery 만들기
+- 내부 통신할 때, 지금은 서비스별 port를 기준으로 목적지 주소를 찾는다.
+- 이 경우는 스케일 아웃에 대비할 수 없고, Endpoint를 직접 알아야 해서 의존도 크다.
+- 서비스 별 라우팅 경로를 갖고 있는 중간상을 구현하여 스케일 아웃에도 대응하고 직접 상대 포트를 몰라도 되게 만들자.
+- 참고로 내부 서비스간 통신은 요청 시간이 암호화된 코드를 공유해서 복호화가 안되거나, 일정 시간 이상이면 응답하지 않는다.
+- [RouteService](https://github.com/ecsimsw/my-spring-playground/blob/main/api-gateway/src/main/java/com/ecsimsw/gateway/service/RouteService.java)
+- [RouteController](https://github.com/ecsimsw/my-spring-playground/blob/main/api-gateway/src/main/java/com/ecsimsw/gateway/controller/RouteController.java)
+
+#### 사용 시나리오
 ```
+1. 각 프로젝트 application.properties에 service.name, server.port, 연결할 gateway 주소 선언한다.
+2. 라우터에선 user에 등록된 엔드포인트 리스트를 읽고 목록 중 하나로 요청, 로드 밸런싱한다.
+3. 내부 통신에 단순 서비스 명만 정의하는 식으로 통신 가능해지고, 서비스 간 직접 의존이 없어짐에 따라 동적 스케일 아웃이 가능해진다.
+```
+
+#### 서비스 엔드포인트 관리
+```
+1. 애플리케이션이 뜰 때 본인의 서비스 정보, 포트 정보를 Gateway 서버에 알린다.
+2. Gateway 서버는 서비스별 주소와 포트 정보 리스트를 관리한다.
+3. 서비스 별 통신에 Gateway에 서비스 정보만으로 전달이 가능하다.
+4. 애플리케이션이 다운될 때 이를 Gateway 서버에 알려 리스트에서 제거한다.
+```
+
+## 1. Spring security 연습
 - 회사에서 가장 분석하지 못한 코드가 Auth 였고, 이번에 앱의 SDK 버전에 따라 로그인 처리를 달리해야 하는 작업이 할당되었다.
 - 설 연휴동안 이참에 Spring security로 가상 요구 사항 개발해보기!
 - 아래는 내 코드 기준
-```
 
 #### 인증 처리
 
