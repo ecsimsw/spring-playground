@@ -7,8 +7,10 @@ import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.account.dto.SignUpRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class UserController {
@@ -17,6 +19,7 @@ public class UserController {
 
     @PostMapping("/api/user/signup")
     public ApiResponse<Long> user(@RequestBody SignUpRequest request) {
+        log.info("Create user {}", request.username());
         var id = userService.create(request);
         return ApiResponse.success(id);
     }
