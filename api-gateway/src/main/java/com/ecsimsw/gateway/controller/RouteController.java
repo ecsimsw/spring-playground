@@ -45,15 +45,17 @@ public class RouteController {
         if (!queryString.isBlank()) {
             url += "?" + queryString;
         }
-        log.info("Request url : {}", url);
         var headers = headers(request);
         return send(method, url, headers, requestBody);
     }
 
     private Mono<ResponseEntity<String>> send(HttpMethod method, String url, HashMap<String, String> headers, Optional<Object> requestBody) {
-        log.info("Request url : {}", url);
-        log.info("Request headers : {}", headers);
-        log.info("Request body : {}", requestBody);
+        log.info(
+            "Request url : {}\n" +
+            "Request headers : {}\n" +
+            "Request body : {}",
+            url, headers, requestBody
+        );
         return webClient
             .method(method)
             .uri(url)

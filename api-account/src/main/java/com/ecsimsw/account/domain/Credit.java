@@ -2,6 +2,7 @@ package com.ecsimsw.account.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,17 +13,17 @@ public class Credit {
 
     @Id
     private Long uid;
-    private Long value;
+    private Long creditValue;
 
-    public Credit(Long uid, Long value) {
-        if (value < 0) {
+    public Credit(Long uid, Long creditValue) {
+        if (creditValue < 0) {
             throw new IllegalArgumentException("Value cannot be negative");
         }
         this.uid = uid;
-        this.value = value;
+        this.creditValue = creditValue;
     }
 
     public void add(Long addition) {
-        this.value += addition;
+        this.creditValue += addition;
     }
 }

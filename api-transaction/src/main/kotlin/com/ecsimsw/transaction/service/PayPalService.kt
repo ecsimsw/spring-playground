@@ -1,15 +1,19 @@
 package com.ecsimsw.transaction.service
 
+import com.ecsimsw.common.client.UserClient
 import com.ecsimsw.transaction.dto.TransactionMetaData
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.paypal.api.payments.*
 import com.paypal.base.rest.APIContext
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
 @Service
 class PayPalService(
     private val apiContext: APIContext,
-    private val objectMapper: ObjectMapper
+    private val userClient: UserClient,
+    private val objectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 ) {
 
     fun createPayment(
@@ -38,7 +42,21 @@ class PayPalService(
             ?: throw IllegalArgumentException("approval_url not found in payment links")
     }
 
-    fun executePayment(paymentId: String, payerId: String): Payment {
+    fun approve(paymentId: String, payerId: String): Payment {
+        val payment = Payment.get(apiContext, paymentId)
+        for (transaction in payment.transactions) {
+            val metaData = objectMapper.readValue(transaction.custom, TransactionMetaData::class.java)
+            val creditClientResponse = userClient.addCredit(metaData.username, metaData.amount)
+            println(creditClientResponse.statusCode)
+            println(creditClientResponse.body)
+            if(creditClientResponse.statusCode != HttpStatus.OK) {
+                throw IllegalArgumentException("Failed to add credit")
+            }
+        }
+        return executePayPal(paymentId, payerId)
+    }
+
+    private fun executePayPal(paymentId: String, payerId: String): Payment {
         val payment = Payment().apply {
             this.id = paymentId
         }

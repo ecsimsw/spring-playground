@@ -30,10 +30,7 @@ public class InternalCommunicateService {
     public <T> ResponseEntity<T> request(HttpMethod method, String path, Object requestBody, Class<T> type) {
         try {
             var url = gateway + path;
-            var headers = new HttpHeaders();
-            headers.set("X-Client-Key", ClientKeyUtils.init());
-            var entity = new HttpEntity<>(requestBody, headers);
-            return restTemplate.exchange(url, method, entity, type);
+            return restTemplate.exchange(url, method, httpEntity(requestBody), type);
         } catch (HttpStatusCodeException ex) {
             return ResponseEntity.status(ex.getStatusCode())
                 .headers(ex.getResponseHeaders())
@@ -42,6 +39,16 @@ public class InternalCommunicateService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body((T) ("Internal Server Error: " + ex.getMessage()));
         }
+    }
+
+    private static HttpEntity<Object> httpEntity(Object requestBody) {
+        var headers = new HttpHeaders();
+        headers.set("X-Client-Key", ClientKeyUtils.init());
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+        if(requestBody != null) {
+            return new HttpEntity<>(requestBody, headers);
+        }
+        return new HttpEntity<>(headers);
     }
 }
 

@@ -13,7 +13,7 @@ import java.net.InetSocketAddress;
 
 @RequiredArgsConstructor
 @RestController
-public class ServiceMeshController {
+public class ServiceDiscoveryController {
 
     private final RouteService routeService;
 

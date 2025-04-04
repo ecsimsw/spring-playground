@@ -16,7 +16,7 @@ class PayPalController(
 ) {
 
     @PostMapping("/api/transaction/pay")
-    fun payment(@RequestParam("sum") amount: Int, user: AuthUser): String {
+    fun payment(@RequestParam("sum") amount: Long, user: AuthUser): String {
         val approvalUrl = payPalService.createPayment(
             TransactionMetaData(user.username, amount),
             SUCCESS_WEB_HOOK_URL,
@@ -30,11 +30,13 @@ class PayPalController(
         @RequestParam("paymentId") paymentId: String,
         @RequestParam("PayerID") payerId: String
     ): String {
-        val payment = payPalService.executePayment(paymentId, payerId)
-        if (payment.state == "approved") {
+        try {
+            payPalService.approve(paymentId, payerId)
             return "Payment successful"
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return "Payment failed"
         }
-        return "Payment failed"
     }
 
     @GetMapping("/api/transaction/cancel")

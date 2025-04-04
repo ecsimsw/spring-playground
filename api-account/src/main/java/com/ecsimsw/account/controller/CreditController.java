@@ -17,8 +17,8 @@ public class CreditController {
 
     @InternalHandler
     @PostMapping("/api/user/credit")
-    public ApiResponse<Void> me(AuthUser user, @RequestParam Long addition) {
-        creditService.addCredit(user.username(), addition);
+    public ApiResponse<Void> addCredit(@RequestParam String username, @RequestParam Long addition) {
+        creditService.addCredit(username, addition);
         return ApiResponse.success();
     }
 }

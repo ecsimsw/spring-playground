@@ -11,7 +11,12 @@ dependencies {
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // paypal sdk
     implementation 'com.paypal.sdk:rest-api-sdk:1.14.0'
+
+    // jackson
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8'
 
     // db
     runtimeOnly 'com.h2database:h2'
