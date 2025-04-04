@@ -15,8 +15,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,6 +41,10 @@ public class RouteController {
     ) {
         var endPoint = routeService.getEndPoint(service);
         var url = "http://" + endPoint.getHostName() + ":" + endPoint.getPort() + request.getRequestURI();
+        var queryString = buildQueryString(request);
+        if (!queryString.isBlank()) {
+            url += "?" + queryString;
+        }
         log.info("Request url : {}", url);
         var headers = headers(request);
         return send(method, url, headers, requestBody);
@@ -65,5 +75,22 @@ public class RouteController {
             headers.put(headerName, request.getHeader(headerName));
         }
         return headers;
+    }
+
+    private String buildQueryString(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap(); // 쿼리 파라미터 추출
+        return params.entrySet().stream()
+            .map(entry -> {
+                String key = entry.getKey();
+                String[] values = entry.getValue();
+                return Arrays.stream(values)
+                    .map(value -> encodeParam(key) + "=" + encodeParam(value)) // URL 인코딩 적용
+                    .collect(Collectors.joining("&")); // 같은 key의 여러 값 처리
+            })
+            .collect(Collectors.joining("&"));
+    }
+
+    private String encodeParam(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 }

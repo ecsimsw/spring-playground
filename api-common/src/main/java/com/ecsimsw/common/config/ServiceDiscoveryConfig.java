@@ -8,16 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class ServiceMessConfig {
+public class ServiceDiscoveryConfig {
 
     private final GatewayClient gatewayClient;
 

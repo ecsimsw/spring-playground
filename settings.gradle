@@ -5,7 +5,7 @@ rootProject.name = 'ecsimsw-skeleton'
 include 'api-common'
 include 'api-account'
 include 'api-notification'
-include 'api-business'
+include 'api-transaction'
 include 'api-gateway'
 include 'api-auth'
 

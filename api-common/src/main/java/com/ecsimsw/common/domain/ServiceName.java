@@ -6,7 +6,7 @@ public enum ServiceName {
     GATEWAY,
     USER,
     AUTH,
-    BUSINESS,
+    TRANSACTION,
     NOTIFICATION;
 
     public static ServiceName resolve(String name) {
