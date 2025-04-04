@@ -19,11 +19,12 @@ public class MDCFilter implements Filter {
         try {
             var httpRequest = (HttpServletRequest) request;
             var traceId = httpRequest.getHeader(TRACE_ID_HEADER);
-            if(traceId == null) {
-                MDC.put(TRACE_ID, UUID.randomUUID().toString());
+            if(traceId != null) {
+                MDC.put(TRACE_ID, traceId);
                 chain.doFilter(request, response);
             } else {
-                MDC.put(TRACE_ID, traceId);
+                var newTraceId = UUID.randomUUID().toString();
+                MDC.put(TRACE_ID, newTraceId);
                 chain.doFilter(request, response);
             }
         } finally {

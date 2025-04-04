@@ -6,12 +6,13 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetSocketAddress;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
 public class RouteService {
 
-    private static final Map<ServiceName, List<InetSocketAddress>> SERVICE_ENDPOINTS = new HashMap<>();
+    private static final ConcurrentHashMap<ServiceName, List<InetSocketAddress>> SERVICE_ENDPOINTS = new ConcurrentHashMap<>();
     private static final Random RANDOM = new Random();
 
     public void register(String name, InetSocketAddress address) {
@@ -19,9 +20,7 @@ public class RouteService {
             throw new IllegalArgumentException("Address " + address + " already registered");
         }
         var serviceName = ServiceName.resolve(name);
-        var endpoints = SERVICE_ENDPOINTS.getOrDefault(serviceName, new ArrayList<>());
-        endpoints.add(address);
-        SERVICE_ENDPOINTS.put(serviceName, endpoints);
+        SERVICE_ENDPOINTS.computeIfAbsent(serviceName, k -> new ArrayList<>()).add(address);
         log.info("Registered service " + serviceName + " at " + address.getHostName() + ":" + address.getPort());
     }
 
