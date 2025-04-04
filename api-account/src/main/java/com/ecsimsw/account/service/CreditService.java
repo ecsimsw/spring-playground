@@ -22,4 +22,13 @@ public class CreditService {
         credit.add(value);
         creditRepository.save(credit);
     }
+
+    @Transactional
+    public void rollbackAddition(String username, Long addition) {
+        var user = userRepository.findByUsername(username).orElseThrow();
+        var credit = creditRepository.findByUidWithLock(user.getId())
+            .orElse(new Credit(user.getId(), 0L));
+        credit.subtract(addition);
+        creditRepository.save(credit);
+    }
 }

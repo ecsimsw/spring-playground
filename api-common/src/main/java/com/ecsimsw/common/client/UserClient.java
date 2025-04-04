@@ -16,4 +16,8 @@ public class UserClient {
     public ResponseEntity<Void> addCredit(String username, Long addition) {
         return internalCommunicateService.request(POST, "/api/user/credit?addition=" + addition + "&username=" + username, Void.class);
     }
+
+    public ResponseEntity<Void> rollbackCreditAddition(String username, Long addition) {
+        return internalCommunicateService.request(POST, "/api/user/credit/rollback?addition=" + addition + "&username=" + username, Void.class);
+    }
 }

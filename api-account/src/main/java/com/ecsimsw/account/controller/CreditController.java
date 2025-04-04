@@ -17,8 +17,15 @@ public class CreditController {
 
     @InternalHandler
     @PostMapping("/api/user/credit")
-    public ApiResponse<Void> addCredit(@RequestParam String username, @RequestParam Long addition) {
+    public ApiResponse<Void> add(@RequestParam String username, @RequestParam Long addition) {
         creditService.addCredit(username, addition);
+        return ApiResponse.success();
+    }
+
+    @InternalHandler
+    @PostMapping("/api/user/credit/rollback")
+    public ApiResponse<Void> rollbackAddition(@RequestParam String username, @RequestParam Long addition) {
+        creditService.rollbackAddition(username, addition);
         return ApiResponse.success();
     }
 }

@@ -26,4 +26,11 @@ public class Credit {
     public void add(Long addition) {
         this.creditValue += addition;
     }
+
+    public void subtract(Long addition) {
+        this.creditValue -= addition;
+        if(this.creditValue < 0) {
+            this.creditValue = 0L;
+        }
+    }
 }

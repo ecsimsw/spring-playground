@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service
 class PayPalService(
     private val apiContext: APIContext,
     private val userClient: UserClient,
+    private val auditService: AuditService,
     private val objectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 ) {
 
@@ -21,42 +22,55 @@ class PayPalService(
         successUrl: String,
         cancelUrl: String
     ): String {
-        val transaction = Transaction().apply {
-            this.amount = Amount("USD", metaData.amount.toString())
-            this.custom = objectMapper.writeValueAsString(metaData)
-        }
         val payer = Payer().apply {
             this.paymentMethod = "paypal"
             this.payerInfo = PayerInfo()
         }
         val payment = Payment("sale", payer).apply {
+            val transaction = Transaction().apply {
+                amount = Amount("USD", metaData.amount.toString())
+                custom = objectMapper.writeValueAsString(metaData)
+            }
             this.setTransactions(listOf(transaction))
-            this.redirectUrls = RedirectUrls().apply {
+            redirectUrls = RedirectUrls().apply {
                 this.returnUrl = successUrl
                 this.cancelUrl = cancelUrl
             }
         }
-        return payment.create(apiContext).links
+        val paymentUrl = payment.create(apiContext).links
             .firstOrNull { it.rel.equals("approval_url") }
             ?.href
             ?: throw IllegalArgumentException("approval_url not found in payment links")
+
+        auditService.requested(metaData)
+        return paymentUrl
     }
 
-    fun approve(paymentId: String, payerId: String): Payment {
-        val payment = Payment.get(apiContext, paymentId)
-        for (transaction in payment.transactions) {
-            val metaData = objectMapper.readValue(transaction.custom, TransactionMetaData::class.java)
-            val creditClientResponse = userClient.addCredit(metaData.username, metaData.amount)
-            println(creditClientResponse.statusCode)
-            println(creditClientResponse.body)
-            if(creditClientResponse.statusCode != HttpStatus.OK) {
-                throw IllegalArgumentException("Failed to add credit")
-            }
+    fun approve(paymentId: String, payerId: String) {
+        val getPayment = Payment.get(apiContext, paymentId)
+        val transaction = getPayment.transactions.first()
+        val metaData = objectMapper.readValue(transaction.custom, TransactionMetaData::class.java)
+        addCredit(metaData)
+
+        val executePayment = executePayment(paymentId, payerId)
+        if (isFailed(executePayment)) {
+            auditService.failed(metaData, executePayment.failureReason)
+            userClient.rollbackCreditAddition(metaData.username, metaData.amount)
+            throw IllegalArgumentException("Failed to payment")
         }
-        return executePayPal(paymentId, payerId)
+        auditService.approved(metaData)
     }
 
-    private fun executePayPal(paymentId: String, payerId: String): Payment {
+    private fun addCredit(metaData: TransactionMetaData) {
+        val creditAddedResponse = userClient.addCredit(metaData.username, metaData.amount)
+        if (creditAddedResponse.statusCode != HttpStatus.OK) {
+            auditService.failed(metaData, "Failed to add credit")
+            throw IllegalArgumentException("Failed to add credit")
+        }
+        auditService.creditAdded(metaData)
+    }
+
+    private fun executePayment(paymentId: String, payerId: String): Payment {
         val payment = Payment().apply {
             this.id = paymentId
         }
@@ -64,5 +78,9 @@ class PayPalService(
             this.payerId = payerId
         }
         return payment.execute(apiContext, paymentExecution)
+    }
+
+    private fun isFailed(payment: Payment): Boolean {
+        return payment.state != "approved";
     }
 }
