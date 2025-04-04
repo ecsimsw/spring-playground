@@ -7,12 +7,10 @@ import java.time.LocalDateTime
 
 @Getter
 @Entity
-class Audit @JvmOverloads constructor(
+class Audit(
     private val transactionId: String = "",
     @field:Convert(converter = TransactionStatusConverter::class)
     private val status: TransactionStatus = TransactionStatus.NONE,
-    private val username: String = "",
-    private val amount: Long = 0L,
     private val message: String = ""
 ) {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
