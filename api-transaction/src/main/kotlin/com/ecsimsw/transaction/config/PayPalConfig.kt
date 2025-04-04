@@ -35,8 +35,8 @@ open class PayPalConfig {
     @Bean
     @Throws(PayPalRESTException::class)
     open fun apiContext(): APIContext {
-        val context = APIContext(oAuthTokenCredential().accessToken)
-        context.setConfigurationMap(paypalSdkConfig())
-        return context
+        return APIContext(oAuthTokenCredential().accessToken).apply {
+            configurationMap = paypalSdkConfig()
+        }
     }
 }

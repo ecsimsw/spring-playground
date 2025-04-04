@@ -1,6 +1,7 @@
 package com.ecsimsw.auth.service;
 
 import com.ecsimsw.auth.domain.UserPasswordRepository;
+import com.ecsimsw.auth.domain.UserRole;
 import com.ecsimsw.auth.domain.UserRoleRepository;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;

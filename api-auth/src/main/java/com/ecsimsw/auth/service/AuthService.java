@@ -9,6 +9,7 @@ import com.ecsimsw.common.domain.BlockedTokenRepository;
 import com.ecsimsw.common.domain.BlockedUserRepository;
 import com.ecsimsw.common.domain.RefreshTokenRepository;
 import com.ecsimsw.common.client.dto.AuthCreationRequest;
+import com.ecsimsw.common.domain.RoleType;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.client.dto.AuthUpdateRequest;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -72,9 +74,12 @@ public class AuthService {
         return userRole.roleNames();
     }
 
+    @Transactional
     public void createUserAuth(AuthCreationRequest request) {
-        var userPassword = new UserPassword(passwordEncoder, request.userId(), request.purePassword(), request.purePassword());
+        var userPassword = new UserPassword(passwordEncoder, request.userId(), request.username(), request.purePassword());
         userPasswordRepository.save(userPassword);
+        var userRole = new UserRole(request.userId(), false, new HashSet<>());
+        userRoleRepository.save(userRole);
     }
 
     public void updateUserAuth(AuthUpdateRequest request) {

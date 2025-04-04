@@ -1,9 +1,10 @@
 package com.ecsimsw.transaction.controller
 
+import com.ecsimsw.common.dto.AuthUser
 import com.ecsimsw.transaction.config.CANCEL_WEB_HOOK_URL
 import com.ecsimsw.transaction.config.SUCCESS_WEB_HOOK_URL
+import com.ecsimsw.transaction.dto.TransactionMetaData
 import com.ecsimsw.transaction.service.PayPalService
-import com.paypal.api.payments.Payment
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -15,17 +16,13 @@ class PayPalController(
 ) {
 
     @PostMapping("/api/transaction/pay")
-    fun payment(@RequestParam("sum") sum: Double): String {
-        val payment: Payment = payPalService.createPayment(
-            sum,
-            "Payment description",
+    fun payment(@RequestParam("sum") amount: Int, user: AuthUser): String {
+        val approvalUrl = payPalService.createPayment(
+            TransactionMetaData(user.username, amount),
             SUCCESS_WEB_HOOK_URL,
             CANCEL_WEB_HOOK_URL
         )
-        return payment.links
-            .firstOrNull { it.rel.equals("approval_url") }
-            ?.let { "redirect:${it.href}" }
-            ?: throw IllegalArgumentException("approval_url not found in payment links")
+        return "redirect:$approvalUrl"
     }
 
     @GetMapping("/api/transaction/success")

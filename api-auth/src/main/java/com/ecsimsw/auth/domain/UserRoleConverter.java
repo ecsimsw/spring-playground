@@ -5,6 +5,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,9 @@ public class UserRoleConverter implements AttributeConverter<Set<RoleType>, Stri
     @Override
     public Set<RoleType> convertToEntityAttribute(String dbData) {
         try {
+            if(dbData == null || dbData.isBlank()) {
+                return new HashSet<>();
+            }
             return Arrays.stream(dbData.split(DELIMITER))
                 .map(RoleType::valueOf)
                 .collect(Collectors.toSet());
