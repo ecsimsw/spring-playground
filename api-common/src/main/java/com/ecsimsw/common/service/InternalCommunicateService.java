@@ -1,7 +1,6 @@
 package com.ecsimsw.common.service;
 
-import com.ecsimsw.common.support.ClientKeyUtils;
-import lombok.val;
+import com.ecsimsw.common.support.utils.ClientKeyUtils;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -12,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 
 import static com.ecsimsw.common.config.LogConfig.TRACE_ID;
 import static com.ecsimsw.common.config.LogConfig.TRACE_ID_HEADER;
-import static com.ecsimsw.common.support.MDCFilter.TRACE_ID;
 
 @Service
 public class InternalCommunicateService {

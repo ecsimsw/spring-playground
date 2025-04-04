@@ -1,4 +1,4 @@
-package com.ecsimsw.common.support;
+package com.ecsimsw.common.support.aop;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

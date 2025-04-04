@@ -1,38 +1,45 @@
 package com.ecsimsw.transaction.service
 
 import com.ecsimsw.common.client.UserClient
+import com.ecsimsw.common.support.aop.MemLock
 import com.ecsimsw.transaction.domain.Transaction
 import com.ecsimsw.transaction.domain.TransactionStatus
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
 @Service
-class TransactionPaymentService(
+open class TransactionPaymentService(
     private val userClient: UserClient,
     private val paymentService: PaymentService,
     private val transactionService: TransactionService
 ) {
-    fun create(username: String, amount: Long, successUrl: String, cancelUrl: String): String {
+    open fun create(username: String, amount: Long, successUrl: String, cancelUrl: String): String {
         val transaction = transactionService.create(username, amount)
         val payment = paymentService.create(transaction, successUrl, cancelUrl)
         transactionService.paymentRequested(transaction, payment.id)
         return payment.url
     }
 
-    fun approve(paymentId: String, payerId: String) {
-        val transaction = transactionService.findByPaymentId(paymentId)
-        if (!transaction.isStatus(TransactionStatus.REQUESTED)) {
-            throw IllegalArgumentException("Not a valid transaction")
-        }
-        addCredit(transaction)
-
+    open fun approve(paymentId: String, payerId: String) {
         try {
-            paymentService.approve(paymentId, payerId)
-            transactionService.approved(transaction)
-        } catch (e: Exception) {
-            transactionService.failed(transaction, "Failed to payment")
-            rollbackCredit(transaction)
-            throw IllegalArgumentException("Failed to payment")
+            MemLock.tryLock(paymentId, 500)
+
+            val transaction = transactionService.findByPaymentId(paymentId)
+            if (!transaction.isStatus(TransactionStatus.REQUESTED)) {
+                throw IllegalArgumentException("Not a valid transaction")
+            }
+            addCredit(transaction)
+
+            try {
+                paymentService.approve(paymentId, payerId)
+                transactionService.approved(transaction)
+            } catch (e: Exception) {
+                transactionService.failed(transaction, "Failed to payment")
+                rollbackCredit(transaction)
+                throw IllegalArgumentException("Failed to payment")
+            }
+        } finally {
+            MemLock.unlock(paymentId)
         }
     }
 

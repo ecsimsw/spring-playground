@@ -1,4 +1,4 @@
-package com.ecsimsw.common.support;
+package com.ecsimsw.common.support.utils;
 
 public class ClientKeyUtils {
 

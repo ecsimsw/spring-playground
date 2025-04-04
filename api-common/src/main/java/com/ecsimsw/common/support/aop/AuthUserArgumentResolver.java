@@ -1,4 +1,4 @@
-package com.ecsimsw.common.support;
+package com.ecsimsw.common.support.aop;
 
 import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.common.error.AuthException;

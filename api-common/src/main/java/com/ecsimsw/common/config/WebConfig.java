@@ -1,9 +1,10 @@
 package com.ecsimsw.common.config;
 
-import com.ecsimsw.common.support.AuthUserArgumentResolver;
-import com.ecsimsw.common.support.InternalHandlerInterceptor;
+import com.ecsimsw.common.support.aop.AuthUserArgumentResolver;
+import com.ecsimsw.common.support.aop.InternalHandlerInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

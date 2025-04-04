@@ -1,11 +1,9 @@
 package com.ecsimsw.transaction.controller
 
 import com.ecsimsw.common.dto.AuthUser
-import com.ecsimsw.common.support.MDCFilter.TRACE_ID
 import com.ecsimsw.transaction.config.CANCEL_WEB_HOOK_URL
 import com.ecsimsw.transaction.config.SUCCESS_WEB_HOOK_URL
 import com.ecsimsw.transaction.service.TransactionPaymentService
-import org.slf4j.MDC
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -18,8 +16,6 @@ class PayPalController(
 
     @PostMapping("/api/transaction")
     fun payment(@RequestParam("sum") amount: Long, user: AuthUser): String {
-        val traceId = MDC.get(TRACE_ID)
-        println(traceId)
         val approvalUrl = transactionPaymentService.create(
             user.username,
             amount,
@@ -32,8 +28,7 @@ class PayPalController(
     @GetMapping("/api/transaction/approve")
     fun approve(@RequestParam("paymentId") paymentId: String, @RequestParam("PayerID") payerId: String): String {
         try {
-            val traceId = MDC.get(TRACE_ID)
-            println(traceId)
+
             transactionPaymentService.approve(paymentId, payerId)
             return "Payment successful"
         } catch (e: Exception) {
