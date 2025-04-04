@@ -1,7 +1,7 @@
 package com.ecsimsw.common.config;
 
 import com.ecsimsw.common.domain.ServiceName;
-import com.ecsimsw.common.service.GatewayClient;
+import com.ecsimsw.common.client.GatewayClient;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;

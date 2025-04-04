@@ -1,4 +1,4 @@
-package com.ecsimsw.common.annotation;
+package com.ecsimsw.common.support.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

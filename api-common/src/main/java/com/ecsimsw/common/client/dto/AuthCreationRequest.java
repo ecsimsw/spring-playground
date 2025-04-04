@@ -1,4 +1,4 @@
-package com.ecsimsw.common.service.dto;
+package com.ecsimsw.common.client.dto;
 
 public record AuthCreationRequest(
     Long userId,

@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+const val SUCCESS_WEB_HOOK_URL: String = "http://localhost:8080/api/transaction/success"
+const val CANCEL_WEB_HOOK_URL: String = "http://localhost:8080/api/transaction/cancel"
+
 @Configuration
 open class PayPalConfig {
 

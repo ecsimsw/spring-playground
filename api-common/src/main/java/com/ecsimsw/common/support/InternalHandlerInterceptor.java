@@ -1,6 +1,6 @@
 package com.ecsimsw.common.support;
 
-import com.ecsimsw.common.annotation.InternalHandler;
+import com.ecsimsw.common.support.annotation.InternalHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;

@@ -1,9 +1,9 @@
 package com.ecsimsw.auth.controller;
 
 import com.ecsimsw.auth.service.AuthService;
-import com.ecsimsw.common.annotation.InternalHandler;
-import com.ecsimsw.common.service.dto.AuthCreationRequest;
-import com.ecsimsw.common.service.dto.AuthUpdateRequest;
+import com.ecsimsw.common.support.annotation.InternalHandler;
+import com.ecsimsw.common.client.dto.AuthCreationRequest;
+import com.ecsimsw.common.client.dto.AuthUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
