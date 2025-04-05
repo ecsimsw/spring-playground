@@ -4,6 +4,7 @@ import com.ecsimsw.gateway.service.RouteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.ecsimsw.common.config.LogConfig.TRACE_ID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,10 +64,13 @@ public class RouteController {
             .retrieve()
             .toEntity(String.class)
             .onErrorResume(WebClientResponseException.class, exception -> {
+                    var responseHeader = new HttpHeaders();
+                    responseHeader.setContentType(MediaType.APPLICATION_JSON);
+                    responseHeader.setContentLength(exception.getResponseBodyAsString().getBytes(StandardCharsets.UTF_8).length);
+                    responseHeader.set(TRACE_ID, exception.getHeaders().getFirst(TRACE_ID));
                     return Mono.just(ResponseEntity
                         .status(exception.getStatusCode())
-                        .headers(exception.getHeaders())
-                        .contentType(exception.getHeaders().getContentType() != null ? exception.getHeaders().getContentType() : MediaType.APPLICATION_JSON)
+                        .headers(responseHeader)
                         .body(exception.getResponseBodyAsString()));
                 }
             );

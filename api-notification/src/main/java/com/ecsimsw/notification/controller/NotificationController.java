@@ -1,7 +1,5 @@
 package com.ecsimsw.notification.controller;
 
-import com.ecsimsw.common.error.AuthException;
-import com.ecsimsw.common.error.ErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +18,6 @@ public class NotificationController {
         } catch (InterruptedException e) {
 
         }
-        throw new IllegalArgumentException("sdfadf");
-//        return ResponseEntity.ok().build();
+        throw new IllegalArgumentException("Test error");
     }
 }
