@@ -1,6 +1,6 @@
 package com.ecsimsw.common.client;
 
-import com.ecsimsw.common.domain.ServiceName;
+import com.ecsimsw.common.config.ServiceName;
 import com.ecsimsw.common.service.InternalCommunicateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

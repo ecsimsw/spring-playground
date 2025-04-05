@@ -1,6 +1,6 @@
 package com.ecsimsw.gateway.service;
 
-import com.ecsimsw.common.domain.ServiceName;
+import com.ecsimsw.common.config.ServiceName;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,6 @@ public class RouteService {
     private static final Random RANDOM = new Random();
 
     public void register(String name, InetSocketAddress address) {
-        if (SERVICE_ENDPOINTS.values().stream().anyMatch(set -> set.contains(address))) {
-            throw new IllegalArgumentException("Address " + address + " already registered");
-        }
         var serviceName = ServiceName.resolve(name);
         SERVICE_ENDPOINTS.computeIfAbsent(serviceName, k -> new ArrayList<>()).add(address);
         log.info("Registered service " + serviceName + " at " + address.getHostName() + ":" + address.getPort());

@@ -8,10 +8,6 @@ version = '1.0.0'
 dependencies {
     implementation project(':api-common')
 
-    // spring
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
     // paypal sdk
     implementation 'com.paypal.sdk:rest-api-sdk:1.14.0'
 

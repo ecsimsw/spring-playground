@@ -23,13 +23,8 @@ open class TransactionPaymentService(
     open fun approve(paymentId: String, payerId: String) {
         try {
             MemLock.tryLock(paymentId, 500)
-
-            val transaction = transactionService.findByPaymentId(paymentId)
-            if (!transaction.isStatus(TransactionStatus.REQUESTED)) {
-                throw IllegalArgumentException("Not a valid transaction")
-            }
+            val transaction = getRequestedTransaction(paymentId)
             addCredit(transaction)
-
             try {
                 paymentService.approve(paymentId, payerId)
                 transactionService.approved(transaction)
@@ -41,6 +36,14 @@ open class TransactionPaymentService(
         } finally {
             MemLock.unlock(paymentId)
         }
+    }
+
+    private fun getRequestedTransaction(paymentId: String): Transaction {
+        val transaction = transactionService.findByPaymentId(paymentId)
+        if (!transaction.isStatus(TransactionStatus.REQUESTED)) {
+            throw IllegalArgumentException("Not a valid transaction")
+        }
+        return transaction
     }
 
     private fun addCredit(transaction: Transaction) {

@@ -1,4 +1,4 @@
-package com.ecsimsw.common.domain;
+package com.ecsimsw.common.config;
 
 import java.util.Arrays;
 

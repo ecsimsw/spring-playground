@@ -1,22 +1,18 @@
 package com.ecsimsw.common.dto;
 
 import com.ecsimsw.common.error.ApiException;
+import org.slf4j.MDC;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
+import static com.ecsimsw.common.config.LogConfig.TRACE_ID;
+
 public class ApiResponse<T> extends ResponseEntity<T> {
 
-    public ApiResponse(T body, HttpStatus status) {
-        super(body, status);
-    }
-
-    public ApiResponse(MultiValueMap<String, String> headers, HttpStatus status) {
-        super(headers, status);
-    }
-
-    public ApiResponse(T body, MultiValueMap<String, String> headers, int rawStatus) {
-        super(body, headers, rawStatus);
+    public ApiResponse(T body, HttpStatus statusCode) {
+        super(body, statusCode);
     }
 
     public ApiResponse(T body, MultiValueMap<String, String> headers, HttpStatus statusCode) {
@@ -24,22 +20,22 @@ public class ApiResponse<T> extends ResponseEntity<T> {
     }
 
     public static ApiResponse<Void> success() {
-        return new ApiResponse<>(null, HttpStatus.OK);
-    }
-
-    public static ApiResponse<Void> success(HttpStatus status) {
-        return new ApiResponse<>(null, status);
+        return success(HttpStatus.OK, null);
     }
 
     public static <T> ApiResponse<T> success(T result) {
-        return new ApiResponse<>(result, HttpStatus.OK);
+        return success(HttpStatus.OK, result);
     }
 
     public static <T> ApiResponse<T> success(HttpStatus status, T result) {
-        return new ApiResponse<>(result, status);
+        var headers = new HttpHeaders();
+        headers.add(TRACE_ID, MDC.get(TRACE_ID));
+        return new ApiResponse<>(result, headers, status);
     }
 
     public static ApiResponse<ApiErrorResult> error(ApiException e) {
-        return new ApiResponse<>(ApiErrorResult.of(e), e.status());
+        var headers = new HttpHeaders();
+        headers.add(TRACE_ID, MDC.get(TRACE_ID));
+        return new ApiResponse<>(ApiErrorResult.of(e), headers, e.status());
     }
 }

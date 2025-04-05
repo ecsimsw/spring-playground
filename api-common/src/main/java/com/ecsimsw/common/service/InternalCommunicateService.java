@@ -8,6 +8,11 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.ecsimsw.common.config.LogConfig.TRACE_ID;
 import static com.ecsimsw.common.config.LogConfig.TRACE_ID_HEADER;
@@ -16,11 +21,13 @@ import static com.ecsimsw.common.config.LogConfig.TRACE_ID_HEADER;
 public class InternalCommunicateService {
 
     private final RestTemplate restTemplate;
+    private final WebClient webClient;
 
     @Value("${service.gateway}")
     public String gateway;
 
-    public InternalCommunicateService(RestTemplateBuilder builder) {
+    public InternalCommunicateService(RestTemplateBuilder builder, WebClient webClient) {
+        this.webClient = webClient;
         this.restTemplate = builder
             .setConnectTimeout(java.time.Duration.ofSeconds(5))
             .setReadTimeout(java.time.Duration.ofSeconds(5))
@@ -29,6 +36,28 @@ public class InternalCommunicateService {
 
     public <T> ResponseEntity<T> request(HttpMethod method, String path, Class<T> type) {
         return request(method, path, null, type);
+    }
+
+    public <T> Mono<ResponseEntity<T>> requestAsync(HttpMethod method, String path, Class<T> type) {
+        return requestAsync(method, path, null, type);
+    }
+
+    public <T> Mono<ResponseEntity<T>> requestAsync(HttpMethod method, String path, Object requestBody, Class<T> type) {
+        var url = gateway + path;
+        var headers = getHeaders();
+        if(requestBody == null) {
+            return webClient.method(method)
+                .uri(url)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .retrieve()
+                .toEntity(type);
+        }
+        return webClient.method(method)
+            .uri(url)
+            .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+            .bodyValue(requestBody)
+            .retrieve()
+            .toEntity(type);
     }
 
     public <T> ResponseEntity<T> request(HttpMethod method, String path, Object requestBody, Class<T> type) {
@@ -45,15 +74,24 @@ public class InternalCommunicateService {
         }
     }
 
-    private static HttpEntity<Object> httpEntity(Object requestBody) {
-        var headers = new HttpHeaders();
-        headers.set("X-Client-Key", ClientKeyUtils.init());
-        headers.set(TRACE_ID_HEADER, MDC.get(TRACE_ID));
-        headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
-        if(requestBody != null) {
-            return new HttpEntity<>(requestBody, headers);
+    private HttpEntity<Object> httpEntity(Object requestBody) {
+        var httpHeaders = new HttpHeaders();
+        var headers = getHeaders();
+        for (var h : headers.keySet()) {
+            httpHeaders.set(h, headers.get(h));
         }
-        return new HttpEntity<>(headers);
+        if (requestBody != null) {
+            return new HttpEntity<>(requestBody, httpHeaders);
+        }
+        return new HttpEntity<>(httpHeaders);
+    }
+
+    private Map<String, String> getHeaders() {
+        var headers = new HashMap<String, String>();
+        headers.put(TRACE_ID_HEADER, MDC.get(TRACE_ID));
+        headers.put("X-Client-Key", ClientKeyUtils.init());
+        headers.put(HttpHeaders.CONTENT_TYPE, "application/json");
+        return headers;
     }
 }
 

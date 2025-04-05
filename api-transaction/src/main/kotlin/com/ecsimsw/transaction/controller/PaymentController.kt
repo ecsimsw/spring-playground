@@ -28,7 +28,6 @@ class PayPalController(
     @GetMapping("/api/transaction/approve")
     fun approve(@RequestParam("paymentId") paymentId: String, @RequestParam("PayerID") payerId: String): String {
         try {
-
             transactionPaymentService.approve(paymentId, payerId)
             return "Payment successful"
         } catch (e: Exception) {

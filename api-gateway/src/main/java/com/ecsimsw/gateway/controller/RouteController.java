@@ -19,7 +19,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,10 +48,9 @@ public class RouteController {
     }
 
     private Mono<ResponseEntity<String>> send(HttpMethod method, String url, HashMap<String, String> headers, Optional<Object> requestBody) {
-        log.info(
-            "Request url : {}\n" +
-            "Request headers : {}\n" +
-            "Request body : {}",
+        log.info("Request url : {}\n" +
+                "Request headers : {}\n" +
+                "Request body : {}",
             url, headers, requestBody
         );
         return webClient
@@ -62,10 +60,14 @@ public class RouteController {
             .bodyValue(requestBody)
             .retrieve()
             .toEntity(String.class)
-            .onErrorResume(WebClientResponseException.class, exception -> Mono.just(ResponseEntity
-                .status(exception.getStatusCode())
-                .contentType(exception.getHeaders().getContentType() != null ? exception.getHeaders().getContentType() : MediaType.APPLICATION_JSON)
-                .body(exception.getResponseBodyAsString())));
+            .onErrorResume(WebClientResponseException.class, exception -> {
+                    return Mono.just(ResponseEntity
+                        .status(exception.getStatusCode())
+                        .headers(exception.getHeaders())
+                        .contentType(exception.getHeaders().getContentType() != null ? exception.getHeaders().getContentType() : MediaType.APPLICATION_JSON)
+                        .body(exception.getResponseBodyAsString()));
+                }
+            );
     }
 
     private HashMap<String, String> headers(HttpServletRequest request) {
@@ -79,16 +81,10 @@ public class RouteController {
     }
 
     private String buildQueryString(HttpServletRequest request) {
-        Map<String, String[]> params = request.getParameterMap(); // 쿼리 파라미터 추출
-        return params.entrySet().stream()
-            .map(entry -> {
-                String key = entry.getKey();
-                String[] values = entry.getValue();
-                return Arrays.stream(values)
-                    .map(value -> encodeParam(key) + "=" + encodeParam(value)) // URL 인코딩 적용
-                    .collect(Collectors.joining("&")); // 같은 key의 여러 값 처리
-            })
-            .collect(Collectors.joining("&"));
+        return request.getParameterMap().entrySet().stream()
+            .map(entry -> Arrays.stream(entry.getValue())
+                .map(value -> encodeParam(entry.getKey()) + "=" + encodeParam(value))
+                .collect(Collectors.joining("&"))).collect(Collectors.joining("&"));
     }
 
     private String encodeParam(String value) {
