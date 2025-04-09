@@ -6,7 +6,8 @@ dependencies {
     api 'org.springframework.boot:spring-boot-starter-web'
     api 'org.springframework.boot:spring-boot-starter-webflux'
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
-
+    api 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.apache.commons:commons-pool2:2.11.1'
     implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'

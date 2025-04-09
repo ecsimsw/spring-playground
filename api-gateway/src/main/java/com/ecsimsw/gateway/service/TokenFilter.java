@@ -1,11 +1,11 @@
 package com.ecsimsw.gateway.service;
 
 import com.ecsimsw.common.config.TokenConfig;
+import com.ecsimsw.common.domain.BlockedToken;
+import com.ecsimsw.common.domain.BlockedTokenRepository;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.domain.AccessToken;
-import com.ecsimsw.common.domain.BlockedTokenRepository;
-import com.ecsimsw.common.domain.BlockedUserRepository;
 import com.ecsimsw.gateway.dto.RequestWrapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,14 +24,13 @@ import java.util.Optional;
 public class TokenFilter extends OncePerRequestFilter {
 
     private final BlockedTokenRepository blockedTokenRepository;
-    private final BlockedUserRepository blockedUserRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             var token = getToken(request).orElseThrow(() -> new AuthException(ErrorType.TOKEN_NOT_FOUND));
             var accessToken = AccessToken.fromToken(TokenConfig.secretKey, token);
-            checkBlocked(token, accessToken.username());
+            checkBlocked(token);
 
             var requestWrapper = new RequestWrapper(request);
             requestWrapper.addHeader("X-User-Id", accessToken.username());
@@ -43,8 +42,8 @@ public class TokenFilter extends OncePerRequestFilter {
         }
     }
 
-    private void checkBlocked(String token, String username) {
-        if (blockedTokenRepository.exists(token) || blockedUserRepository.exists(username)) {
+    private void checkBlocked(String token) {
+        if (blockedTokenRepository.exists(new BlockedToken(token))) {
             throw new AuthException(ErrorType.USER_NOT_APPROVED_YET);
         }
     }

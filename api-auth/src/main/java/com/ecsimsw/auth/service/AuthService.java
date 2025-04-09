@@ -5,11 +5,10 @@ import com.ecsimsw.auth.domain.AccessToken;
 import com.ecsimsw.auth.dto.LogInResponse;
 import com.ecsimsw.auth.dto.Tokens;
 import com.ecsimsw.common.config.TokenConfig;
+import com.ecsimsw.common.domain.BlockedToken;
 import com.ecsimsw.common.domain.BlockedTokenRepository;
-import com.ecsimsw.common.domain.BlockedUserRepository;
 import com.ecsimsw.common.domain.RefreshTokenRepository;
 import com.ecsimsw.common.client.dto.AuthCreationRequest;
-import com.ecsimsw.common.domain.RoleType;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.client.dto.AuthUpdateRequest;
@@ -28,7 +27,6 @@ public class AuthService {
     private final UserPasswordRepository userPasswordRepository;
     private final UserRoleRepository userRoleRepository;
     private final BlockedTokenRepository blockedTokenRepository;
-    private final BlockedUserRepository blockedUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -57,11 +55,7 @@ public class AuthService {
     }
 
     public void blockToken(String token) {
-        blockedTokenRepository.save(token);
-    }
-
-    public void blockUser(String username) {
-        blockedUserRepository.save(username);
+        blockedTokenRepository.save(new BlockedToken(token));
     }
 
     @Transactional(readOnly = true)

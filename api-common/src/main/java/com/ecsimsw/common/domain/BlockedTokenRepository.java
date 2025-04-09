@@ -1,24 +1,32 @@
 package com.ecsimsw.common.domain;
 
-import com.ecsimsw.common.config.TokenConfig;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.ecsimsw.common.config.RedisConfig;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.concurrent.TimeUnit;
 
 @Repository
 public class BlockedTokenRepository {
 
-    private final Cache<String, Object> tokens = Caffeine.newBuilder()
-        .expireAfterWrite(TokenConfig.REFRESH_TOKEN_EXPIRED_TIME, TimeUnit.MICROSECONDS)
-        .build();
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public void save(String token) {
-        tokens.put(token, null);
+    public BlockedTokenRepository(RedisConfig redisConfig) {
+        this.redisTemplate = redisConfig.redisTemplate(1000);
     }
 
-    public boolean exists(String token) {
-        return tokens.getIfPresent(token) != null;
+    public boolean exists(BlockedToken token) {
+        try {
+            return redisTemplate.hasKey(token.redisKey());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void save(BlockedToken token) {
+        try {
+            redisTemplate.opsForValue().set(token.redisKey(), token, token.timeoutMs());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

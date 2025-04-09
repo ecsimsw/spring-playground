@@ -1,5 +1,7 @@
 package com.ecsimsw.gateway.controller;
 
+import com.ecsimsw.common.domain.BlockedToken;
+import com.ecsimsw.common.domain.BlockedTokenRepository;
 import com.ecsimsw.gateway.service.RouteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -32,8 +31,21 @@ public class RouteController {
 
     private final WebClient webClient;
     private final RouteService routeService;
+    private final BlockedTokenRepository blockedTokenRepository;
 
-    @RequestMapping("/api/{service}/**")
+    @GetMapping("/api/hi")
+    public ResponseEntity<Void> hi(@RequestParam String msg) {
+        blockedTokenRepository.save(new BlockedToken(msg));
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/bye")
+    public ResponseEntity<Boolean> bye(@RequestParam String msg) {
+        var hi = blockedTokenRepository.exists(new BlockedToken(msg));
+        return ResponseEntity.ok(hi);
+    }
+
+//    @RequestMapping("/api/{service}/**")
     public Mono<ResponseEntity<String>> routeRequest(
         @PathVariable String service,
         @RequestBody(required = false) Optional<Object> requestBody,
