@@ -12,3 +12,4 @@ services:
       --maxmemory-policy allkeys-lru 
       --appendonly no 
       --save ""
+      ----requirepass ecsimsw

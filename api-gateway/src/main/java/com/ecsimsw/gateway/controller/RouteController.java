@@ -1,7 +1,7 @@
 package com.ecsimsw.gateway.controller;
 
-import com.ecsimsw.common.domain.BlockedToken;
-import com.ecsimsw.common.domain.BlockedTokenRepository;
+import com.ecsimsw.common.domain.BlockedUser;
+import com.ecsimsw.common.domain.BlockedUserRepository;
 import com.ecsimsw.gateway.service.RouteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,17 +31,17 @@ public class RouteController {
 
     private final WebClient webClient;
     private final RouteService routeService;
-    private final BlockedTokenRepository blockedTokenRepository;
+    private final BlockedUserRepository blockedUserRepository;
 
     @GetMapping("/api/hi")
     public ResponseEntity<Void> hi(@RequestParam String msg) {
-        blockedTokenRepository.save(new BlockedToken(msg));
+        blockedUserRepository.save(new BlockedUser(msg));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/api/bye")
     public ResponseEntity<Boolean> bye(@RequestParam String msg) {
-        var hi = blockedTokenRepository.exists(new BlockedToken(msg));
+        var hi = blockedUserRepository.contains(new BlockedUser(msg));
         return ResponseEntity.ok(hi);
     }
 

@@ -1,8 +1,8 @@
 package com.ecsimsw.gateway.service;
 
 import com.ecsimsw.common.config.TokenConfig;
-import com.ecsimsw.common.domain.BlockedToken;
-import com.ecsimsw.common.domain.BlockedTokenRepository;
+import com.ecsimsw.common.domain.BlockedUser;
+import com.ecsimsw.common.domain.BlockedUserRepository;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.domain.AccessToken;
@@ -23,7 +23,7 @@ import java.util.Optional;
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
-    private final BlockedTokenRepository blockedTokenRepository;
+    private final BlockedUserRepository blockedUserRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -43,7 +43,7 @@ public class TokenFilter extends OncePerRequestFilter {
     }
 
     private void checkBlocked(String token) {
-        if (blockedTokenRepository.exists(new BlockedToken(token))) {
+        if (blockedUserRepository.contains(new BlockedUser(token))) {
             throw new AuthException(ErrorType.USER_NOT_APPROVED_YET);
         }
     }
