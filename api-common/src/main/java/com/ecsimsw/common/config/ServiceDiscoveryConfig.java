@@ -24,8 +24,11 @@ public class ServiceDiscoveryConfig {
 
     @PostConstruct
     public void init() {
+        if(serviceName == null || serviceName.isEmpty()) {
+            return;
+        }
         var service = ServiceName.resolve(serviceName);
-        if(service == ServiceName.GATEWAY) {
+        if(service == ServiceName.GATEWAY || service == ServiceName.EVENT) {
             return;
         }
         var result = gatewayClient.registerService(service, port);

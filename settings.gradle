@@ -2,10 +2,11 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 rootProject.name = 'ecsimsw-skeleton'
-include 'api-common'
 include 'api-account'
+include 'api-auth'
+include 'api-common'
+include 'api-event'
+include 'api-gateway'
 include 'api-notification'
 include 'api-transaction'
-include 'api-gateway'
-include 'api-auth'
 

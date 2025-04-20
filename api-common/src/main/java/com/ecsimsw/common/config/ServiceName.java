@@ -6,6 +6,7 @@ public enum ServiceName {
     GATEWAY,
     USER,
     AUTH,
+    EVENT,
     TRANSACTION,
     NOTIFICATION;
 

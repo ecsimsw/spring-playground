@@ -23,7 +23,7 @@ public class InternalCommunicateService {
     private final RestTemplate restTemplate;
     private final WebClient webClient;
 
-    @Value("${service.gateway}")
+    @Value("${service.gateway:}")
     public String gateway;
 
     public InternalCommunicateService(RestTemplateBuilder builder, WebClient webClient) {
