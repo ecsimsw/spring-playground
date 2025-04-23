@@ -1,7 +1,11 @@
 package com.ecsimsw.apievent.controller;
 
-import com.ecsimsw.apievent.dto.EventMessage;
-import com.ecsimsw.apievent.support.AESBase64Decrypt;
+import com.ecsimsw.apievent.domain.DataEventMessage;
+import com.ecsimsw.apievent.domain.EventMessage;
+import com.ecsimsw.apievent.domain.StatusEventMessage;
+import com.ecsimsw.apievent.service.DataEventService;
+import com.ecsimsw.apievent.service.StatusEventService;
+import com.ecsimsw.common.support.utils.TimeUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.stereotype.Controller;
 
-import java.io.IOException;
+import static com.ecsimsw.apievent.domain.support.Protocol.DATA;
+import static com.ecsimsw.apievent.domain.support.Protocol.STATUS;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,6 +24,8 @@ import java.io.IOException;
 public class DeviceEventListener {
 
     private final ObjectMapper objectMapper;
+    private final DataEventService dataEventService;
+    private final StatusEventService statusEventService;
 
     @Value("${pulsar.event.secretKey}")
     private String secretKey;
@@ -30,12 +37,19 @@ public class DeviceEventListener {
         concurrency = "11"
     )
     public void listen(Message<byte[]> message) {
-        try {
-            var eventMessage = objectMapper.readValue(message.getData(), EventMessage.class);
-            var decryptedBody = AESBase64Decrypt.decrypt(eventMessage.data(), secretKey);
-            System.out.println(decryptedBody);
-        } catch (IOException e) {
-            log.error("failed to consume event : {}", e.getMessage());
+        var start = System.currentTimeMillis();
+        var eventMessage = EventMessage.from(objectMapper, message);
+        if (eventMessage.isProtocol(STATUS)) {
+            var statusEvent = StatusEventMessage.from(objectMapper, eventMessage, secretKey);
+            log.info("{} recv : {}", Thread.currentThread().getId(), statusEvent.devId());
+            statusEventService.handle(statusEvent);
         }
+        if (eventMessage.isProtocol(DATA)) {
+            var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
+            log.info("{} recv : {}", Thread.currentThread().getId(), dataEvent.getDevId());
+            dataEventService.saveNonBlocking(dataEvent);
+        }
+        var end = System.currentTimeMillis();
+        TimeUtils.sleep(60_000L);
     }
 }
