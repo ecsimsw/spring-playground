@@ -37,19 +37,11 @@ public class DeviceEventListener {
         concurrency = "11"
     )
     public void listen(Message<byte[]> message) {
-        var start = System.currentTimeMillis();
         var eventMessage = EventMessage.from(objectMapper, message);
-        if (eventMessage.isProtocol(STATUS)) {
-            var statusEvent = StatusEventMessage.from(objectMapper, eventMessage, secretKey);
-            log.info("{} recv : {}", Thread.currentThread().getId(), statusEvent.devId());
-            statusEventService.handle(statusEvent);
-        }
         if (eventMessage.isProtocol(DATA)) {
             var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
-            log.info("{} recv : {}", Thread.currentThread().getId(), dataEvent.getDevId());
-            dataEventService.saveNonBlocking(dataEvent);
+            dataEventService.handle(dataEvent);
         }
-        var end = System.currentTimeMillis();
         TimeUtils.sleep(60_000L);
     }
 }
