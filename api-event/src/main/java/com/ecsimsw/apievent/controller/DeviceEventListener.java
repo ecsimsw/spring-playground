@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.SubscriptionType;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.stereotype.Controller;
@@ -37,11 +38,17 @@ public class DeviceEventListener {
         concurrency = "11"
     )
     public void listen(Message<byte[]> message) {
-        var eventMessage = EventMessage.from(objectMapper, message);
-        if (eventMessage.isProtocol(DATA)) {
-            var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
-            dataEventService.handle(dataEvent);
+        try {
+            MDC.put("threadId", String.valueOf(Thread.currentThread().getId()));
+            var eventMessage = EventMessage.from(objectMapper, message);
+            if (eventMessage.isProtocol(DATA)) {
+                var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
+                dataEventService.handle(dataEvent);
+            }
+        } finally {
+            MDC.clear();
+            TimeUtils.sleep(30_000);
+//            TimeUtils.sleep(60_000L);
         }
-        TimeUtils.sleep(60_000L);
     }
 }

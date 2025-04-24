@@ -17,6 +17,7 @@ public class MDCFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
+            MDC.put("threadId", String.valueOf(Thread.currentThread().getId()));
             var httpRequest = (HttpServletRequest) request;
             var traceId = httpRequest.getHeader(TRACE_ID_HEADER);
             if(traceId != null) {
