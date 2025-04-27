@@ -2,10 +2,11 @@ package com.ecsimsw.event.controller;
 
 import com.ecsimsw.event.domain.DataEventMessage;
 import com.ecsimsw.event.domain.EventMessage;
-import com.ecsimsw.event.service.EventThroughputCounter;
 import com.ecsimsw.event.service.DataEventService;
+import com.ecsimsw.event.service.EventThroughputCounter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.client.api.Message;
@@ -14,6 +15,8 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.stereotype.Controller;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.ecsimsw.event.domain.support.Protocol.DATA;
 
@@ -31,7 +34,7 @@ public class DeviceEventListener {
 
     @PostConstruct
     public void initCount() {
-        eventThroughputCounter.startCount();
+        eventThroughputCounter.start(1, TimeUnit.SECONDS);
     }
 
     @PulsarListener(
@@ -45,7 +48,6 @@ public class DeviceEventListener {
         try {
             MDC.put("threadId", String.valueOf(Thread.currentThread().getId()));
             var eventMessage = EventMessage.from(objectMapper, message);
-            System.out.println(System.currentTimeMillis() - eventMessage.t());
             if (eventMessage.isProtocol(DATA)) {
                 var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
                 dataEventService.handle(dataEvent);
@@ -55,5 +57,10 @@ public class DeviceEventListener {
 //            TimeUtils.sleep(30_000);
 //            TimeUtils.sleep(60_000L);
         }
+    }
+
+    @PreDestroy
+    public void destroyCount() {
+        eventThroughputCounter.end();
     }
 }

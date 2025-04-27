@@ -15,16 +15,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class EventThroughputCounter {
 
     private final AtomicInteger counter = new AtomicInteger(0);
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-    public void startCount() {
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    public void start(long period, TimeUnit unit) {
         scheduler.scheduleAtFixedRate(() -> {
             int count = counter.getAndSet(0);
             log.info("Event count per sec: {}", count);
-        }, 1, 1, TimeUnit.SECONDS);
+        }, 1, period, unit);
     }
 
     public void up() {
         counter.incrementAndGet();
+    }
+
+    public void end() {
+        scheduler.shutdown();
     }
 }
