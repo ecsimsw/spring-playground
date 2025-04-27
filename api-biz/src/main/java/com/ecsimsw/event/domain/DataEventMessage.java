@@ -1,6 +1,6 @@
-package com.ecsimsw.apievent.domain;
+package com.ecsimsw.event.domain;
 
-import com.ecsimsw.apievent.support.AESBase64Decrypt;
+import com.ecsimsw.event.support.AESBase64Decrypt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
-package com.ecsimsw.apievent.config;
+package com.ecsimsw.event.config;
 
-import com.ecsimsw.apievent.support.PulsarAuthentication;
+import com.ecsimsw.event.support.PulsarAuthentication;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,10 +1,9 @@
-package com.ecsimsw.apievent.controller;
+package com.ecsimsw.event.controller;
 
-import com.ecsimsw.apievent.domain.DataEventMessage;
-import com.ecsimsw.apievent.domain.EventMessage;
-import com.ecsimsw.apievent.domain.StatusEventMessage;
-import com.ecsimsw.apievent.service.DataEventService;
-import com.ecsimsw.apievent.service.StatusEventService;
+import com.ecsimsw.event.domain.DataEventMessage;
+import com.ecsimsw.event.domain.EventMessage;
+import com.ecsimsw.event.service.DataEventService;
+import com.ecsimsw.event.service.StatusEventService;
 import com.ecsimsw.common.support.utils.TimeUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.stereotype.Controller;
 
-import static com.ecsimsw.apievent.domain.support.Protocol.DATA;
-import static com.ecsimsw.apievent.domain.support.Protocol.STATUS;
+import static com.ecsimsw.event.domain.support.Protocol.DATA;
 
 @Slf4j
 @RequiredArgsConstructor

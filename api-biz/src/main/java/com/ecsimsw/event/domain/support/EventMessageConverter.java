@@ -1,6 +1,6 @@
-package com.ecsimsw.apievent.domain.support;
+package com.ecsimsw.event.domain.support;
 
-import com.ecsimsw.apievent.domain.EventMessage;
+import com.ecsimsw.event.domain.EventMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pulsar.client.api.Message;
 

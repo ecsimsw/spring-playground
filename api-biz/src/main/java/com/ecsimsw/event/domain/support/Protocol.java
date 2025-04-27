@@ -1,4 +1,4 @@
-package com.ecsimsw.apievent.domain.support;
+package com.ecsimsw.event.domain.support;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

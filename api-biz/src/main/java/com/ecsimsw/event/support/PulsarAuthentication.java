@@ -1,11 +1,10 @@
 
-package com.ecsimsw.apievent.support;
+package com.ecsimsw.event.support;
 
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.AuthenticationDataProvider;
 import org.apache.pulsar.shade.org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.Serial;
 import java.util.Map;
 
 public class PulsarAuthentication implements Authentication {

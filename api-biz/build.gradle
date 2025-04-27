@@ -1,0 +1,28 @@
+group = 'com.ecsimsw'
+version = '1.0.0'
+
+dependencies {
+    implementation project(':api-common')
+
+    // WebFlux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Reactive MongoDB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    // Pulsar
+    implementation 'org.springframework.boot:spring-boot-starter-pulsar'
+
+    runtimeOnly 'com.h2database:h2'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+task prepareKotlinBuildScriptModel {
+
+}

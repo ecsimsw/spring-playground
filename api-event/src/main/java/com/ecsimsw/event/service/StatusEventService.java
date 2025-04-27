@@ -1,6 +1,6 @@
-package com.ecsimsw.apievent.service;
+package com.ecsimsw.event.service;
 
-import com.ecsimsw.apievent.domain.StatusEventMessage;
+import com.ecsimsw.event.domain.StatusEventMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

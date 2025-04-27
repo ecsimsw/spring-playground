@@ -1,6 +1,6 @@
-package com.ecsimsw.apievent.domain;
+package com.ecsimsw.event.domain;
 
-import com.ecsimsw.apievent.domain.support.Protocol;
+import com.ecsimsw.event.domain.support.Protocol;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pulsar.client.api.Message;
 import org.slf4j.Logger;

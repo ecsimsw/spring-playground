@@ -1,5 +1,5 @@
 
-package com.ecsimsw.apievent.support;
+package com.ecsimsw.event.support;
 
 import org.apache.pulsar.shade.org.apache.commons.codec.binary.Base64;
 import org.apache.pulsar.shade.org.apache.commons.codec.binary.StringUtils;

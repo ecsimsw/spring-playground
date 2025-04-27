@@ -1,7 +1,7 @@
-package com.ecsimsw.apievent.service;
+package com.ecsimsw.event.service;
 
-import com.ecsimsw.apievent.domain.DataEventMessage;
-import com.ecsimsw.apievent.domain.DataEventMessageRepository;
+import com.ecsimsw.event.domain.DataEventMessage;
+import com.ecsimsw.event.domain.DataEventMessageRepository;
 import com.ecsimsw.common.client.NotificationClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ public class DataEventService {
     private final DataEventMessageRepository dataEventMessageRepository;
     private final NotificationClient notificationClient;
     private final KafkaTemplate<String, String> kafkaTemplate;
+
     @Value("${notification.kafka.topic}")
     private String sampleTopic;
 
