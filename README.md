@@ -1,11 +1,32 @@
 # Spring playground
 
+### 이벤트 처리량 개선, Reactive programming / Kafka batch queue
+- Pulsar로부터 수신한 이벤트를 1. 외부 Api, 2. MongoDB, 3. Kafka에 전달해야 한다.
+- 초당 2000개의 이벤트 처리를 목표로 했다.
+- WebClient, Reative Mongo는 Netty의 이벤트 루프 스레드로 관리되어 처리 완료 시 또는 예외 시 콜백 기반으로 이후 처리 로직이 수행된다.
+- Netty 이벤트 루프 스레드는 기본 값으로 CPU 코어 수에 따라 스레드 풀이 생성되고, 직접 설정할 수 있다.
+- Epoll 등 커널 수준의 이벤트 IO 전달(멀티 플렉싱)을 사용하여 이벤트가 발생했을 때를 핸들링하기에, 이벤트 발생을 대기하는 기존 멀티 스레딩 방식보다 자원 효율이 좋고, 더 적은 수의 스레드로 처리가 가능하다.
+``` 
+// 스레드 이름 예시
+WebClient : reactor-http-nio-1
+Reactive Mongo : nioEventLoopGroup-2-16
+```
+- Kafka producer의 이벤트 전달 역시 그 결과를 대기하지 않는다.
+- 그렇지만 그 동작 방식은 멀티 플렉싱을 사용한 앞선 WebClient, Reactive Mongo와는 다르다.
+- Kafka produce는 전달할 이벤트를 담을 큐(batch queue)를 메모리에 생성해두고 이를 관리하는 스레드를 따로 둔다.
+- 그 스레드는 일정 시간 간격 또는 큐에 쌓인 이벤트 크기(batch size)를 기준으로 큐의 이벤트를 배치 발송한다.
+- 카프카 서버로의 이벤트 전달에 필요한 네트워크 비용을 최소화한다.
+```
+// Batch queue 관리 스레드 이름 예시
+Kafka producer : kafka-producer-network-thread | producer-1
+```
+
 ### Sliding window rate limiter
 - 사용자별 분당 요청 수를 제한한다.
 - lua script로 경쟁 조건을 피하고 원자적 연산을 수행했다.
 - ZSet의 Score를 요청 시간으로 하여 조건 시간내 개수 검색과 요소 제거 성능을 높인다.
 - Zset은 Skip list와 Hash Table으로 구현되어 있다.
-- Skip list는 Linked list를 계층화하고, 랜덤하게 뽑힌 노드들을 연결하는 Express Line으로 요소를 건너뛰며 검색할 수 있는 포인트를 두어 검색 성능을 높인다.
+- Skip list는 Linked list를 계층화하고, 랜덤하게 뽑힌 노드들을 연결하는 Express Line으로 요소를 건너뛸 수 있는 포인트를 두어 검색 성능을 높인다.
 
 ``` lua
 local key = KEYS[1]
