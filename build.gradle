@@ -23,6 +23,9 @@ subprojects {
 
     dependencies {
 
+        // config
+        implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
         // test
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
@@ -32,6 +35,12 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
         testCompileOnly 'org.projectlombok:lombok'
         testAnnotationProcessor 'org.projectlombok:lombok'
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
+        }
     }
 
     test {
