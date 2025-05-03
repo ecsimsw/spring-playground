@@ -45,7 +45,7 @@ public class RouteController {
         return ResponseEntity.ok(hi);
     }
 
-//    @RequestMapping("/api/{service}/**")
+    @RequestMapping("/api/{service}/**")
     public Mono<ResponseEntity<String>> routeRequest(
         @PathVariable String service,
         @RequestBody(required = false) Optional<Object> requestBody,
