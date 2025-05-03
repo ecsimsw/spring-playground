@@ -1,13 +1,38 @@
 # Spring playground
 
+### Sliding window rate limiter
+- 사용자별 분당 요청 수를 제한한다.
+- lua script로 경쟁 조건을 피하고 원자적 연산을 수행했다.
+- ZSet의 Score를 요청 시간으로 하여 조건 시간내 개수 검색과 요소 제거 성능을 높인다.
+- Zset은 Skip list와 Hash Table으로 구현되어 있다.
+- Skip list는 Linked list를 계층화하고, 랜덤하게 뽑힌 노드들을 연결하는 Express Line으로 요소를 건너뛰며 검색할 수 있는 포인트를 두어 검색 성능을 높인다.
+
+``` lua
+local key = KEYS[1]
+local now = tonumber(ARGV[1])
+local window = tonumber(ARGV[2])
+local maxReq = tonumber(ARGV[3])
+local uuid = ARGV[4]
+
+redis.call('ZREMRANGEBYSCORE', key, 0, now-window)
+local cnt = redis.call('ZCOUNT', key, now-window+1, now)
+if cnt >= maxReq then
+  return 0
+else
+  redis.call('ZADD', key, now, uuid)
+  redis.call('EXPIRE', key, window+10)
+  return 1
+end
+```
+
 ### WebClient, 이벤트 전달
 - 이벤트를 단순히 전달하는 상황에서 WebClient를 사용했다.
 - 기존 블록킹 방식의 RestTemplate는 외부 API의 응답 시간에 영향을 받아 호출한 스레드가 응답을 기다리며 차단된다.
-- 이로 인해 응답 시간과 상관없이 기존 처리 흐름을 유지하려면 멀티스레딩이 필요하다.
+- 이로 인해 응답 시간과 상관없이 기존 처리 흐름을 유지하려면 멀티스레딩이 필요했다.
 - 반면, WebClient는 논블로킹 방식으로 외부 API 요청을 처리한다.
 - 호출한 스레드는 응답을 기다리지 않고 이후의 작업을 계속 처리할 수 있다.
 - 응답 결과나 에러는 Mono/Flux 기반의 이벤트 스트림으로 처리된다.
-- 멀티스레딩을 사용하는 것이 아닌, Netty의 이벤트 루프를 활용하기에 리소스 효율이 더 좋다.
+- 매번 스레드를 사용하는 것이, 멀티플렉싱을 활용하기에 리소스 효율이 더 좋다.
 - 요청과 응답 헤더에 TraceId를 삽입하고 이로 MDC를 대신하여 로깅하였다.
 
 ``` java
