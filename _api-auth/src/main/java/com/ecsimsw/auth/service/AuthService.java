@@ -13,6 +13,7 @@ import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.client.dto.AuthUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class AuthService {
+
+    @Value("${auth.token.secret}")
+    private String secret;
 
     private final UserPasswordRepository userPasswordRepository;
     private final UserRoleRepository userRoleRepository;
@@ -39,7 +43,7 @@ public class AuthService {
     }
 
     public LogInResponse reissue(String refreshToken) {
-        var username = RefreshToken.fromToken(TokenConfig.secretKey, refreshToken).username();
+        var username = RefreshToken.fromToken(secret, refreshToken).username();
         var tokenOpt = refreshTokenRepository.findByUsername(username);
         if (tokenOpt.isEmpty()) {
             throw new AuthException(ErrorType.INVALID_TOKEN);
@@ -49,8 +53,8 @@ public class AuthService {
 
     public Tokens createTokens(String username, boolean isAdmin) {
         return new Tokens(
-            new AccessToken(username, isAdmin).asJwtToken(TokenConfig.secretKey),
-            new RefreshToken(username).asJwtToken(TokenConfig.secretKey)
+            new AccessToken(username, isAdmin).asJwtToken(secret),
+            new RefreshToken(username).asJwtToken(secret)
         );
     }
 

@@ -15,9 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Mono;
 
-import static com.ecsimsw.common.config.LogConfig.TRACE_ID;
+import static com.ecsimsw.common.config.LogConfig.MDC_TRACE_ID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class UserService {
             .doOnError(WebClientResponseException.class, ex -> {
                 log.info(
                     "traceId : {}, status : {}, body : {}",
-                    ex.getHeaders().getFirst(TRACE_ID),
+                    ex.getHeaders().getFirst(MDC_TRACE_ID),
                     ex.getStatusCode(),
                     ex.getResponseBodyAsString()
                 );

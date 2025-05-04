@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.ecsimsw.common.config.LogConfig.TRACE_ID;
+import static com.ecsimsw.common.config.LogConfig.MDC_TRACE_ID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -79,7 +79,7 @@ public class RouteController {
                     var responseHeader = new HttpHeaders();
                     responseHeader.setContentType(MediaType.APPLICATION_JSON);
                     responseHeader.setContentLength(exception.getResponseBodyAsString().getBytes(StandardCharsets.UTF_8).length);
-                    responseHeader.set(TRACE_ID, exception.getHeaders().getFirst(TRACE_ID));
+                    responseHeader.set(MDC_TRACE_ID, exception.getHeaders().getFirst(MDC_TRACE_ID));
                     return Mono.just(ResponseEntity
                         .status(exception.getStatusCode())
                         .headers(responseHeader)

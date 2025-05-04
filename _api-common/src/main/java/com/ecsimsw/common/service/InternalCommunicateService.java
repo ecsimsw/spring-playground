@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ecsimsw.common.config.LogConfig.TRACE_ID;
+import static com.ecsimsw.common.config.LogConfig.MDC_TRACE_ID;
 import static com.ecsimsw.common.config.LogConfig.TRACE_ID_HEADER;
 
 @Service
@@ -88,7 +88,7 @@ public class InternalCommunicateService {
 
     private Map<String, String> getHeaders() {
         var headers = new HashMap<String, String>();
-        headers.put(TRACE_ID_HEADER, MDC.get(TRACE_ID));
+        headers.put(TRACE_ID_HEADER, MDC.get(MDC_TRACE_ID));
         headers.put("X-Client-Key", ClientKeyUtils.init());
         headers.put(HttpHeaders.CONTENT_TYPE, "application/json");
         return headers;

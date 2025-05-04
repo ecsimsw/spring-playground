@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.ecsimsw.common.config.LogConfig.TRACE_ID;
+import static com.ecsimsw.common.config.LogConfig.MDC_TRACE_ID;
 import static com.ecsimsw.common.config.LogConfig.TRACE_ID_HEADER;
 
 @Component
@@ -21,11 +21,11 @@ public class MDCFilter implements Filter {
             var httpRequest = (HttpServletRequest) request;
             var traceId = httpRequest.getHeader(TRACE_ID_HEADER);
             if(traceId != null) {
-                MDC.put(TRACE_ID, traceId);
+                MDC.put(MDC_TRACE_ID, traceId);
                 chain.doFilter(request, response);
             } else {
                 var newTraceId = UUID.randomUUID().toString();
-                MDC.put(TRACE_ID, newTraceId);
+                MDC.put(MDC_TRACE_ID, newTraceId);
                 chain.doFilter(request, response);
             }
         } finally {

@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
-import static com.ecsimsw.common.config.LogConfig.TRACE_ID;
+import static com.ecsimsw.common.config.LogConfig.MDC_TRACE_ID;
+import static com.ecsimsw.common.config.LogConfig.TRACE_ID_HEADER;
 
 public class ApiResponse<T> extends ResponseEntity<T> {
 
@@ -29,13 +30,13 @@ public class ApiResponse<T> extends ResponseEntity<T> {
 
     public static <T> ApiResponse<T> success(HttpStatus status, T result) {
         var headers = new HttpHeaders();
-        headers.add(TRACE_ID, MDC.get(TRACE_ID));
+        headers.add(TRACE_ID_HEADER, MDC.get(MDC_TRACE_ID));
         return new ApiResponse<>(result, headers, status);
     }
 
     public static ApiResponse<ApiErrorResult> error(ApiException e) {
         var headers = new HttpHeaders();
-        headers.add(TRACE_ID, MDC.get(TRACE_ID));
+        headers.add(TRACE_ID_HEADER, MDC.get(MDC_TRACE_ID));
         return new ApiResponse<>(ApiErrorResult.of(e), headers, e.status());
     }
 }

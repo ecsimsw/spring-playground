@@ -53,7 +53,7 @@ public class SpringSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers(CONTENT_URLS);
+        return web -> web.ignoring().requestMatchers("/h2-console/**");
     }
 
     @Bean

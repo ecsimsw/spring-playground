@@ -12,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,13 +24,16 @@ import java.util.Optional;
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
+    @Value("${auth.token.secret}")
+    private String secret;
+
     private final BlockedUserRepository blockedUserRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             var token = getToken(request).orElseThrow(() -> new AuthException(ErrorType.TOKEN_NOT_FOUND));
-            var accessToken = AccessToken.fromToken(TokenConfig.secretKey, token);
+            var accessToken = AccessToken.fromToken(secret, token);
             checkBlocked(token);
 
             var requestWrapper = new RequestWrapper(request);

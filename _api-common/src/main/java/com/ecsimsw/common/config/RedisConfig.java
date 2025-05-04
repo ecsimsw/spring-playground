@@ -37,7 +37,8 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
-        var connFactory = redisConnectionFactory(3000);
+        var defaultTimeout = 3000;
+        var connFactory = redisConnectionFactory(defaultTimeout);
         return redisTemplate(connFactory);
     }
 
