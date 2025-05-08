@@ -23,7 +23,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
 # ECS_CLUSTER
 
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "base-cluster"
+  name = "spring-playground-cluster"
 }
 
 resource "aws_security_group" "ecs_sg" {

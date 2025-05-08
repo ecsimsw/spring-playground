@@ -77,7 +77,7 @@ resource "aws_ecs_service" "ecs_service_notification" {
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.ecs_task_notification.arn
   desired_count   = 1
-  launch_type     = "FARGATE"
+  launch_type     = null
   health_check_grace_period_seconds = 120
   force_new_deployment = true
 
@@ -85,6 +85,12 @@ resource "aws_ecs_service" "ecs_service_notification" {
     subnets          = var.private_subnet_ids
     security_groups = [var.ecs_security_group_id]
     assign_public_ip = false
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT" # Spot으로 사용
+    weight            = 1
+    base              = 0
   }
 
   load_balancer {
