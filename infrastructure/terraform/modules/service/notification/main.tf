@@ -41,7 +41,7 @@ resource "aws_lb_listener_rule" "alb_listener_rule_notification" {
 
 resource "aws_ecs_task_definition" "ecs_task_notification" {
   family             = "task-notification"
-  execution_role_arn = ecs_task_execution_role
+  execution_role_arn = var.ecs_task_execution_role
   network_mode       = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                = 256
@@ -50,7 +50,7 @@ resource "aws_ecs_task_definition" "ecs_task_notification" {
   container_definitions = jsonencode([
     {
       name   = "notification-svc"
-      image  = "${ecr_url}-notification:0.0.1"
+      image  = "${var.ecr_url}-notification:0.0.1"
       cpu    = 256
       memory = 512
       essential = true # If the essential parameter of a container is marked as true, and that container fails or stops for any reason, all other containers that are part of the task are stopped
