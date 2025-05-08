@@ -1,7 +1,7 @@
 # TARGET_SERVICE
 
 resource "aws_lb_target_group" "aws_lb_tg_notification" {
-  name        = "spring-playground-notification-${substr(uuid(), 0, 5)}"
+  name        = "playground-notification-${substr(uuid(), 0, 5)}"
   port        = 8083
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -50,7 +50,7 @@ resource "aws_ecs_task_definition" "ecs_task_notification" {
   container_definitions = jsonencode([
     {
       name   = "notification-svc"
-      image  = "${var.ecr_url}-notification:0.0.1"
+      image  = "${var.ecr_url}:notification-0.0.1"
       cpu    = 256
       memory = 512
       essential = true # If the essential parameter of a container is marked as true, and that container fails or stops for any reason, all other containers that are part of the task are stopped
@@ -73,7 +73,7 @@ resource "aws_ecs_task_definition" "ecs_task_notification" {
 # ECS_SERVICE
 
 resource "aws_ecs_service" "ecs_service_notification" {
-  name            = "service-base"
+  name            = "sp-notification"
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.ecs_task_notification.arn
   desired_count   = 1
@@ -88,7 +88,7 @@ resource "aws_ecs_service" "ecs_service_notification" {
   }
 
   capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT" # Spot으로 사용
+    capacity_provider = "FARGATE_SPOT"
     weight            = 1
     base              = 0
   }
@@ -96,7 +96,7 @@ resource "aws_ecs_service" "ecs_service_notification" {
   load_balancer {
     target_group_arn = aws_lb_target_group.aws_lb_tg_notification.arn
     container_name   = "notification-svc"  # make sure that set same as container name
-    container_port   = 8080
+    container_port   = 8083
   }
 
   depends_on = [
