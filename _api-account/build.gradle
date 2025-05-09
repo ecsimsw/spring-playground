@@ -3,7 +3,7 @@ version = '1.0.0'
 
 dependencies {
     // modules
-    implementation project(':_api-common')
+    implementation project(':_support-common')
 
     // db
     runtimeOnly 'com.h2database:h2'
