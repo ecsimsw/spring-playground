@@ -1,8 +1,10 @@
 # Spring playground
 
-### 이벤트 처리량 개선, Reactive programming / Kafka batch queue
+### 이벤트 처리량 개선
 - Pulsar로부터 수신한 이벤트를 1. 외부 Api, 2. MongoDB, 3. Kafka에 전달해야 한다.
-- 초당 2000개의 이벤트 처리를 목표로 했다.
+- 초당 2000개의 이벤트 처리를 목표로 한다.
+
+#### Reactive programming
 - WebClient, Reative Mongo는 Netty의 이벤트 루프 스레드로 관리되어 처리 완료 시 또는 예외 시 콜백 기반으로 이후 처리 로직이 수행된다.
 - Netty 이벤트 루프 스레드는 기본 값으로 CPU 코어 수에 따라 스레드 풀이 생성되고, 직접 설정할 수 있다.
 - Epoll 등 커널 수준의 이벤트 IO 전달(멀티 플렉싱)을 사용하여 이벤트가 발생했을 때를 핸들링하기에, 이벤트 발생을 대기하는 기존 멀티 스레딩 방식보다 자원 효율이 좋고, 더 적은 수의 스레드로 처리가 가능하다.
@@ -11,6 +13,8 @@
 WebClient : reactor-http-nio-1
 Reactive Mongo : nioEventLoopGroup-2-16
 ```
+
+####  Kafka batch queue
 - Kafka producer의 이벤트 전달 역시 그 결과를 대기하지 않는다.
 - 그렇지만 그 동작 방식은 멀티 플렉싱을 사용한 앞선 WebClient, Reactive Mongo와는 다르다.
 - Kafka produce는 전달할 이벤트를 담을 큐(batch queue)를 메모리에 생성해두고 이를 관리하는 스레드를 따로 둔다.
@@ -21,7 +25,7 @@ Reactive Mongo : nioEventLoopGroup-2-16
 Kafka producer : kafka-producer-network-thread | producer-1
 ```
 
-### Sliding window rate limiter
+### Rate limit, Sliding window rate limiter
 - 사용자별 분당 요청 수를 제한한다.
 - lua script로 경쟁 조건을 피하고 원자적 연산을 수행했다.
 - ZSet의 Score를 요청 시간으로 하여 조건 시간내 개수 검색과 요소 제거 성능을 높인다.
@@ -46,28 +50,13 @@ else
 end
 ```
 
-### WebClient, 이벤트 전달
-- 이벤트를 단순히 전달하는 상황에서 WebClient를 사용했다.
-- 기존 블록킹 방식의 RestTemplate는 외부 API의 응답 시간에 영향을 받아 호출한 스레드가 응답을 기다리며 차단된다.
-- 이로 인해 응답 시간과 상관없이 기존 처리 흐름을 유지하려면 멀티스레딩이 필요했다.
-- 반면, WebClient는 논블로킹 방식으로 외부 API 요청을 처리한다.
-- 호출한 스레드는 응답을 기다리지 않고 이후의 작업을 계속 처리할 수 있다.
-- 응답 결과나 에러는 Mono/Flux 기반의 이벤트 스트림으로 처리된다.
-- 매번 스레드를 사용하는 것이, 멀티플렉싱을 활용하기에 리소스 효율이 더 좋다.
-- 요청과 응답 헤더에 TraceId를 삽입하고 이로 MDC를 대신하여 로깅하였다.
-
-``` java
-notificationClient.postAsAsync()
-    .doOnError(WebClientResponseException.class, ex -> {
-        log.error("Failed to deliver notification event : {}, status : {}, body : {}",
-            ex.getHeaders().getFirst(TRACE_ID),
-            ex.getStatusCode(),
-            ex.getResponseBodyAsString()
-        );
-    }).subscribe();
-        return user.getId();
-    }
-```
+### Config server
+- 모듈간 중복된 속성 값이 늘었고, 이를 한 곳에서 관리하고 싶다.
+- 속성 값이 변경되었을 때, Application을 새로 빌드하지 않도록 하고 싶었다.
+- Spring cloud Config server를 구성했다.
+- 속성 값은 Git 레포지토리로 관리되고, Config server는 애플리케이션을 실행할 때 그 값을 전달한다.
+- 공통 속성을 관리하기 용이하고, 속성 값이 변경되었어도 애플리케이션을 새로 빌드하지 않아도 된다.
+- 대신 Config server는 내부망에서만 요청을 수신할 수 있도록 한다.
 
 ### MDC(Mapped Diagnostic Context)
 - 한 요청의 처리 흐름이 단일 서버가 아닌, 여러 서버로 전파되는 경우 로깅이 까다롭다.
