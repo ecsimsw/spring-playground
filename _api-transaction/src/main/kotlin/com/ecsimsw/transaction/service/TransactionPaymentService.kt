@@ -1,6 +1,6 @@
 package com.ecsimsw.transaction.service
 
-import com.ecsimsw.common.client.UserClient
+import com.ecsimsw.common.client.AccountClient
 import com.ecsimsw.common.support.aop.MemLock
 import com.ecsimsw.transaction.domain.Transaction
 import com.ecsimsw.transaction.domain.TransactionStatus
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 
 @Service
 open class TransactionPaymentService(
-    private val userClient: UserClient,
+    private val accountClient: AccountClient,
     private val paymentService: PaymentService,
     private val transactionService: TransactionService
 ) {
@@ -47,7 +47,7 @@ open class TransactionPaymentService(
     }
 
     private fun addCredit(transaction: Transaction) {
-        val creditAddedResponse = userClient.addCredit(transaction.username, transaction.amount)
+        val creditAddedResponse = accountClient.addCredit(transaction.username, transaction.amount)
         if (creditAddedResponse.statusCode != HttpStatus.OK) {
             transactionService.failed(transaction, "Failed to add credit")
             throw IllegalArgumentException("Failed to add credit")
@@ -55,6 +55,6 @@ open class TransactionPaymentService(
     }
 
     private fun rollbackCredit(transaction: Transaction) {
-        userClient.rollbackCreditAddition(transaction.username, transaction.amount)
+        accountClient.rollbackCreditAddition(transaction.username, transaction.amount)
     }
 }

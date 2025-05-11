@@ -17,31 +17,31 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/api/user/signup")
+    @PostMapping("/api/account/signup")
     public ApiResponse<Long> user(@RequestBody SignUpRequest request) {
         log.info("Create user {}", request.username());
         var id = userService.create(request);
         return ApiResponse.success(id);
     }
 
-    @GetMapping("/api/user/me")
+    @GetMapping("/api/account/me")
     public ApiResponse<UserInfoResponse> me(AuthUser user) {
         var result = userService.userInfo(user.username());
         return ApiResponse.success(result);
     }
 
-    @GetMapping("/api/user/roles")
+    @GetMapping("/api/account/roles")
     public ApiResponse<String[]> roles(AuthUser user) {
         return ApiResponse.success(user.roles());
     }
 
-    @PutMapping("/api/user/password")
+    @PutMapping("/api/account/password")
     public ApiResponse<Void> password(AuthUser user, @RequestBody UpdatePasswordRequest request) {
         userService.updatePassword(user.username(), request.password());
         return ApiResponse.success();
     }
 
-    @DeleteMapping("/api/user")
+    @DeleteMapping("/api/account")
     public ApiResponse<Void> delete(AuthUser user) {
         userService.delete(user.username());
         return ApiResponse.success();

@@ -29,6 +29,8 @@ module "ecs" {
   ecr_url                 = module.ecr.ecr_url
   ecs_security_group_id   = module.ecs.ecs_security_group_id
   ecs_task_execution_role = module.ecs.ecs_task_execution_role
+  account_port            = 8851
+  account_version         = "1.0.1"
   notification_port       = 8854
   notification_version    = "1.0.1"
 }

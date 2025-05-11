@@ -37,3 +37,11 @@ variable "notification_port" {
 variable "notification_version" {
   type = string
 }
+
+variable "account_port" {
+  type = number
+}
+
+variable "account_version" {
+  type = string
+}

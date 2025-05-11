@@ -18,19 +18,19 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @GetMapping("/api/user/admin/users")
+    @GetMapping("/api/account/admin/users")
     public ApiResponse<Page<UserInfoAdminResponse>> users(Pageable pageable) {
         var response = adminService.users(pageable);
         return ApiResponse.success(response);
     }
 
-    @GetMapping("/api/user/admin/role-names")
+    @GetMapping("/api/account/admin/role-names")
     public ApiResponse<RoleType[]> roles() {
         var roleNames = RoleType.values();
         return ApiResponse.success(roleNames);
     }
 
-    @DeleteMapping("/api/user/admin/users/{userId}")
+    @DeleteMapping("/api/account/admin/users/{userId}")
     public ApiResponse<Void> deleteUser(@PathVariable Long userId) {
         adminService.deleteUser(userId);
         return ApiResponse.success();

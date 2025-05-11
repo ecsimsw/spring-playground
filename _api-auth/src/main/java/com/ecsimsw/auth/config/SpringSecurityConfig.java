@@ -20,8 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
 
-import static com.ecsimsw.common.config.Urls.CONTENT_URLS;
-
 @RequiredArgsConstructor
 @Configuration
 @EnableMethodSecurity
