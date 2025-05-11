@@ -15,6 +15,10 @@ resource "aws_internet_gateway" "vpc_igw_main" {
 # NAT
 resource "aws_eip" "nat_ip_main" {
   domain = "vpc"
+
+  tags = {
+    Name = "spring-playground-nat"
+  }
 }
 
 resource "aws_nat_gateway" "nat_main" {

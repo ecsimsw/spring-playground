@@ -2,7 +2,7 @@
 
 resource "aws_lb_target_group" "aws_lb_tg_notification" {
   name        = "playground-notification-${substr(uuid(), 0, 5)}"
-  port        = 8083
+  port        = var.notification_port
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
@@ -37,6 +37,13 @@ resource "aws_lb_listener_rule" "alb_listener_rule_notification" {
   }
 }
 
+# LOG_GROUP
+
+resource "aws_cloudwatch_log_group" "notification" {
+  name              = "/spring-playground/notification-svc"
+  retention_in_days = 1
+}
+
 # ECS_TASK
 
 resource "aws_ecs_task_definition" "ecs_task_notification" {
@@ -50,17 +57,26 @@ resource "aws_ecs_task_definition" "ecs_task_notification" {
   container_definitions = jsonencode([
     {
       name   = "notification-svc"
-      image  = "${var.ecr_url}:notification-0.0.1"
+      image  = "${var.ecr_url}:api-notification-${var.notification_version}"
       cpu    = 256
       memory = 512
       essential = true # If the essential parameter of a container is marked as true, and that container fails or stops for any reason, all other containers that are part of the task are stopped
       portMappings = [
         {
-          containerPort = 8083
-          hostPort      = 8083
+          containerPort = var.notification_port
+          hostPort      = var.notification_port
           protocol      = "tcp"
         }
       ]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.notification.name
+          awslogs-region        = "ap-northeast-2"
+          awslogs-stream-prefix = "notification"
+        }
+      }
     }
   ])
 
@@ -73,7 +89,7 @@ resource "aws_ecs_task_definition" "ecs_task_notification" {
 # ECS_SERVICE
 
 resource "aws_ecs_service" "ecs_service_notification" {
-  name            = "sp-notification"
+  name            = "playground-notification"
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.ecs_task_notification.arn
   desired_count   = 1
@@ -96,7 +112,7 @@ resource "aws_ecs_service" "ecs_service_notification" {
   load_balancer {
     target_group_arn = aws_lb_target_group.aws_lb_tg_notification.arn
     container_name   = "notification-svc"  # make sure that set same as container name
-    container_port   = 8083
+    container_port   = var.notification_port
   }
 
   depends_on = [
