@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ./build-and-deploy.sh api-config 1.0.0
-# ./build-and-deploy.sh api-notification 1.0.0
+# ./build-and-deploy.sh api-notification 1.0.1
 
 if [ $# -ne 2 ]; then
   echo "use : $0 <MODULE_NAME> <VERSION>"

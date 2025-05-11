@@ -1,6 +1,6 @@
 # SG
 resource "aws_security_group" "alb_sg" {
-  name        = "alb-sg"
+  name        = "spring-playground-alb-sg"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -20,7 +20,7 @@ resource "aws_security_group" "alb_sg" {
 
 # ALB
 resource "aws_lb" "alb" {
-  name               = "alb"
+  name               = "spring-playground-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]

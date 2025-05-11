@@ -8,7 +8,7 @@ resource "aws_lb_target_group" "aws_lb_tg_notification" {
   target_type = "ip"
 
   health_check {
-    path                = "/up"
+    path                = "/api/notification/up"
     interval            = 5
     timeout             = 2
     healthy_threshold   = 2

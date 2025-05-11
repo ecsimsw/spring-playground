@@ -30,7 +30,7 @@ module "ecs" {
   ecs_security_group_id   = module.ecs.ecs_security_group_id
   ecs_task_execution_role = module.ecs.ecs_task_execution_role
   notification_port       = 8854
-  notification_version    = "1.0.0"
+  notification_version    = "1.0.1"
 }
 
 module "lb" {
