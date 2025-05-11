@@ -45,3 +45,11 @@ variable "account_port" {
 variable "account_version" {
   type = string
 }
+
+variable "auth_port" {
+  type = number
+}
+
+variable "auth_version" {
+  type = string
+}

@@ -16,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -65,6 +62,11 @@ public class AuthController {
     @PutMapping("/api/auth/user")
     public ResponseEntity<Void> updateUser(@RequestBody AuthUpdateRequest request) {
         authService.updateUserAuth(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/auth/up")
+    public ResponseEntity<Void> up() {
         return ResponseEntity.ok().build();
     }
 
