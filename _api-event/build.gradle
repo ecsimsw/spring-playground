@@ -16,6 +16,9 @@ dependencies {
     // Pulsar
     implementation 'org.springframework.boot:spring-boot-starter-pulsar'
 
+    // web socket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
     runtimeOnly 'com.h2database:h2'
 }
 

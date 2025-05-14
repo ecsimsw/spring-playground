@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ApiEventApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ApiEventApplication.class, args);
+        var app = new SpringApplication(ApiEventApplication.class);
+        app.setAdditionalProfiles("local");
+        app.run(args);
     }
 
 }

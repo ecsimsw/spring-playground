@@ -20,7 +20,7 @@ public class EventThroughputCounter {
     public void start(long period, TimeUnit unit) {
         scheduler.scheduleAtFixedRate(() -> {
             int count = counter.getAndSet(0);
-            log.info("Event count per sec: {}", count);
+            log.info("Event count : {}, per {} {}", count, period, unit.toChronoUnit().name());
         }, 1, period, unit);
     }
 
