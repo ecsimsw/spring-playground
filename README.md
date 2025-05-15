@@ -24,6 +24,10 @@ Reactive Mongo : nioEventLoopGroup-2-16
 // Batch queue 관리 스레드 이름 예시
 Kafka producer : kafka-producer-network-thread | producer-1
 ```
+- Kafka client는 TCP 연결을 지속하고 통신한다.
+- Producer는 앞선 설명대로 이벤트를 일정 크기 또는 기간 동안 모아 Batch로 전송한다.
+- 또 같은 연결 안에서 Ack로 전송 결과를 확인하는데, Producer-ack 설정으로 안정도 수준을 결정할 수 있다. (0 : 확인x, 1: 리더 파티션 브로커만 확인, all:모든 파티션 전파 확인)
+- Subscriber는 짧은 주기별로 Polling하여 데이터를 컨슘하는데, 매번 연결을 수립하고 정리하는 과정을 생략할 수 있다.
 
 ### Rate limit, Sliding window rate limiter
 - 사용자별 분당 요청 수를 제한한다.
