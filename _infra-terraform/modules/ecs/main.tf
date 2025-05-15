@@ -35,7 +35,7 @@ resource "aws_security_group" "ecs_sg" {
     from_port = 8080
     to_port   = 8080
     protocol  = "tcp"
-    security_groups = [var.alb_sg_id]
+    security_groups = [var.internal_alb_sg_id]
   }
 
   egress {

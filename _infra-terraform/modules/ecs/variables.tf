@@ -2,7 +2,7 @@ variable "vpc_id" {
   type = string
 }
 
-variable "alb_sg_id" {
+variable "internal_alb_sg_id" {
   type = string
 }
 

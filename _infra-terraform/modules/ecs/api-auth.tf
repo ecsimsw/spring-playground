@@ -96,7 +96,7 @@ resource "aws_security_group" "ecs_auth_sg" {
     from_port       = var.auth_port
     to_port         = var.auth_port
     protocol        = "tcp"
-    security_groups = [var.alb_sg_id] # Allow only for alb
+    security_groups = [var.internal_alb_sg_id] # Allow only for alb
   }
 
   egress {

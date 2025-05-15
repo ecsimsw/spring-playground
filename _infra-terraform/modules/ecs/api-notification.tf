@@ -96,7 +96,7 @@ resource "aws_security_group" "ecs_notification_sg" {
     from_port       = var.notification_port
     to_port         = var.notification_port
     protocol        = "tcp"
-    security_groups = [var.alb_sg_id] # Allow only for alb
+    security_groups = [var.internal_alb_sg_id] # Allow only for alb
   }
 
   egress {
