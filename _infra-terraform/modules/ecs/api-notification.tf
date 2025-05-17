@@ -1,7 +1,7 @@
 # TARGET_SERVICE
 
 resource "aws_lb_target_group" "aws_lb_tg_notification" {
-  name        = "spring-playground-notification-${substr(uuid(), 0, 5)}"
+  name        = "spground-notification-${substr(uuid(), 0, 3)}"
   port        = var.notification_port
   protocol    = "HTTP"
   vpc_id      = var.vpc_id

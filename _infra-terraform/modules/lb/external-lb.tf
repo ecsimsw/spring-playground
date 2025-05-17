@@ -17,7 +17,7 @@ resource "aws_lb_listener" "external_nlb_listener" {
 }
 
 resource "aws_lb_target_group" "external_nlb_tg" {
-  name        = "nlb-to-alb-tg"
+  name        = "spring-playground-nlb-to-alb-tg"
   target_type = "alb"
   port        = 8080
   protocol    = "TCP"
@@ -26,7 +26,7 @@ resource "aws_lb_target_group" "external_nlb_tg" {
   health_check {
     port                = "8080"
     protocol            = "HTTP"
-    path                = "/"
+    path                = "/api/auth/up"
     matcher             = "200-399"
     interval            = 30
     unhealthy_threshold = 3

@@ -1,7 +1,7 @@
 # TARGET_SERVICE
 
 resource "aws_lb_target_group" "aws_lb_tg_account" {
-  name        = "spring-playground-account-${substr(uuid(), 0, 5)}"
+  name        = "spground-account-${substr(uuid(), 0, 3)}"
   port        = var.account_port
   protocol    = "HTTP"
   vpc_id      = var.vpc_id

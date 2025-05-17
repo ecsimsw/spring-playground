@@ -6,7 +6,7 @@ resource "aws_security_group" "internal_alb_sg" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = var.public_subnet_cidr_blocks
+    cidr_blocks = var.internal_lb_cidr_block
   }
 
   egress {

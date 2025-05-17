@@ -6,7 +6,7 @@ variable "public_subnet_ids" {
   type = list(string)
 }
 
-variable "public_subnet_cidr_blocks" {
+variable "internal_lb_cidr_block" {
   type = list(string)
 }
 
