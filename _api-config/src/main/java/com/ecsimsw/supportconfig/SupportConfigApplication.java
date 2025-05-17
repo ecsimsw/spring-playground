@@ -9,7 +9,9 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 public class SupportConfigApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SupportConfigApplication.class, args);
+        var app = new SpringApplication(SupportConfigApplication.class);
+        app.setAdditionalProfiles("local");
+        app.run(args);
     }
 
 }

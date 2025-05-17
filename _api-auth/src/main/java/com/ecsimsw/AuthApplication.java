@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AuthApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AuthApplication.class, args);
+        var app = new SpringApplication(AuthApplication.class);
+        app.setAdditionalProfiles("local");
+        app.run(args);
     }
 }

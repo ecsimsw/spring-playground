@@ -8,6 +8,7 @@ public class AccountApplication {
 
     public static void main(String[] args) {
         var app = new SpringApplication(AccountApplication.class);
+        app.setAdditionalProfiles("local");
         app.run(args);
     }
 }

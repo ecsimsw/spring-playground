@@ -1,6 +1,6 @@
 package com.ecsimsw.transaction.service
 
-import com.ecsimsw.common.client.AccountClient
+import com.ecsimsw.common.service.client.AccountClient
 import com.ecsimsw.transaction.domain.Transaction
 import com.ecsimsw.transaction.domain.TransactionStatus
 import com.ecsimsw.transaction.support.MemLock

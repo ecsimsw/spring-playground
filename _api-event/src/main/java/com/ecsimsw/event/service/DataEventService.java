@@ -1,8 +1,8 @@
 package com.ecsimsw.event.service;
 
+import com.ecsimsw.common.service.client.NotificationClient;
 import com.ecsimsw.event.domain.DataEventMessage;
 import com.ecsimsw.event.domain.DataEventMessageRepository;
-import com.ecsimsw.common.client.NotificationClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
