@@ -1,8 +1,8 @@
-package com.ecsimsw.common.client;
+package com.ecsimsw.common.service.client;
 
 import com.ecsimsw.common.service.InternalCommunicateService;
-import com.ecsimsw.common.client.dto.AuthCreationRequest;
-import com.ecsimsw.common.client.dto.AuthUpdateRequest;
+import com.ecsimsw.common.service.client.dto.AuthCreationRequest;
+import com.ecsimsw.common.service.client.dto.AuthUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

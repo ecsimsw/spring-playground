@@ -10,6 +10,9 @@ public class ClientKeyUtils {
     }
 
     public static boolean isValid(String timeKey, int validTimeMs) {
+        if(timeKey == null || timeKey.isEmpty()) {
+            return false;
+        }
         var decrypted = AESUtils.decrypt(SECRET, timeKey);
         var publishedAt = Long.parseLong(decrypted);
         var now = System.currentTimeMillis();

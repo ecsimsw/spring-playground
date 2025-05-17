@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # ./build-and-deploy.sh api-config 1.0.0
+# ./build-and-deploy.sh api-auth 1.0.1
+# ./build-and-deploy.sh api-account 1.0.1
 # ./build-and-deploy.sh api-notification 1.0.1
 
 if [ $# -ne 2 ]; then

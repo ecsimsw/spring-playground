@@ -1,9 +1,9 @@
 package com.ecsimsw.transaction.service
 
 import com.ecsimsw.common.client.AccountClient
-import com.ecsimsw.common.support.aop.MemLock
 import com.ecsimsw.transaction.domain.Transaction
 import com.ecsimsw.transaction.domain.TransactionStatus
+import com.ecsimsw.transaction.support.MemLock
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 

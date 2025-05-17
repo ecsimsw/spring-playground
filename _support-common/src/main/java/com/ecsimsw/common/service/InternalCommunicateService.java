@@ -1,6 +1,7 @@
 package com.ecsimsw.common.service;
 
 import com.ecsimsw.common.support.utils.ClientKeyUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -17,13 +18,14 @@ import java.util.Map;
 import static com.ecsimsw.common.config.LogConfig.MDC_TRACE_ID;
 import static com.ecsimsw.common.config.LogConfig.TRACE_ID_HEADER;
 
+@Slf4j
 @Service
 public class InternalCommunicateService {
 
     private final RestTemplate restTemplate;
     private final WebClient webClient;
 
-    @Value("${service.gateway:}")
+    @Value("${service.gateway}")
     public String gateway;
 
     public InternalCommunicateService(RestTemplateBuilder builder, WebClient webClient) {
@@ -63,7 +65,14 @@ public class InternalCommunicateService {
     public <T> ResponseEntity<T> request(HttpMethod method, String path, Object requestBody, Class<T> type) {
         try {
             var url = gateway + path;
-            return restTemplate.exchange(url, method, httpEntity(requestBody), type);
+            var requestEntity = httpEntity(requestBody);
+            var headers = requestEntity.getHeaders().toSingleValueMap();
+            log.info("""
+                    Request url : {}
+                    Request headers : {}
+                    Request body : {}""",
+            url, headers, requestBody);
+            return restTemplate.exchange(url, method, requestEntity, type);
         } catch (HttpStatusCodeException ex) {
             return ResponseEntity.status(ex.getStatusCode())
                 .headers(ex.getResponseHeaders())

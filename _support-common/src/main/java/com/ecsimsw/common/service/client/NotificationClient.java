@@ -1,4 +1,4 @@
-package com.ecsimsw.common.client;
+package com.ecsimsw.common.service.client;
 
 import com.ecsimsw.common.service.InternalCommunicateService;
 import lombok.RequiredArgsConstructor;

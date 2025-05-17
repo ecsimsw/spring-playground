@@ -1,4 +1,4 @@
-package com.ecsimsw.common.client.dto;
+package com.ecsimsw.common.service.client.dto;
 
 public record AuthUpdateRequest(
     String username,
