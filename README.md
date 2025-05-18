@@ -37,7 +37,7 @@ Kafka producer : kafka-producer-network-thread | producer-1
 - Public subnet은 NLB로, Private subnet은 internal ALB로 하여, 서버간 통신에 내부 네트워크를 사용하면서도 Reverse proxy 구조를 유지한다.
 <img width="338" alt="image" src="https://github.com/user-attachments/assets/a95cac41-b0ac-4392-8262-e8ec3b1184ad" />
 
-### Rate limit, Sliding window rate limiter
+### 처리량 제한, Sliding window rate limiter
 - 사용자별 분당 요청 수를 제한한다.
 - lua script로 경쟁 조건을 피하고 원자적 연산을 수행했다.
 - ZSet의 Score를 요청 시간으로 하여 조건 시간내 개수 검색과 요소 제거 성능을 높인다.
