@@ -6,11 +6,11 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 
 @EnableConfigServer
 @SpringBootApplication
-public class SupportConfigApplication {
+public class ApiConfigApplication {
 
     public static void main(String[] args) {
-        var app = new SpringApplication(SupportConfigApplication.class);
-        app.setAdditionalProfiles("local");
+        var app = new SpringApplication(ApiConfigApplication.class);
+        app.setAdditionalProfiles("native");
         app.run(args);
     }
 
