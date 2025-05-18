@@ -29,6 +29,14 @@ Kafka producer : kafka-producer-network-thread | producer-1
 - 또 같은 연결 안에서 Ack로 전송 결과를 확인하는데, Producer-ack 설정으로 안정도 수준을 결정할 수 있다. (0 : 확인x, 1: 리더 파티션 브로커만 확인, all:모든 파티션 전파 확인)
 - Subscriber는 짧은 주기별로 Polling하여 데이터를 컨슘하는데, 매번 연결을 수립하고 정리하는 과정을 생략할 수 있다.
 
+### 내부 통신을 위한 Internal ALB
+- 서버 간 내부 통신에 Endpoint를 직접 지정하지 않도록하여, 오토 스케일링을 가능하게 한다.
+- 전면 게이트웨이는 라우팅 규칙에 따라 요청 Path에 해당하는 Target group으로 라우팅한다.
+- 기존의 구조에선 Public subnet의 ALB를 게이트웨이로 사용하다보니, 내부 서버간 통신에 ALB로 전달이 필요했고, 외부 네트워크를 타게 되었다.
+- 라우팅을 처리하는 ALB와 TLS 설정, WAF 등을 전면 처리하는 NLB를 분리하였다.
+- Public subnet은 NLB로, Private subnet은 internal ALB로 하여, 서버간 통신에 내부 네트워크를 사용하면서도 Reverse proxy 구조를 유지한다.
+<img width="338" alt="image" src="https://github.com/user-attachments/assets/a95cac41-b0ac-4392-8262-e8ec3b1184ad" />
+
 ### Rate limit, Sliding window rate limiter
 - 사용자별 분당 요청 수를 제한한다.
 - lua script로 경쟁 조건을 피하고 원자적 연산을 수행했다.
