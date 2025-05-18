@@ -35,7 +35,7 @@ Kafka producer : kafka-producer-network-thread | producer-1
 - 기존의 구조에선 Public subnet의 ALB를 게이트웨이로 사용하다보니, 내부 서버간 통신에 ALB로 전달이 필요했고, 외부 네트워크를 타게 되었다.
 - 라우팅을 처리하는 ALB와 TLS 설정, WAF 등을 전면 처리하는 NLB를 분리하였다.
 - Public subnet은 NLB로, Private subnet은 internal ALB로 하여, 서버간 통신에 내부 네트워크를 사용하면서도 Reverse proxy 구조를 유지한다.
-<img width="338" alt="image" src="https://github.com/user-attachments/assets/a95cac41-b0ac-4392-8262-e8ec3b1184ad" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/a95cac41-b0ac-4392-8262-e8ec3b1184ad" />
 
 ### 처리량 제한, Sliding window rate limiter
 - 사용자별 분당 요청 수를 제한한다.
@@ -132,7 +132,7 @@ Optional<Credit> findByUidWithLock(@Param("uid") Long uid);
 - 후자는 크레딧 업데이트 실패 시, 이미 빠져나간 돈을 반환하긴 쉽지 않다.
 - 크레딧을 잘못 부여 후 회수에 실패하는 전자의 위험보다, 결제는 완료되었지만 크레딧은 그대로인 후자의 위험이 더 크다고 판단했다.
 
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/71d303cb-52ac-46c2-9b08-4736569378b6" />
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/71d303cb-52ac-46c2-9b08-4736569378b6" />
 
 ### Service discovery
 - 각 서비스는 애플리케이션 시작 시 Endpoint 정보를 Gateway에 알린다.
