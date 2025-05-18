@@ -31,7 +31,7 @@ public class GlobalAdvice {
         HttpMessageNotReadableException.class,
         NoResourceFoundException.class
     })
-    public ApiResponse<ApiErrorResult> invalidRequest() {
+    public ApiResponse<ApiErrorResult> invalidRequest(Exception e) {
         var exception = new ApiException(ErrorType.INVALID_REQUEST);
         return ApiResponse.error(exception);
     }
