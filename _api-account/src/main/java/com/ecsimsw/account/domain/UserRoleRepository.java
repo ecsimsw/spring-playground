@@ -1,4 +1,4 @@
-package com.ecsimsw.auth.domain;
+package com.ecsimsw.account.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

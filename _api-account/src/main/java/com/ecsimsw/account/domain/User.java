@@ -22,6 +22,7 @@ public class User {
     private String email;
     private boolean isAdmin = false;
     private boolean deleted = false;
+    private String password;
     private LocalDateTime createTime = LocalDateTime.now();
     private LocalDateTime deletedTime = null;
 

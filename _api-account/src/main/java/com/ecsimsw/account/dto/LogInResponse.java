@@ -1,4 +1,4 @@
-package com.ecsimsw.auth.dto;
+package com.ecsimsw.account.dto;
 
 public record LogInResponse(
     Tokens tokens
