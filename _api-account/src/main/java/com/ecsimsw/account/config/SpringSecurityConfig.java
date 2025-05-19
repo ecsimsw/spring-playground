@@ -1,7 +1,7 @@
-package com.ecsimsw.auth.config;
+package com.ecsimsw.account.config;
 
-import com.ecsimsw.auth.service.CustomAuthenticationProvider;
-import com.ecsimsw.auth.service.CustomUserDetailService;
+import com.ecsimsw.account.service.CustomAuthenticationProvider;
+import com.ecsimsw.account.service.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

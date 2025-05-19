@@ -5,6 +5,9 @@ dependencies {
     // modules
     implementation project(':_support-common')
 
+    // security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
     // db
     runtimeOnly 'com.h2database:h2'
 }

@@ -1,7 +1,7 @@
 package com.ecsimsw.account.dto;
 
 import com.ecsimsw.account.domain.User;
-import com.ecsimsw.common.service.client.dto.AuthCreationRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public record SignUpRequest(
     String username,
@@ -9,11 +9,7 @@ public record SignUpRequest(
     String email
 ) {
 
-    public User toUser() {
+    public User toUser(PasswordEncoder passwordEncoder) {
         return new User(username, email, false);
-    }
-
-    public AuthCreationRequest toAuthCreationRequest(Long userId) {
-        return new AuthCreationRequest(userId, username, password);
     }
 }

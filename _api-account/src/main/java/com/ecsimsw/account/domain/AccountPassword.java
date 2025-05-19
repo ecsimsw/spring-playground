@@ -1,12 +1,10 @@
-package com.ecsimsw.auth.domain;
+package com.ecsimsw.account.domain;
 
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.error.UserException;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,14 +13,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class UserPassword {
+public class AccountPassword {
 
     @Id
     private Long userId;
     private String username;
     private String password;
 
-    public UserPassword(PasswordEncoder encoder, Long userId, String username, String purePassword) {
+    public AccountPassword(PasswordEncoder encoder, Long userId, String username, String purePassword) {
         if (purePassword.length() < 5 || purePassword.length() > 20) {
             throw new UserException(ErrorType.INVALID_PASSWORD);
         }
