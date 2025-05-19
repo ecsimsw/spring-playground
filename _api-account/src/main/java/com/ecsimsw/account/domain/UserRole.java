@@ -1,5 +1,6 @@
 package com.ecsimsw.account.domain;
 
+import com.ecsimsw.account.support.UserRoleConverter;
 import com.ecsimsw.common.domain.RoleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,6 @@ public class UserRole {
 
     @Id
     private Long userId;
-
     private Boolean isAdmin;
 
     @Convert(converter = UserRoleConverter.class)

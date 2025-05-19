@@ -1,11 +1,10 @@
 package com.ecsimsw.account.controller;
 
-import com.ecsimsw.account.dto.UpdatePasswordRequest;
+import com.ecsimsw.account.dto.SignUpRequest;
 import com.ecsimsw.account.dto.UserInfoResponse;
-import com.ecsimsw.account.service.AccountService;
+import com.ecsimsw.account.service.UserService;
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
-import com.ecsimsw.account.dto.SignUpRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -15,18 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
 
-    private final AccountService accountService;
+    private final UserService userService;
 
     @PostMapping("/api/account/signup")
     public ApiResponse<Long> user(@RequestBody SignUpRequest request) {
         log.info("Create user {}", request.username());
-        var id = accountService.create(request);
+        var id = userService.create(request);
         return ApiResponse.success(id);
     }
 
     @GetMapping("/api/account/me")
     public ApiResponse<UserInfoResponse> me(AuthUser user) {
-        var result = accountService.userInfo(user.username());
+        var result = userService.userInfo(user.username());
         return ApiResponse.success(result);
     }
 
@@ -35,15 +34,9 @@ public class UserController {
         return ApiResponse.success(user.roles());
     }
 
-    @PutMapping("/api/account/password")
-    public ApiResponse<Void> password(AuthUser user, @RequestBody UpdatePasswordRequest request) {
-        accountService.updatePassword(user.username(), request.password());
-        return ApiResponse.success();
-    }
-
     @DeleteMapping("/api/account")
     public ApiResponse<Void> delete(AuthUser user) {
-        accountService.delete(user.username());
+        userService.delete(user.username());
         return ApiResponse.success();
     }
 }

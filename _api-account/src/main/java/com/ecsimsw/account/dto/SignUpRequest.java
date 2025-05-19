@@ -9,7 +9,7 @@ public record SignUpRequest(
     String email
 ) {
 
-    public User toUser(PasswordEncoder passwordEncoder) {
+    public User toUser() {
         return new User(username, email, false);
     }
 }

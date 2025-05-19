@@ -13,26 +13,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class AccountPassword {
+public class UserPassword {
 
     @Id
     private Long userId;
     private String username;
     private String password;
 
-    public AccountPassword(PasswordEncoder encoder, Long userId, String username, String purePassword) {
+    public UserPassword(PasswordEncoder encoder, Long userId, String username, String purePassword) {
         if (purePassword.length() < 5 || purePassword.length() > 20) {
             throw new UserException(ErrorType.INVALID_PASSWORD);
         }
         this.userId = userId;
         this.username = username;
-        this.password = encoder.encode(purePassword);
-    }
-
-    public void updatePassword(PasswordEncoder encoder, String purePassword) {
-        if (purePassword.length() < 5 || purePassword.length() > 20) {
-            throw new UserException(ErrorType.INVALID_PASSWORD);
-        }
         this.password = encoder.encode(purePassword);
     }
 
