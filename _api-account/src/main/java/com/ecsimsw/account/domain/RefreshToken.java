@@ -20,6 +20,12 @@ public record RefreshToken(
     }
 
     public String asJwtToken(String secretKey) {
-        return JwtUtils.generate(secretKey, REFRESH_TOKEN_EXPIRED_TIME, Map.of("username", username));
+        return JwtUtils.generate(
+            secretKey,
+            REFRESH_TOKEN_EXPIRED_TIME,
+            Map.of(
+                "username", username
+            )
+        );
     }
 }

@@ -5,11 +5,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public record SignUpRequest(
     String username,
-    String password,
-    String email
+    String password
 ) {
 
-    public User toUser() {
-        return new User(username, email, false);
+    public User toUser(String uid) {
+        return new User(username, uid);
     }
 }

@@ -4,6 +4,7 @@ version = '1.0.2'
 dependencies {
     // modules
     implementation project(':_support-common')
+    implementation project(':_sdk-external-platform')
 
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security'

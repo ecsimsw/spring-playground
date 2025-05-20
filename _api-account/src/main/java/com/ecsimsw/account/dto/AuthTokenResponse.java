@@ -1,6 +1,6 @@
 package com.ecsimsw.account.dto;
 
-public record Tokens(
+public record AuthTokenResponse(
     String accessToken,
     String refreshToken
 ) {

@@ -18,15 +18,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+    private String uid;
     private String username;
-    private String email;
-    private boolean isAdmin = false;
     private LocalDateTime createTime = LocalDateTime.now();
 
     @Builder
-    public User(String username, String email, boolean isAdmin) {
+    public User(String username, String uid) {
         this.username = username;
-        this.email = email;
-        this.isAdmin = isAdmin;
+        this.uid = uid;
     }
 }
