@@ -1,6 +1,5 @@
-package com.ecsimsw.common.service.client;
+package com.ecsimsw.common.support.client;
 
-import com.ecsimsw.common.service.InternalCommunicateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
