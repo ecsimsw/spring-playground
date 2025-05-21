@@ -1,0 +1,19 @@
+group = 'com.ecsimsw'
+version = '1.0.0'
+
+dependencies {
+    // modules
+    implementation project(':_support-common')
+    implementation project(':_sdk-external-platform')
+
+    // db
+    runtimeOnly 'com.h2database:h2'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+task prepareKotlinBuildScriptModel {
+
+}
