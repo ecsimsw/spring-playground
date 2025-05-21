@@ -26,7 +26,7 @@ public class AuthTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public AuthTokenResponse testIssue(String username, String uid) {
+    public AuthTokenResponse vBetaIssue(String username, String uid) {
         var at = new AccessToken(username, uid).asJwtToken(tokenSecret);
         var rt = new RefreshToken(username, uid).asJwtToken(tokenSecret);
         refreshTokenRepository.save(username, rt);
@@ -47,7 +47,7 @@ public class AuthTokenService {
         var username = RefreshToken.fromToken(tokenSecret, rt).username();
         var uid = RefreshToken.fromToken(tokenSecret, rt).uid();
         refreshTokenRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.INVALID_TOKEN));
-        return testIssue(username, uid);
+        return vBetaIssue(username, uid);
     }
 
     public void blockToken(String token) {

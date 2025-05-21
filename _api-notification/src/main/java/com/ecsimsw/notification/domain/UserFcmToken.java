@@ -18,5 +18,10 @@ public class UserFcmToken {
     @Id
     private Long id;
     private String username;
-    private String fcmToken;
+    private String token;
+
+    public UserFcmToken(String username, String token) {
+        this.username = username;
+        this.token = token;
+    }
 }

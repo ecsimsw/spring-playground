@@ -33,8 +33,8 @@ public class AuthTokenController {
     @PostMapping("/api/account/test/login")
     public ApiResponse<AuthTokenResponse> testLogin(@RequestBody LogInRequest request) {
         var uid = externalPlatformService.getUserIdByUsername(request.username());
-        userService.create(new SignUpRequest(request.username(), "password"));
-        var result = authTokenService.testIssue(request.username(), uid);
+        userService.vBetaCreate(new SignUpRequest(request.username(), "password"));
+        var result = authTokenService.vBetaIssue(request.username(), uid);
         return ApiResponse.success(result);
     }
 

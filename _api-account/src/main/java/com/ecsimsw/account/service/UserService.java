@@ -25,6 +25,14 @@ public class UserService {
     private final UserRoleRepository userRoleRepository;
 
     @Transactional
+    public Long vBetaCreate(SignUpRequest request) {
+        if (userRepository.existsByUsername(request.username())) {
+            return userRepository.findByUsername(request.username()).orElseThrow().getId();
+        }
+        return create(request);
+    }
+
+    @Transactional
     public Long create(SignUpRequest request) {
         if (userRepository.existsByUsername(request.username())) {
             throw new UserException(ErrorType.USER_ALREADY_EXISTS);
