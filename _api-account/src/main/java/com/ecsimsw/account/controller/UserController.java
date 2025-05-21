@@ -29,11 +29,6 @@ public class UserController {
         return ApiResponse.success(result);
     }
 
-    @GetMapping("/api/account/roles")
-    public ApiResponse<String[]> roles(AuthUser user) {
-        return ApiResponse.success(user.roles());
-    }
-
     @DeleteMapping("/api/account")
     public ApiResponse<Void> delete(AuthUser user) {
         userService.delete(user.username());

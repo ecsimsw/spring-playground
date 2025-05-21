@@ -3,8 +3,10 @@ package com.ecsimsw.account.controller;
 import com.ecsimsw.account.dto.LogInRequest;
 import com.ecsimsw.account.dto.AuthTokenResponse;
 import com.ecsimsw.account.dto.ReissueRequest;
+import com.ecsimsw.account.dto.SignUpRequest;
 import com.ecsimsw.account.service.AuthTokenService;
 import com.ecsimsw.account.service.CustomUserDetail;
+import com.ecsimsw.account.service.UserService;
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,10 +28,12 @@ public class AuthTokenController {
     private final AuthenticationManager authenticationManager;
     private final AuthTokenService authTokenService;
     private final ExternalPlatformService externalPlatformService;
+    private final UserService userService;
 
     @PostMapping("/api/account/test/login")
     public ApiResponse<AuthTokenResponse> testLogin(@RequestBody LogInRequest request) {
         var uid = externalPlatformService.getUserIdByUsername(request.username());
+        userService.create(new SignUpRequest(request.username(), "password"));
         var result = authTokenService.testIssue(request.username(), uid);
         return ApiResponse.success(result);
     }

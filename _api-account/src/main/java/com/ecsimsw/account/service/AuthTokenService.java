@@ -2,12 +2,9 @@ package com.ecsimsw.account.service;
 
 import com.ecsimsw.account.domain.*;
 import com.ecsimsw.account.dto.AuthTokenResponse;
-import com.ecsimsw.common.domain.BlockedUser;
-import com.ecsimsw.common.domain.BlockedUserRepository;
-import com.ecsimsw.common.domain.RefreshTokenRepository;
+import com.ecsimsw.common.domain.*;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

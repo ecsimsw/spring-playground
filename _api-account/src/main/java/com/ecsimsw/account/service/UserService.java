@@ -24,6 +24,7 @@ public class UserService {
     private final UserPasswordRepository userPasswordRepository;
     private final UserRoleRepository userRoleRepository;
 
+    @Transactional
     public Long create(SignUpRequest request) {
         if (userRepository.existsByUsername(request.username())) {
             throw new UserException(ErrorType.USER_ALREADY_EXISTS);
