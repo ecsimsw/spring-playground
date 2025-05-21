@@ -8,7 +8,7 @@ public record SignUpRequest(
     String password
 ) {
 
-    public User toUser(String uid) {
-        return new User(username, uid);
+    public User toUser() {
+        return new User(username);
     }
 }

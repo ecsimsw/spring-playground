@@ -10,13 +10,13 @@ import static com.ecsimsw.common.config.TokenConfig.ACCESS_TOKEN_EXPIRED_TIME;
 
 public record AccessToken(
     String username,
-    String ext
+    String uid
 ) {
     public static AccessToken fromToken(String secretKey, String token) {
         try {
             return new AccessToken(
                 JwtUtils.getClaimValue(secretKey, token, "username"),
-                JwtUtils.getClaimValue(secretKey, token, "ext")
+                JwtUtils.getClaimValue(secretKey, token, "uid")
             );
         } catch (Exception e) {
             throw new AuthException(ErrorType.INVALID_TOKEN);
@@ -29,7 +29,7 @@ public record AccessToken(
             ACCESS_TOKEN_EXPIRED_TIME,
             Map.of(
                 "username", username,
-                "ext", ext
+                "uid", uid
             )
         );
     }

@@ -9,11 +9,15 @@ import java.util.Map;
 import static com.ecsimsw.common.config.TokenConfig.REFRESH_TOKEN_EXPIRED_TIME;
 
 public record RefreshToken(
-    String username
+    String username,
+    String uid
 ) {
     public static RefreshToken fromToken(String secretKey, String token) {
         try {
-            return new RefreshToken(JwtUtils.getClaimValue(secretKey, token, "username"));
+            return new RefreshToken(
+                JwtUtils.getClaimValue(secretKey, token, "username"),
+                JwtUtils.getClaimValue(secretKey, token, "uid")
+            );
         } catch (Exception e) {
             throw new AuthException(ErrorType.INVALID_TOKEN);
         }
@@ -24,7 +28,8 @@ public record RefreshToken(
             secretKey,
             REFRESH_TOKEN_EXPIRED_TIME,
             Map.of(
-                "username", username
+                "username", username,
+                "uid", uid
             )
         );
     }

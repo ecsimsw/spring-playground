@@ -6,6 +6,7 @@ import com.ecsimsw.account.dto.ReissueRequest;
 import com.ecsimsw.account.service.AuthTokenService;
 import com.ecsimsw.account.service.CustomUserDetail;
 import com.ecsimsw.common.dto.ApiResponse;
+import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,16 @@ public class AuthTokenController {
 
     private final AuthenticationManager authenticationManager;
     private final AuthTokenService authTokenService;
+    private final ExternalPlatformService externalPlatformService;
 
-    @PostMapping("/api/account/login")
+    @PostMapping("/api/account/test/login")
+    public ApiResponse<AuthTokenResponse> testLogin(@RequestBody LogInRequest request) {
+        var uid = externalPlatformService.getUserIdByUsername(request.username());
+        var result = authTokenService.testIssue(request.username(), uid);
+        return ApiResponse.success(result);
+    }
+
+    @PostMapping("/api/account/loginV2")
     public ApiResponse<AuthTokenResponse> login(@RequestBody LogInRequest request) {
         var authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.username(), request.password())

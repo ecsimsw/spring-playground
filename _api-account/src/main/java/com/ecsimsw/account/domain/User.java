@@ -18,13 +18,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    private String uid;
     private String username;
     private LocalDateTime createTime = LocalDateTime.now();
 
     @Builder
-    public User(String username, String uid) {
+    public User(String username) {
         this.username = username;
-        this.uid = uid;
     }
 }

@@ -7,6 +7,7 @@ import com.ecsimsw.common.domain.BlockedUserRepository;
 import com.ecsimsw.common.domain.RefreshTokenRepository;
 import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
+import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,18 +28,29 @@ public class AuthTokenService {
     private final BlockedUserRepository blockedUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public AuthTokenResponse issue(String username) {
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
-        var at = new AccessToken(username, user.getUid()).asJwtToken(tokenSecret);
-        var rt = new RefreshToken(username).asJwtToken(tokenSecret);
+    @Transactional
+    public AuthTokenResponse testIssue(String username, String uid) {
+        var at = new AccessToken(username, uid).asJwtToken(tokenSecret);
+        var rt = new RefreshToken(username, uid).asJwtToken(tokenSecret);
         refreshTokenRepository.save(username, rt);
         return new AuthTokenResponse(at, rt);
     }
 
+    @Transactional
+    public AuthTokenResponse issue(String username) {
+        userRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+        var at = new AccessToken(username, "").asJwtToken(tokenSecret);
+        var rt = new RefreshToken(username, "").asJwtToken(tokenSecret);
+        refreshTokenRepository.save(username, rt);
+        return new AuthTokenResponse(at, rt);
+    }
+
+    @Transactional
     public AuthTokenResponse reissue(String rt) {
         var username = RefreshToken.fromToken(tokenSecret, rt).username();
+        var uid = RefreshToken.fromToken(tokenSecret, rt).uid();
         refreshTokenRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.INVALID_TOKEN));
-        return issue(username);
+        return testIssue(username, uid);
     }
 
     public void blockToken(String token) {

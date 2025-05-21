@@ -23,7 +23,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserPasswordRepository userPasswordRepository;
     private final UserRoleRepository userRoleRepository;
-    private final ExternalPlatformService externalPlatformService;
 
     public Long create(SignUpRequest request) {
         if (userRepository.existsByUsername(request.username())) {
@@ -46,10 +45,6 @@ public class UserService {
     @Transactional
     public void delete(String username) {
         userPasswordRepository.deleteByUsername(username);
-    }
-
-    public String getUid(String username) {
-        externalPlatformService.getUidByUsername(username);
     }
 
     private User getByUsername(String username) {
