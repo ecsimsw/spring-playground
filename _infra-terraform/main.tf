@@ -30,9 +30,7 @@ module "ecs" {
   ecs_security_group_id   = module.ecs.ecs_security_group_id
   ecs_task_execution_role = module.ecs.ecs_task_execution_role
   account_port            = 8851
-  account_version         = "1.0.2"
-  auth_port               = 8852
-  auth_version            = "1.0.2"
+  account_version         = "1.0.5"
   notification_port       = 8854
   notification_version    = "1.0.1"
 }

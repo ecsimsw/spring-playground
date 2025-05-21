@@ -30,14 +30,6 @@ variable "alb_listener_arn" {
   type = string
 }
 
-variable "notification_port" {
-  type = number
-}
-
-variable "notification_version" {
-  type = string
-}
-
 variable "account_port" {
   type = number
 }
@@ -46,10 +38,10 @@ variable "account_version" {
   type = string
 }
 
-variable "auth_port" {
+variable "notification_port" {
   type = number
 }
 
-variable "auth_version" {
+variable "notification_version" {
   type = string
 }
