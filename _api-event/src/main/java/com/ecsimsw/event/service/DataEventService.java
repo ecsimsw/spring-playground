@@ -1,6 +1,6 @@
 package com.ecsimsw.event.service;
 
-import com.ecsimsw.common.service.client.NotificationClient;
+import com.ecsimsw.common.support.client.NotificationClient;
 import com.ecsimsw.event.domain.DataEventMessage;
 import com.ecsimsw.event.domain.DataEventMessageRepository;
 import lombok.RequiredArgsConstructor;
