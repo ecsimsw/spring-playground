@@ -1,6 +1,6 @@
 package com.ecsimsw.account.service;
 
-import com.ecsimsw.common.error.AuthException;
+import com.ecsimsw.account.error.AccountException;
 import com.ecsimsw.common.error.ErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -23,7 +23,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (passwordEncoder.matches(requestPassword, userDetails.getPassword())) {
             return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         }
-        throw new AuthException(ErrorType.FAILED_TO_AUTHENTICATE);
+        throw new AccountException(ErrorType.FAILED_TO_AUTHENTICATE);
     }
 
     @Override

@@ -4,10 +4,12 @@ import com.ecsimsw.account.dto.LogInRequest;
 import com.ecsimsw.account.dto.AuthTokenResponse;
 import com.ecsimsw.account.dto.ReissueRequest;
 import com.ecsimsw.account.dto.SignUpRequest;
+import com.ecsimsw.account.error.AccountException;
 import com.ecsimsw.account.service.AuthTokenService;
 import com.ecsimsw.account.service.CustomUserDetail;
 import com.ecsimsw.account.service.UserService;
 import com.ecsimsw.common.dto.ApiResponse;
+import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +34,14 @@ public class AuthTokenController {
 
     @PostMapping("/api/account/test/login")
     public ApiResponse<AuthTokenResponse> testLogin(@RequestBody LogInRequest request) {
-        var uid = externalPlatformService.getUserIdByUsername(request.username());
-        userService.vBetaCreate(new SignUpRequest(request.username(), "password"));
-        var result = authTokenService.vBetaIssue(request.username(), uid);
-        return ApiResponse.success(result);
+        try {
+            var uid = externalPlatformService.getUserIdByUsername(request.username());
+            userService.vBetaCreate(new SignUpRequest(request.username(), "password"));
+            var result = authTokenService.vBetaIssue(request.username(), uid);
+            return ApiResponse.success(result);
+        } catch (Exception e) {
+            throw new AccountException(ErrorType.USER_NOT_FOUND);
+        }
     }
 
     @PostMapping("/api/account/loginV2")

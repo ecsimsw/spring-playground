@@ -10,28 +10,34 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Configuration
 public class FcmConfig {
 
-    @PostConstruct
-    public void initialize() {
+    @Bean
+    public FirebaseApp firebaseApp() {
         try {
-            var serviceAccount = new FileInputStream("src/main/resources/fcm-account.json");
-            if (FirebaseApp.getApps().isEmpty()) {
-                FirebaseApp.initializeApp(FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .build()
-                );
+            var serviceAccount = getClass().getClassLoader().getResourceAsStream("secret/fcm-account.json");
+            if (serviceAccount == null) {
+                throw new IllegalArgumentException("Cannot find fcm-account.json");
             }
+            if (FirebaseApp.getApps().isEmpty()) {
+                var options = FirebaseOptions.builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .build();
+                return FirebaseApp.initializeApp(options);
+            }
+            return FirebaseApp.getInstance();
         } catch (IOException e) {
             e.printStackTrace();
+            throw new IllegalArgumentException();
         }
     }
 
     @Bean
-    public FirebaseMessaging firebaseMessaging() {
-        return FirebaseMessaging.getInstance();
+    public FirebaseMessaging firebaseMessaging(FirebaseApp app) {
+        return FirebaseMessaging.getInstance(app);
     }
 }
 
