@@ -7,6 +7,9 @@ dependencies {
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    // fcm
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
+
     // db
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'

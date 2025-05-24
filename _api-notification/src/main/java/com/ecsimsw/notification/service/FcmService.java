@@ -2,6 +2,8 @@ package com.ecsimsw.notification.service;
 
 import com.ecsimsw.notification.domain.UserFcmToken;
 import com.ecsimsw.notification.domain.UserFcmTokenRepository;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import java.util.List;
 public class FcmService {
 
     private final UserFcmTokenRepository userFcmTokenRepository;
+    private final FirebaseMessaging firebaseMessaging;
 
     @Transactional
     public void add(String username, String token) {
@@ -33,5 +36,14 @@ public class FcmService {
             .stream()
             .map(UserFcmToken::getToken)
             .toList();
+    }
+
+    public String sendMessage(String targetToken, String title, String body) throws Exception {
+        var message = Message.builder()
+            .setToken(targetToken)
+            .putData("title", title)
+            .putData("body", body)
+            .build();
+        return firebaseMessaging.send(message);
     }
 }

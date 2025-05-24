@@ -16,3 +16,5 @@ build
 **/terraform.tfstate.*
 **/crash.log
 **/*.tfplan
+
+_api-notification/src/main/resources/secret/fcm-account.json

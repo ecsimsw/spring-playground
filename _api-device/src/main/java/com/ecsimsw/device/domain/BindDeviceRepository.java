@@ -8,4 +8,6 @@ public interface BindDeviceRepository extends JpaRepository<BindDevice, Long> {
 
     List<BindDevice> findAllByUsername(String username);
 
+    void deleteAllByUsername(String username);
+
 }
