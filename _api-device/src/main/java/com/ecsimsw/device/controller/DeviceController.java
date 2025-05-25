@@ -4,12 +4,10 @@ import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
+import com.ecsimsw.springsdkexternalplatform.dto.DeviceStatus;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,13 +33,18 @@ public class DeviceController {
         return ApiResponse.success(result);
     }
 
-    @PostMapping("/api/device/{deviceId}")
-    public ApiResponse<List<String>> control(@PathVariable String deviceId) {
-        return null;
+    @GetMapping("/api/device/{deviceId}")
+    public ApiResponse<DeviceInfoResponse> status(@PathVariable String deviceId) {
+        var result = deviceService.status(deviceId);
+        return ApiResponse.success(result);
     }
 
-    @GetMapping("/api/device/{deviceId}")
-    public ApiResponse<List<String>> status(@PathVariable String deviceId) {
-        return null;
+    @PostMapping("/api/device/{deviceId}")
+    public ApiResponse<Void> control(
+        @PathVariable String deviceId,
+        @RequestBody List<DeviceStatus> deviceStatuses
+    ) {
+        externalPlatformService.command(deviceId, deviceStatuses);
+        return ApiResponse.success();
     }
 }

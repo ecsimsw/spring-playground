@@ -10,15 +10,15 @@ import java.util.*;
 public enum DeviceType {
     Camera(
         List.of(""),
-        new DeviceStatusCode("online", Boolean.class)
+        new DeviceStatusCode("online", Boolean.class, false)
     ),
     Brunt(
         List.of(""),
-        new DeviceStatusCode("online", Boolean.class)
+        new DeviceStatusCode("online", Boolean.class, false)
     ),
     Plug(
         List.of("uxjr57hvapakd0io"),
-        new DeviceStatusCode("switch_1", Boolean.class)
+        new DeviceStatusCode("switch_1", Boolean.class, false)
     );
 
     private final List<String> productIds;
@@ -51,9 +51,5 @@ public enum DeviceType {
             .filter(it -> it.name().equals(statusCode))
             .findAny()
             .orElseThrow(() -> new DeviceException(ErrorType.NOT_SUPPORTED_DEVICE));
-    }
-
-    public List<DeviceStatusCode> statusCodes() {
-        return new ArrayList<>(statusCodes);
     }
 }

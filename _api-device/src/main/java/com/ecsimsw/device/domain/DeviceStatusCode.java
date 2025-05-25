@@ -2,7 +2,8 @@ package com.ecsimsw.device.domain;
 
 public record DeviceStatusCode(
     String name,
-    Class<?> type
+    Class<?> type,
+    boolean readOnly
 ) {
     public Object asValue(String value) {
         if(type == Integer.class) {

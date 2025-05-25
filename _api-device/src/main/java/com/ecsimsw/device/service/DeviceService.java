@@ -1,7 +1,9 @@
 package com.ecsimsw.device.service;
 
+import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.domain.*;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
+import com.ecsimsw.device.error.DeviceException;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -76,5 +78,19 @@ public class DeviceService {
                 return new DeviceStatus(deviceResult.getId(), deviceStatus);
             }).toList();
         deviceStatusRepository.saveAll(updatedStatus);
+    }
+
+    @Transactional(readOnly = true)
+    public DeviceInfoResponse status(String deviceId) {
+        var bindDevice = bindDeviceRepository.findById(deviceId)
+            .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
+        var deviceStatus = deviceStatusRepository.findByDeviceId(deviceId)
+            .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
+        return new DeviceInfoResponse(
+            bindDevice.getId(),
+            bindDevice.getProductId(),
+            bindDevice.isOnline(),
+            deviceStatus.getStatus()
+        );
     }
 }
