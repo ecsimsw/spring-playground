@@ -2,10 +2,8 @@ package com.ecsimsw.device.controller;
 
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
-import com.ecsimsw.device.domain.BindDevice;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
-import com.ecsimsw.springsdkexternalplatform.dto.DeviceResult;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

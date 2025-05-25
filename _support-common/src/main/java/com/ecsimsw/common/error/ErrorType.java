@@ -15,6 +15,8 @@ public enum ErrorType {
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, ErrorCode.E40007),
     FORBIDDEN(HttpStatus.UNAUTHORIZED, ErrorCode.E40008),
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, ErrorCode.E40009),
+    NOT_SUPPORTED_DEVICE(HttpStatus.BAD_REQUEST, ErrorCode.E40010),
+    INVALID_DEVICE(HttpStatus.BAD_REQUEST, ErrorCode.E40011),
     UNHANDLED(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.E50001),
     ;
 

@@ -2,72 +2,80 @@ package com.ecsimsw.device.service;
 
 import com.ecsimsw.device.domain.*;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
-import com.ecsimsw.springsdkexternalplatform.dto.DeviceResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class DeviceService {
 
-    private final ObjectMapper objectMapper;
     private final BindDeviceRepository bindDeviceRepository;
     private final DeviceStatusRepository deviceStatusRepository;
 
+    @Transactional(readOnly = true)
     public List<DeviceInfoResponse> deviceList(String username) {
-        return bindDeviceRepository.findAllByUsername(username).stream()
+        var bindDevices = bindDeviceRepository.findAllByUsername(username);
+        var deviceIds = bindDevices.stream().map(BindDevice::getId).toList();
+        var deviceStatusMap = deviceStatusRepository.findAllByDeviceIdIn(deviceIds).stream()
+            .collect(Collectors.toMap(
+                DeviceStatus::getDeviceId,
+                DeviceStatus::getStatus)
+            );
+        return bindDevices.stream()
             .map(device -> new DeviceInfoResponse(
                 device.getId(),
                 device.getName(),
                 device.getProductId(),
-                new HashMap<>()
+                device.isOnline(),
+                deviceStatusMap.get(device.getId())
             )).toList();
     }
 
-    @SneakyThrows
     @Transactional
     public void refresh(String username, List<DeviceResult> deviceResults) {
+        updateBindDevice(username, deviceResults);
+        updateDeviceStatus(deviceResults);
+    }
+
+    private void updateBindDevice(String username, List<DeviceResult> deviceResults) {
         var bindDevices = deviceResults.stream()
-            .map(device -> new BindDevice(
-                device.getId(),
+            .filter(deviceResult -> DeviceType.isSupportedProduct(deviceResult.getPid()))
+            .map(deviceResult -> new BindDevice(
+                deviceResult.getId(),
                 username,
-                device.getName(),
-                device.getPid(),
-                device.getOnline()
+                deviceResult.getName(),
+                deviceResult.getPid(),
+                deviceResult.getOnline()
             )).toList();
         bindDeviceRepository.deleteAllByUsername(username);
         bindDeviceRepository.saveAll(bindDevices);
+    }
 
-        for (var device : deviceResults) {
-            var deviceId = device.getId();
-            var optDeviceType = DeviceType.findTypeByProductId(device.getPid());
-            if (optDeviceType.isEmpty()) {
-                continue;
-            }
-            var deviceType = optDeviceType.get();
-            var statusCode = deviceType.statusCode();
-            var deviceStatusMap = new HashMap<String, Object>();
-            for (var status : device.getStatus()) {
-                var optCode = statusCode.stream()
-                    .filter(it -> it.name().equals(status.getCode()))
-                    .findFirst();
-                if (optCode.isPresent()) {
-                    var deviceStatusCode = optCode.get();
-                    var codeName = deviceStatusCode.name();
-                    var value = deviceStatusCode.asValue(String.valueOf(status.getValue()));
-                    deviceStatusMap.put(codeName, value);
-                }
-            }
-            var jsonStatus = objectMapper.writeValueAsString(deviceStatusMap);
-            var deviceStatus = new DeviceStatus(deviceId, jsonStatus);
-            deviceStatusRepository.deleteByDeviceId(deviceId);
-            deviceStatusRepository.save(deviceStatus);
-        }
+    @SneakyThrows
+    private void updateDeviceStatus(List<DeviceResult> deviceResults) {
+        var deviceIds = deviceResults.stream()
+            .map(DeviceResult::getId)
+            .toList();
+        deviceStatusRepository.deleteAllByDeviceIdIn(deviceIds);
+
+        var updatedStatus = deviceResults.stream()
+            .filter(deviceResult -> DeviceType.isSupportedProduct(deviceResult.getPid()))
+            .map(deviceResult -> {
+                var deviceType = DeviceType.resolveByProductId(deviceResult.getPid());
+                var deviceStatus = deviceResult.getStatus().stream()
+                    .filter(status -> deviceType.isSupportedStatusCode(status.getCode()))
+                    .collect(Collectors.toMap(
+                        it -> it.getCode(),
+                        it -> deviceType.getDeviceStatusCode(it.getCode())
+                            .asValue(String.valueOf(it.getValue()))
+                    ));
+                return new DeviceStatus(deviceResult.getId(), deviceStatus);
+            }).toList();
+        deviceStatusRepository.saveAll(updatedStatus);
     }
 }

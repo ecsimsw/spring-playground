@@ -17,5 +17,6 @@ public enum ErrorCode {
     E40008,
     E40009,
     E40010,
+    E40011,
     E50001
 }

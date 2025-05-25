@@ -6,6 +6,7 @@ public record DeviceInfoResponse(
     String deviceId,
     String deviceName,
     String productName,
+    boolean online,
     Map<String, Object> status
 ) {
 }

@@ -1,42 +1,59 @@
 package com.ecsimsw.device.domain;
 
+import com.ecsimsw.common.error.ErrorType;
+import com.ecsimsw.device.error.DeviceException;
 import lombok.AllArgsConstructor;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 public enum DeviceType {
     Camera(
-        Set.of(""),
+        List.of(""),
         new DeviceStatusCode("online", Boolean.class)
     ),
     Brunt(
-        Set.of(""),
+        List.of(""),
         new DeviceStatusCode("online", Boolean.class)
     ),
     Plug(
-        Set.of("uxjr57hvapakd0io"),
+        List.of("uxjr57hvapakd0io"),
         new DeviceStatusCode("switch_1", Boolean.class)
     );
 
-    private final Set<String> productKeys;
-    private final Set<DeviceStatusCode> statusCode;
+    private final List<String> productIds;
+    private final List<DeviceStatusCode> statusCodes;
 
-    DeviceType(Set<String> productKeys, DeviceStatusCode... statusCodes) {
-        this.productKeys = productKeys;
-        this.statusCode = Set.of(statusCodes);
+    DeviceType(List<String> productIds, DeviceStatusCode... statusCodes) {
+        this.productIds = productIds;
+        this.statusCodes = List.of(statusCodes);
     }
 
-    public static Optional<DeviceType> findTypeByProductId(String productKey) {
+    public static DeviceType resolveByProductId(String productId) {
         return Arrays.stream(values())
-            .filter(it -> it.productKeys.contains(productKey))
-            .findAny();
+            .filter(it -> it.productIds.contains(productId))
+            .findAny()
+            .orElseThrow(() -> new DeviceException(ErrorType.NOT_SUPPORTED_DEVICE));
     }
 
-    public Set<DeviceStatusCode> statusCode() {
-        return new HashSet<>(statusCode);
+    public static boolean isSupportedProduct(String productId) {
+        return Arrays.stream(values())
+            .anyMatch(it -> it.productIds.contains(productId));
+    }
+
+    public boolean isSupportedStatusCode(String statusCode) {
+        return statusCodes.stream()
+            .anyMatch(it -> it.name().equals(statusCode));
+    }
+
+    public DeviceStatusCode getDeviceStatusCode(String statusCode) {
+        return statusCodes.stream()
+            .filter(it -> it.name().equals(statusCode))
+            .findAny()
+            .orElseThrow(() -> new DeviceException(ErrorType.NOT_SUPPORTED_DEVICE));
+    }
+
+    public List<DeviceStatusCode> statusCodes() {
+        return new ArrayList<>(statusCodes);
     }
 }
