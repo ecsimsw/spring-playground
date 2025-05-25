@@ -1,6 +1,6 @@
 package com.ecsimsw.common.domain;
 
-import com.ecsimsw.common.error.AuthException;
+import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.support.utils.JwtUtils;
 
@@ -19,7 +19,7 @@ public record AccessToken(
                 JwtUtils.getClaimValue(secretKey, token, "uid")
             );
         } catch (Exception e) {
-            throw new AuthException(ErrorType.INVALID_TOKEN);
+            throw new ApiException(ErrorType.INVALID_TOKEN);
         }
     }
 

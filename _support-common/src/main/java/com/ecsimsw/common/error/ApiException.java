@@ -12,6 +12,11 @@ public class ApiException extends IllegalArgumentException {
         this.type = type;
     }
 
+    public ApiException(ErrorType type, String message) {
+        super(String.format(MESSAGE_FORM, type.getCode().name(), message));
+        this.type = type;
+    }
+
     public HttpStatus status() {
         return type.getStatus();
     }

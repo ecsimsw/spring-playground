@@ -1,9 +1,10 @@
 package com.ecsimsw.common.domain;
 
-import com.ecsimsw.common.error.AuthException;
+import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.support.utils.JwtUtils;
 
+import javax.security.auth.login.AccountException;
 import java.util.Map;
 
 import static com.ecsimsw.common.config.TokenConfig.REFRESH_TOKEN_EXPIRED_TIME;
@@ -19,7 +20,7 @@ public record RefreshToken(
                 JwtUtils.getClaimValue(secretKey, token, "uid")
             );
         } catch (Exception e) {
-            throw new AuthException(ErrorType.INVALID_TOKEN);
+            throw new ApiException(ErrorType.INVALID_TOKEN);
         }
     }
 

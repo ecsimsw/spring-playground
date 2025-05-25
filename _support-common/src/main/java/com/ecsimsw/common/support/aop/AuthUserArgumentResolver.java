@@ -2,13 +2,10 @@ package com.ecsimsw.common.support.aop;
 
 import com.ecsimsw.common.domain.AccessToken;
 import com.ecsimsw.common.dto.AuthUser;
-import com.ecsimsw.common.error.AuthException;
+import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
@@ -31,8 +28,8 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
         org.springframework.web.bind.support.WebDataBinderFactory binderFactory
     ) {
         var bearerToken = webRequest.getHeader("Authorization");
-        if(bearerToken == null) {
-            throw new AuthException(ErrorType.FAILED_TO_AUTHENTICATE);
+        if (bearerToken == null) {
+            throw new ApiException(ErrorType.FAILED_TO_AUTHENTICATE);
         }
         var token = bearerToken.split("Bearer ")[1];
         var accessToken = AccessToken.fromToken(tokenSecret, token);
