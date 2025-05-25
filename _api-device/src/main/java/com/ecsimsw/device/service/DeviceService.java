@@ -3,6 +3,7 @@ package com.ecsimsw.device.service;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.domain.*;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
+import com.ecsimsw.device.dto.PairingRequest;
 import com.ecsimsw.device.error.DeviceException;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
 import lombok.RequiredArgsConstructor;
@@ -92,5 +93,9 @@ public class DeviceService {
             bindDevice.isOnline(),
             deviceStatus.getStatus()
         );
+    }
+
+    public void register(String username, DeviceInfo deviceInfo) {
+        bindDeviceRepository.save(new BindDevice());
     }
 }

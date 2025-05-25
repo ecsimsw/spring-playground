@@ -2,7 +2,9 @@ package com.ecsimsw.device.controller;
 
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
+import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
+import com.ecsimsw.device.dto.PairingRequest;
 import com.ecsimsw.device.service.DeviceService;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceStatus;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
@@ -18,12 +20,21 @@ public class DeviceController {
     private final ExternalPlatformService externalPlatformService;
     private final DeviceService deviceService;
 
-    //    @InternalHandler
+    @InternalHandler
     @GetMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
-        var userId = externalPlatformService.getUserIdByUsername(username);
-        var deviceResults = externalPlatformService.getDeviceList(userId);
-        deviceService.refresh(username, deviceResults);
+        var deviceInfos = externalPlatformService.getDeviceList(username);
+        deviceService.refresh(username, deviceInfos);
+        return ApiResponse.success();
+    }
+
+    @PostMapping("/api/device/beta/pairing")
+    public ApiResponse<Void> pairing(
+        AuthUser authUser,
+        @RequestBody PairingRequest pairingRequest
+    ) {
+        var deviceResult = externalPlatformService.deviceInfo(pairingRequest.deviceId());
+        deviceService.register(authUser.username(), deviceResult);
         return ApiResponse.success();
     }
 

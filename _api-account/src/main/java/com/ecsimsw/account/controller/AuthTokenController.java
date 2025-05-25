@@ -10,6 +10,7 @@ import com.ecsimsw.account.service.CustomUserDetail;
 import com.ecsimsw.account.service.UserService;
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.error.ErrorType;
+import com.ecsimsw.common.support.client.DeviceClient;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class AuthTokenController {
     private final AuthTokenService authTokenService;
     private final ExternalPlatformService externalPlatformService;
     private final UserService userService;
+    private final DeviceClient deviceClient;
 
     @PostMapping("/api/account/test/login")
     public ApiResponse<AuthTokenResponse> testLogin(@RequestBody LogInRequest request) {
@@ -38,6 +40,7 @@ public class AuthTokenController {
             var uid = externalPlatformService.getUserIdByUsername(request.username());
             userService.vBetaCreate(new SignUpRequest(request.username(), "password"));
             var result = authTokenService.vBetaIssue(request.username(), uid);
+            deviceClient.refresh(request.username());
             return ApiResponse.success(result);
         } catch (Exception e) {
             throw new AccountException(ErrorType.USER_NOT_FOUND);
