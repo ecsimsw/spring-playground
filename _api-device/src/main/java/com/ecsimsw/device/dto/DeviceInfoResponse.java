@@ -4,8 +4,7 @@ import java.util.Map;
 
 public record DeviceInfoResponse(
     String deviceId,
-    String deviceName,
-    String productName,
+    String productId,
     boolean online,
     Map<String, Object> status
 ) {

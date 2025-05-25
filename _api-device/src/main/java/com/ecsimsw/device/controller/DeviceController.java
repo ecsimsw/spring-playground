@@ -24,12 +24,12 @@ public class DeviceController {
     @GetMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
         var userId = externalPlatformService.getUserIdByUsername(username);
-        var deviceResults = externalPlatformService.getDevices(userId);
+        var deviceResults = externalPlatformService.getDeviceList(userId);
         deviceService.refresh(username, deviceResults);
         return ApiResponse.success();
     }
 
-    @GetMapping("/api/device")
+    @GetMapping("/api/device/list")
     public ApiResponse<List<DeviceInfoResponse>> list(AuthUser authUser) {
         var result = deviceService.deviceList(authUser.username());
         return ApiResponse.success(result);

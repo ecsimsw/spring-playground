@@ -2,9 +2,10 @@ package com.ecsimsw.account.service;
 
 import com.ecsimsw.account.domain.*;
 import com.ecsimsw.account.dto.AuthTokenResponse;
+import com.ecsimsw.account.error.AccountException;
 import com.ecsimsw.common.domain.*;
-import com.ecsimsw.common.error.AuthException;
 import com.ecsimsw.common.error.ErrorType;
+import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class AuthTokenService {
 
     @Transactional
     public AuthTokenResponse issue(String username) {
-        userRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+        userRepository.findByUsername(username).orElseThrow(() -> new AccountException(ErrorType.FAILED_TO_AUTHENTICATE));
         var at = new AccessToken(username, "").asJwtToken(tokenSecret);
         var rt = new RefreshToken(username, "").asJwtToken(tokenSecret);
         refreshTokenRepository.save(username, rt);
@@ -46,7 +47,7 @@ public class AuthTokenService {
     public AuthTokenResponse reissue(String rt) {
         var username = RefreshToken.fromToken(tokenSecret, rt).username();
         var uid = RefreshToken.fromToken(tokenSecret, rt).uid();
-        refreshTokenRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.INVALID_TOKEN));
+        refreshTokenRepository.findByUsername(username).orElseThrow(() -> new AccountException(ErrorType.INVALID_TOKEN));
         return vBetaIssue(username, uid);
     }
 
@@ -56,8 +57,8 @@ public class AuthTokenService {
 
     @Transactional(readOnly = true)
     public List<String> roleNames(String username) {
-        var userPassword = userPasswordRepository.findByUsername(username).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
-        var userRole = userRoleRepository.findByUserId(userPassword.userId()).orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+        var userPassword = userPasswordRepository.findByUsername(username).orElseThrow(() -> new AccountException(ErrorType.FAILED_TO_AUTHENTICATE));
+        var userRole = userRoleRepository.findByUserId(userPassword.userId()).orElseThrow(() -> new AccountException(ErrorType.FAILED_TO_AUTHENTICATE));
         if (userRole.getIsAdmin()) {
             return List.of("ADMIN");
         }

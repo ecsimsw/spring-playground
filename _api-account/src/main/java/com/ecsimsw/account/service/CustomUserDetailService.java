@@ -2,8 +2,9 @@ package com.ecsimsw.account.service;
 
 import com.ecsimsw.account.domain.UserPasswordRepository;
 import com.ecsimsw.account.domain.UserRoleRepository;
-import com.ecsimsw.common.error.AuthException;
+import com.ecsimsw.account.error.AccountException;
 import com.ecsimsw.common.error.ErrorType;
+import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,9 +21,9 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userPasswordRepository.findByUsername(username)
-            .orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+            .orElseThrow(() -> new AccountException(ErrorType.FAILED_TO_AUTHENTICATE));
         var role = userRoleRepository.findByUserId(user.userId())
-            .orElseThrow(() -> new AuthException(ErrorType.FAILED_TO_AUTHENTICATE));
+            .orElseThrow(() -> new AccountException(ErrorType.FAILED_TO_AUTHENTICATE));
         return CustomUserDetail.builder()
             .username(user.username())
             .password(user.password())

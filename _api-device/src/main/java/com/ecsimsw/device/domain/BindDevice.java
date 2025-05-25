@@ -19,17 +19,15 @@ public class BindDevice {
     @Id
     private String id;
     private String username;
-    private String name;
     private String productId;
     private boolean online;
 
     @Enumerated(value = EnumType.STRING)
     private DeviceType type;
 
-    public BindDevice(String id, String username, String name, String productId, boolean online) {
+    public BindDevice(String id, String username, String productId, boolean online) {
         this.id = id;
         this.username = username;
-        this.name = name;
         this.productId = productId;
         this.online = online;
         this.type = DeviceType.resolveByProductId(productId);

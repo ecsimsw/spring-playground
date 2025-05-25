@@ -1,7 +1,7 @@
 package com.ecsimsw.account.domain;
 
+import com.ecsimsw.account.error.AccountException;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.common.error.UserException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class UserPassword {
 
     public UserPassword(PasswordEncoder encoder, Long userId, String username, String purePassword) {
         if (purePassword.length() < 5 || purePassword.length() > 20) {
-            throw new UserException(ErrorType.INVALID_PASSWORD);
+            throw new AccountException(ErrorType.INVALID_PASSWORD);
         }
         this.userId = userId;
         this.username = username;

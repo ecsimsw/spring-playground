@@ -2,6 +2,7 @@ package com.ecsimsw.device.service;
 
 import com.ecsimsw.device.domain.*;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
+import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,6 @@ public class DeviceService {
         return bindDevices.stream()
             .map(device -> new DeviceInfoResponse(
                 device.getId(),
-                device.getName(),
                 device.getProductId(),
                 device.isOnline(),
                 deviceStatusMap.get(device.getId())
@@ -37,29 +37,28 @@ public class DeviceService {
     }
 
     @Transactional
-    public void refresh(String username, List<DeviceResult> deviceResults) {
+    public void refresh(String username, List<DeviceInfo> deviceResults) {
         updateBindDevice(username, deviceResults);
         updateDeviceStatus(deviceResults);
     }
 
-    private void updateBindDevice(String username, List<DeviceResult> deviceResults) {
+    private void updateBindDevice(String username, List<DeviceInfo> deviceResults) {
         var bindDevices = deviceResults.stream()
             .filter(deviceResult -> DeviceType.isSupportedProduct(deviceResult.getPid()))
             .map(deviceResult -> new BindDevice(
                 deviceResult.getId(),
                 username,
-                deviceResult.getName(),
                 deviceResult.getPid(),
-                deviceResult.getOnline()
+                deviceResult.isOnline()
             )).toList();
         bindDeviceRepository.deleteAllByUsername(username);
         bindDeviceRepository.saveAll(bindDevices);
     }
 
     @SneakyThrows
-    private void updateDeviceStatus(List<DeviceResult> deviceResults) {
+    private void updateDeviceStatus(List<DeviceInfo> deviceResults) {
         var deviceIds = deviceResults.stream()
-            .map(DeviceResult::getId)
+            .map(DeviceInfo::getId)
             .toList();
         deviceStatusRepository.deleteAllByDeviceIdIn(deviceIds);
 
