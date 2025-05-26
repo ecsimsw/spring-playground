@@ -37,7 +37,7 @@ public class DeviceController {
         @RequestBody PairingRequest pairingRequest
     ) {
         var deviceResult = externalPlatformService.deviceInfo(pairingRequest.deviceId());
-        deviceService.register(authUser.username(), deviceResult);
+        deviceService.bindDevices(authUser.username(), List.of(deviceResult));
         return ApiResponse.success();
     }
 

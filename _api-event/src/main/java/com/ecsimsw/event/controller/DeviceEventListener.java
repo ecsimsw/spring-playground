@@ -8,15 +8,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.SubscriptionType;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.View;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import static com.ecsimsw.event.domain.support.Protocol.DATA;
 
@@ -28,36 +31,83 @@ public class DeviceEventListener {
     private final ObjectMapper objectMapper;
     private final DataEventService dataEventService;
     private final EventThroughputCounter eventThroughputCounter;
+    private final PulsarClient pulsarClient;
 
     @Value("${pulsar.event.secretKey}")
     private String secretKey;
 
+    @Value("${pulsar.event.topic}")
+    private String topic;
+
+    @Value("${pulsar.event.subscriptionName}")
+    private String subscriptionName;
+
+    @Value("${pulsar.event.partitionNumber}")
+    private int partitionNumber;
+
     @PostConstruct
     public void initCount() {
         eventThroughputCounter.start(1, TimeUnit.SECONDS);
+        consume(partitionNumber);
     }
 
-    @PulsarListener(
-        topics = "${pulsar.event.topic}",
-        subscriptionName = "${pulsar.event.subscriptionName}",
-        subscriptionType = SubscriptionType.Shared,
-        concurrency = "11"
-    )
-    public void listen(Message<byte[]> message) {
-        eventThroughputCounter.up();
-        try {
-            MDC.put("threadId", String.valueOf(Thread.currentThread().getId()));
-            var eventMessage = EventMessage.from(objectMapper, message);
-            if (eventMessage.isProtocol(DATA)) {
-                var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
-                dataEventService.handle(dataEvent);
+    @SneakyThrows
+    public void consume(int consumerCount) {
+        var executor = Executors.newFixedThreadPool(consumerCount);
+        IntStream.rangeClosed(1, consumerCount).forEach(
+            i -> executor.submit(() -> {
+                try {
+                    listen(i);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            })
+        );
+    }
+
+    private void listen(int consumerId) throws PulsarClientException {
+        var consumer = pulsarClient.newConsumer()
+            .topic("persistent://" + topic)
+            .subscriptionName(subscriptionName)
+            .subscriptionType(SubscriptionType.Shared)
+            .subscribe();
+        while (!Thread.currentThread().isInterrupted()) {
+            var msg = consumer.receive(1, TimeUnit.SECONDS);
+            try {
+                if (msg != null) {
+                    var eventMessage = EventMessage.from(objectMapper, msg);
+                    if (eventMessage.isProtocol(DATA)) {
+                        var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
+                        dataEventService.handle(dataEvent);
+                    }
+                    consumer.acknowledge(msg);
+                }
+            } catch (Exception e) {
+                // TODO :: 재시도와 DLQ, 예외 처리
             }
-        } finally {
-            MDC.clear();
-//            TimeUtils.sleep(30_000);
-//            TimeUtils.sleep(60_000L);
         }
     }
+
+//    @PulsarListener(
+//        topics = "${pulsar.event.topic}",
+//        subscriptionName = "${pulsar.event.subscriptionName}",
+//        subscriptionType = SubscriptionType.Shared,
+//        concurrency = "11"
+//    )
+//    public void listen(Message<byte[]> message) {
+//        eventThroughputCounter.up();
+//        try {
+//            MDC.put("threadId", String.valueOf(Thread.currentThread().getId()));
+//            var eventMessage = EventMessage.from(objectMapper, message);
+//            if (eventMessage.isProtocol(DATA)) {
+//                var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
+//                System.out.println(dataEvent.getDevId());
+////                dataEventService.handle(dataEvent);
+//            }
+//        } finally {
+//            MDC.clear();
+//        }
+//    }
 
     @PreDestroy
     public void destroyCount() {

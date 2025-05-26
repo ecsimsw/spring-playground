@@ -3,11 +3,9 @@ package com.ecsimsw.device.service;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.domain.*;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
-import com.ecsimsw.device.dto.PairingRequest;
 import com.ecsimsw.device.error.DeviceException;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,11 +39,17 @@ public class DeviceService {
 
     @Transactional
     public void refresh(String username, List<DeviceInfo> deviceResults) {
-        updateBindDevice(username, deviceResults);
-        updateDeviceStatus(deviceResults);
+        bindDeviceRepository.deleteAllByUsername(username);
+        var deviceIds = deviceResults.stream()
+            .map(DeviceInfo::getId)
+            .toList();
+        deviceStatusRepository.deleteAllByDeviceIdIn(deviceIds);
+
+        bindDevices(username, deviceResults);
     }
 
-    private void updateBindDevice(String username, List<DeviceInfo> deviceResults) {
+    @Transactional
+    public void bindDevices(String username, List<DeviceInfo> deviceResults) {
         var bindDevices = deviceResults.stream()
             .filter(deviceResult -> DeviceType.isSupportedProduct(deviceResult.getPid()))
             .map(deviceResult -> new BindDevice(
@@ -54,16 +58,7 @@ public class DeviceService {
                 deviceResult.getPid(),
                 deviceResult.isOnline()
             )).toList();
-        bindDeviceRepository.deleteAllByUsername(username);
         bindDeviceRepository.saveAll(bindDevices);
-    }
-
-    @SneakyThrows
-    private void updateDeviceStatus(List<DeviceInfo> deviceResults) {
-        var deviceIds = deviceResults.stream()
-            .map(DeviceInfo::getId)
-            .toList();
-        deviceStatusRepository.deleteAllByDeviceIdIn(deviceIds);
 
         var updatedStatus = deviceResults.stream()
             .filter(deviceResult -> DeviceType.isSupportedProduct(deviceResult.getPid()))
@@ -93,9 +88,5 @@ public class DeviceService {
             bindDevice.isOnline(),
             deviceStatus.getStatus()
         );
-    }
-
-    public void register(String username, DeviceInfo deviceInfo) {
-        bindDeviceRepository.save(new BindDevice());
     }
 }
