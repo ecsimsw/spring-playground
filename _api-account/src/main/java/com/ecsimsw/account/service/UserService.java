@@ -24,7 +24,7 @@ public class UserService {
     private final UserRoleRepository userRoleRepository;
 
     @Transactional
-    public Long vBetaCreate(SignUpRequest request) {
+    public Long betaCreate(SignUpRequest request) {
         if (userRepository.existsByUsername(request.username())) {
             return userRepository.findByUsername(request.username()).orElseThrow().getId();
         }

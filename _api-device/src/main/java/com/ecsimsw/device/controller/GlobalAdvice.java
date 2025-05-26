@@ -32,6 +32,7 @@ public class GlobalAdvice {
         NoResourceFoundException.class
     })
     public ApiResponse<ApiErrorResult> invalidRequest(Exception e) {
+        e.printStackTrace();
         var exception = new ApiException(ErrorType.INVALID_REQUEST);
         return ApiResponse.error(exception);
     }

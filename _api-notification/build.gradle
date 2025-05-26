@@ -1,5 +1,5 @@
 group = 'com.ecsimsw'
-version = '1.0.4'
+version = '1.0.7'
 
 dependencies {
     implementation project(':_support-common')

@@ -34,9 +34,4 @@ public class NotificationController {
         fcmService.remove(authUser.username(), request.token());
         return ApiResponse.success();
     }
-
-    @GetMapping("/api/notification/up")
-    public ApiResponse<Void> up() {
-        return ApiResponse.success();
-    }
 }

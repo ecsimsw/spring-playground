@@ -22,16 +22,6 @@ resource "aws_lb_target_group" "external_nlb_tg" {
   port        = 8080
   protocol    = "TCP"
   vpc_id      = var.vpc_id
-
-  health_check {
-    port                = "8080"
-    protocol            = "HTTP"
-    path                = "/api/auth/up"
-    matcher             = "200-399"
-    interval            = 30
-    unhealthy_threshold = 3
-    healthy_threshold   = 3
-  }
 }
 
 resource "aws_lb_target_group_attachment" "attach_alb" {

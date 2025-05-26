@@ -77,6 +77,17 @@ resource "aws_ecs_task_definition" "ecs_task_account" {
           awslogs-stream-prefix = "account"
         }
       }
+
+      environment = [
+        {
+          name  = "SPRING_PROFILES_ACTIVE"
+          value = "prod"
+        },
+        {
+          name  = "VERSION"
+          value = var.account_version
+        }
+      ]
     }
   ])
 

@@ -9,10 +9,12 @@ import com.ecsimsw.device.service.DeviceService;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceStatus;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class DeviceController {
@@ -21,8 +23,9 @@ public class DeviceController {
     private final DeviceService deviceService;
 
     @InternalHandler
-    @GetMapping("/api/device/beta/refresh/{username}")
+    @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
+        log.info("Refresh : {}", username);
         var deviceInfos = externalPlatformService.getDeviceList(username);
         deviceService.refresh(username, deviceInfos);
         return ApiResponse.success();

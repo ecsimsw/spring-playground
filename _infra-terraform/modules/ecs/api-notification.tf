@@ -78,6 +78,17 @@ resource "aws_ecs_task_definition" "ecs_task_notification" {
           awslogs-stream-prefix = "notification"
         }
       }
+
+      environment = [
+        {
+          name  = "SPRING_PROFILES_ACTIVE"
+          value = "prod"
+        },
+        {
+          name  = "VERSION"
+          value = var.notification_version
+        }
+      ]
     }
   ])
 

@@ -1,7 +1,7 @@
 package com.ecsimsw.account.controller;
 
-import com.ecsimsw.account.dto.LogInRequest;
 import com.ecsimsw.account.dto.AuthTokenResponse;
+import com.ecsimsw.account.dto.LogInRequest;
 import com.ecsimsw.account.dto.ReissueRequest;
 import com.ecsimsw.account.dto.SignUpRequest;
 import com.ecsimsw.account.error.AccountException;
@@ -34,20 +34,21 @@ public class AuthTokenController {
     private final UserService userService;
     private final DeviceClient deviceClient;
 
-    @PostMapping("/api/account/test/login")
+    @PostMapping("/api/account/beta/login")
     public ApiResponse<AuthTokenResponse> testLogin(@RequestBody LogInRequest request) {
         try {
             var uid = externalPlatformService.getUserIdByUsername(request.username());
-            userService.vBetaCreate(new SignUpRequest(request.username(), "password"));
-            var result = authTokenService.vBetaIssue(request.username(), uid);
+            userService.betaCreate(new SignUpRequest(request.username(), "password"));
+            var result = authTokenService.betaIssue(request.username(), uid);
             deviceClient.refresh(request.username());
             return ApiResponse.success(result);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new AccountException(ErrorType.USER_NOT_FOUND);
         }
     }
 
-    @PostMapping("/api/account/loginV2")
+    @PostMapping("/api/account/login")
     public ApiResponse<AuthTokenResponse> login(@RequestBody LogInRequest request) {
         var authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.username(), request.password())

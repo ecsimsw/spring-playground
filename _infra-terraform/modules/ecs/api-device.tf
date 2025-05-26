@@ -77,6 +77,17 @@ resource "aws_ecs_task_definition" "ecs_task_device" {
           awslogs-stream-prefix = "device"
         }
       }
+
+      environment = [
+        {
+          name  = "SPRING_PROFILES_ACTIVE"
+          value = "prod"
+        },
+        {
+          name  = "VERSION"
+          value = var.device_version
+        }
+      ]
     }
   ])
 

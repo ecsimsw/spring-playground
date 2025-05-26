@@ -5,7 +5,6 @@ import com.ecsimsw.account.dto.AuthTokenResponse;
 import com.ecsimsw.account.error.AccountException;
 import com.ecsimsw.common.domain.*;
 import com.ecsimsw.common.error.ErrorType;
-import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ public class AuthTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public AuthTokenResponse vBetaIssue(String username, String uid) {
+    public AuthTokenResponse betaIssue(String username, String uid) {
         var at = new AccessToken(username, uid).asJwtToken(tokenSecret);
         var rt = new RefreshToken(username, uid).asJwtToken(tokenSecret);
         refreshTokenRepository.save(username, rt);
@@ -48,7 +47,7 @@ public class AuthTokenService {
         var username = RefreshToken.fromToken(tokenSecret, rt).username();
         var uid = RefreshToken.fromToken(tokenSecret, rt).uid();
         refreshTokenRepository.findByUsername(username).orElseThrow(() -> new AccountException(ErrorType.INVALID_TOKEN));
-        return vBetaIssue(username, uid);
+        return betaIssue(username, uid);
     }
 
     public void blockToken(String token) {
