@@ -31,14 +31,16 @@ module "ecs" {
   ecs_task_execution_role = module.ecs.ecs_task_execution_role
   account_port            = 8851
   account_version         = "1.0.6"
+  device_port             = 8852
+  device_version          = "1.0.1"
   notification_port       = 8854
   notification_version    = "1.0.4"
 }
 
 module "lb" {
-  source            = "./modules/lb"
-  vpc_id            = module.vpc.vpc_id
-  public_subnet_ids = module.vpc.public_subnet_ids
+  source             = "./modules/lb"
+  vpc_id             = module.vpc.vpc_id
+  public_subnet_ids  = module.vpc.public_subnet_ids
   private_subnet_ids = module.vpc.private_subnet_ids
   internal_lb_cidr_block = ["0.0.0.0/0"]
 }

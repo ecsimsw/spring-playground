@@ -38,6 +38,14 @@ variable "account_version" {
   type = string
 }
 
+variable "device_port" {
+  type = number
+}
+
+variable "device_version" {
+  type = string
+}
+
 variable "notification_port" {
   type = number
 }

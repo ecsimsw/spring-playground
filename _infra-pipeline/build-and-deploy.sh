@@ -46,21 +46,21 @@ if [ ! -f "$JAR_PATH" ]; then
   exit 1
 fi
 
-cp "$JAR_PATH" ./app/app.jar
+cp "$JAR_PATH" ./app.jar
 
 docker buildx build \
  --platform linux/amd64 \
  -t "${REPO_NAME}:${IMAGE_TAG}" --load \
- -f ./app/Dockerfile ./app
+ -f ./Dockerfile .
 
 BUILD_RESULT=$?
 if [ $BUILD_RESULT -ne 0 ]; then
   echo "Docker build failed!"
-  rm -f ./app/app.jar
+  rm -f ./app.jar
   exit 2
 fi
 
-rm -f ./app/app.jar
+rm -f ./app.jar
 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 AWS_REGION=$(aws configure get region)
