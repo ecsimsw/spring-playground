@@ -12,10 +12,10 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.SubscriptionInitialPosition;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.servlet.View;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -46,18 +46,18 @@ public class DeviceEventListener {
     private int partitionNumber;
 
     @PostConstruct
-    public void initCount() {
+    public void init() {
         eventThroughputCounter.start(1, TimeUnit.SECONDS);
-        consume(partitionNumber);
+        listen(partitionNumber);
     }
 
     @SneakyThrows
-    public void consume(int consumerCount) {
+    public void listen(int consumerCount) {
         var executor = Executors.newFixedThreadPool(consumerCount);
         IntStream.rangeClosed(1, consumerCount).forEach(
             i -> executor.submit(() -> {
                 try {
-                    listen(i);
+                    consume(i);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -65,11 +65,12 @@ public class DeviceEventListener {
         );
     }
 
-    private void listen(int consumerId) throws PulsarClientException {
+    private void consume(int consumerId) throws PulsarClientException {
         var consumer = pulsarClient.newConsumer()
             .topic("persistent://" + topic)
             .subscriptionName(subscriptionName)
             .subscriptionType(SubscriptionType.Shared)
+            .subscriptionInitialPosition(SubscriptionInitialPosition.Latest)
             .subscribe();
         while (!Thread.currentThread().isInterrupted()) {
             var msg = consumer.receive(1, TimeUnit.SECONDS);
@@ -78,13 +79,15 @@ public class DeviceEventListener {
                     var eventMessage = EventMessage.from(objectMapper, msg);
                     if (eventMessage.isProtocol(DATA)) {
                         var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
-                        dataEventService.handle(dataEvent);
+                        dataEventService.handle(eventMessage.t(), dataEvent);
                     }
                     consumer.acknowledge(msg);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 // TODO :: 재시도와 DLQ, 예외 처리
             }
+            eventThroughputCounter.up();
         }
     }
 

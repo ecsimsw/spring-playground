@@ -1,4 +1,4 @@
-package com.ecsimsw.device.domain;
+package com.ecsimsw.common.domain;
 
 public record DeviceStatusCode(
     String name,

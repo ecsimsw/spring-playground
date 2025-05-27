@@ -1,7 +1,7 @@
-package com.ecsimsw.device.domain;
+package com.ecsimsw.common.domain;
 
+import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.device.error.DeviceException;
 import lombok.AllArgsConstructor;
 
 import java.util.*;
@@ -33,7 +33,7 @@ public enum DeviceType {
         return Arrays.stream(values())
             .filter(it -> it.productIds.contains(productId))
             .findAny()
-            .orElseThrow(() -> new DeviceException(ErrorType.NOT_SUPPORTED_DEVICE));
+            .orElseThrow(() -> new ApiException(ErrorType.NOT_SUPPORTED_DEVICE));
     }
 
     public static boolean isSupportedProduct(String productId) {
@@ -50,6 +50,6 @@ public enum DeviceType {
         return statusCodes.stream()
             .filter(it -> it.name().equals(statusCode))
             .findAny()
-            .orElseThrow(() -> new DeviceException(ErrorType.NOT_SUPPORTED_DEVICE));
+            .orElseThrow(() -> new ApiException(ErrorType.NOT_SUPPORTED_DEVICE));
     }
 }

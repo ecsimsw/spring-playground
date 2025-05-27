@@ -1,5 +1,6 @@
 package com.ecsimsw.device.domain;
 
+import com.ecsimsw.common.domain.DeviceType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

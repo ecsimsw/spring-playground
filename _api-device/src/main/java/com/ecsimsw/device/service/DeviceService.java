@@ -1,5 +1,6 @@
 package com.ecsimsw.device.service;
 
+import com.ecsimsw.common.domain.DeviceType;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.domain.*;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
