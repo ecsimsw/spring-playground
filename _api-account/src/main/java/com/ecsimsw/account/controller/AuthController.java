@@ -11,6 +11,7 @@ import com.ecsimsw.account.service.UserService;
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.support.client.DeviceClient;
+import com.ecsimsw.common.support.client.EventClient;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,17 +23,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class AuthTokenController {
+public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final AuthTokenService authTokenService;
     private final ExternalPlatformService externalPlatformService;
     private final UserService userService;
     private final DeviceClient deviceClient;
+    private final EventClient eventClient;
 
     @PostMapping("/api/account/beta/login")
     public ApiResponse<AuthTokenResponse> testLogin(@RequestBody LogInRequest request) {
@@ -40,7 +43,16 @@ public class AuthTokenController {
             var uid = externalPlatformService.getUserIdByUsername(request.username());
             userService.betaCreate(new SignUpRequest(request.username(), "password"));
             var result = authTokenService.betaIssue(request.username(), uid);
-            deviceClient.refresh(request.username());
+
+            var eventRefreshFuture = CompletableFuture.supplyAsync(() ->
+                eventClient.refresh(request.username())
+            );
+            var deviceRefreshFuture = CompletableFuture.supplyAsync(() ->
+                deviceClient.refresh(request.username())
+            );
+            CompletableFuture.allOf(eventRefreshFuture, deviceRefreshFuture)
+                .join();
+
             return ApiResponse.success(result);
         } catch (Exception e) {
             e.printStackTrace();

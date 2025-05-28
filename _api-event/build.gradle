@@ -2,7 +2,9 @@ group = 'com.ecsimsw'
 version = '1.0.3'
 
 dependencies {
+    // Modules
     implementation project(':_support-common')
+    implementation project(':_sdk-external-platform')
 
     // WebFlux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -19,6 +21,7 @@ dependencies {
     // web socket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+    // H2
     runtimeOnly 'com.h2database:h2'
 }
 
