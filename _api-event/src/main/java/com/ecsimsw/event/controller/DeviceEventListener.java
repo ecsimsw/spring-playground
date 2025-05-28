@@ -48,7 +48,7 @@ public class DeviceEventListener {
     @PostConstruct
     public void init() {
         eventThroughputCounter.start(1, TimeUnit.SECONDS);
-        listen(partitionNumber);
+//        listen(partitionNumber);
     }
 
     @SneakyThrows

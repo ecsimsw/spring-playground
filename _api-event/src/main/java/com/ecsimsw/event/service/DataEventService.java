@@ -10,8 +10,6 @@ import com.ecsimsw.event.domain.DeviceOwnerRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +23,7 @@ public class DataEventService {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     private final DeviceOwnerRepository deviceOwnerRepository;
-    private DeviceStatusEventBrokerClient deviceStatusEventBrokerClient;
+    private final DeviceStatusEventBrokerClient deviceStatusEventBrokerClient;
 
     @PostConstruct
     public void init() {
@@ -43,9 +41,9 @@ public class DataEventService {
             [{code=cur_voltage, t=1748328396530, value=2, 20=2}]
          */
 
-//        if(dataEvent.getDevId().equals("s8616242a58d13cc66xszg")) {
+        if (dataEvent.getDevId().equals("s8616242a58d13cc66xszg")) {
 //            System.out.println(dataEvent.getStatus());
-//        }
+        }
 
         var optDeviceOwner = deviceOwnerRepository.findById(dataEvent.getDevId());
         if (optDeviceOwner.isEmpty()) {
@@ -55,14 +53,14 @@ public class DataEventService {
         var deviceOwner = optDeviceOwner.get();
         var deviceType = deviceOwner.getDeviceType();
         for (var statusMap : dataEvent.getStatus()) {
-            for (var statusCode : statusMap.keySet()) {
-                if (deviceType.isSupportedStatusCode(statusCode)) {
-                    deviceStatusEventBrokerClient.produceDeviceStatus(new DeviceStatusEvent(
-                        dataEvent.getDevId(),
-                        statusCode,
-                        statusMap.get(statusCode)
-                    ));
-                }
+            var code = (String) statusMap.get("code");
+            var value = statusMap.get("value");
+            if (deviceType.isSupportedStatusCode(code)) {
+                deviceStatusEventBrokerClient.produceDeviceStatus(new DeviceStatusEvent(
+                    dataEvent.getDevId(),
+                    code,
+                    value
+                ));
             }
         }
 //        notificationClient.createNotificationAsync(dataEvent.getDataId()).subscribe(
