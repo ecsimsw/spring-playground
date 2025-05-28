@@ -1,4 +1,4 @@
-package com.ecsimsw.event.service;
+package com.ecsimsw.event.support;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

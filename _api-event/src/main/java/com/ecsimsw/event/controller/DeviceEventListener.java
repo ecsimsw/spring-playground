@@ -1,9 +1,9 @@
 package com.ecsimsw.event.controller;
 
-import com.ecsimsw.event.domain.DataEventMessage;
 import com.ecsimsw.event.domain.EventMessage;
+import com.ecsimsw.event.dto.DeviceStatusEventMessage;
 import com.ecsimsw.event.service.DataEventService;
-import com.ecsimsw.event.service.EventThroughputCounter;
+import com.ecsimsw.event.support.EventThroughputCounter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -14,6 +14,7 @@ import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.SubscriptionInitialPosition;
 import org.apache.pulsar.client.api.SubscriptionType;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
@@ -48,7 +49,7 @@ public class DeviceEventListener {
     @PostConstruct
     public void init() {
         eventThroughputCounter.start(1, TimeUnit.SECONDS);
-//        listen(partitionNumber);
+        listen(partitionNumber);
     }
 
     @SneakyThrows
@@ -57,15 +58,18 @@ public class DeviceEventListener {
         IntStream.rangeClosed(1, consumerCount).forEach(
             i -> executor.submit(() -> {
                 try {
-                    consume(i);
+                    MDC.put("threadId", String.valueOf(Thread.currentThread().getId()));
+                    consume();
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    MDC.clear();
                 }
             })
         );
     }
 
-    private void consume(int consumerId) throws PulsarClientException {
+    private void consume() throws PulsarClientException {
         var consumer = pulsarClient.newConsumer()
             .topic("persistent://" + topic)
             .subscriptionName(subscriptionName)
@@ -78,8 +82,8 @@ public class DeviceEventListener {
                 if (msg != null) {
                     var eventMessage = EventMessage.from(objectMapper, msg);
                     if (eventMessage.isProtocol(DATA)) {
-                        var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
-                        dataEventService.handle(eventMessage.t(), dataEvent);
+                        var dataEvent = DeviceStatusEventMessage.from(objectMapper, eventMessage, secretKey);
+                        dataEventService.handle(dataEvent);
                     }
                     consumer.acknowledge(msg);
                 }
@@ -90,27 +94,6 @@ public class DeviceEventListener {
             eventThroughputCounter.up();
         }
     }
-
-//    @PulsarListener(
-//        topics = "${pulsar.event.topic}",
-//        subscriptionName = "${pulsar.event.subscriptionName}",
-//        subscriptionType = SubscriptionType.Shared,
-//        concurrency = "11"
-//    )
-//    public void listen(Message<byte[]> message) {
-//        eventThroughputCounter.up();
-//        try {
-//            MDC.put("threadId", String.valueOf(Thread.currentThread().getId()));
-//            var eventMessage = EventMessage.from(objectMapper, message);
-//            if (eventMessage.isProtocol(DATA)) {
-//                var dataEvent = DataEventMessage.from(objectMapper, eventMessage, secretKey);
-//                System.out.println(dataEvent.getDevId());
-////                dataEventService.handle(dataEvent);
-//            }
-//        } finally {
-//            MDC.clear();
-//        }
-//    }
 
     @PreDestroy
     public void destroyCount() {

@@ -22,13 +22,13 @@ public class DeviceStatusEventBrokerClient {
 
     public void produceDeviceStatus(DeviceStatusEvent statusEvent) {
         var jsonMessage = convertAsJson(statusEvent);
-        kafkaTemplate.send(deviceStatusTopic, statusEvent.deviceId(), jsonMessage)
+        kafkaTemplate.send(deviceStatusTopic, statusEvent.getDeviceId(), jsonMessage)
             .whenComplete((result, ex) -> {
                 if (ex != null) {
                     log.info("Thread id : {} ", (Thread.currentThread().getName()));
                 }
             });
-        log.info("produce device status event : {}", statusEvent.deviceId());
+        log.info("produce device status event : {}", statusEvent.getDeviceId());
     }
 
     private String convertAsJson(DeviceStatusEvent statusEvent) {
