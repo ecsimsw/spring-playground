@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class DataEventService {
+public class EventService {
 
     private final DeviceOwnerRepository deviceOwnerRepository;
     private final DeviceStatusEventBrokerClient deviceStatusEventBrokerClient;

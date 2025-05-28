@@ -17,7 +17,6 @@ public class DeviceStatusEventBrokerClient {
     private String deviceStatusTopic;
 
     private final ObjectMapper objectMapper;
-
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public void produceDeviceStatus(DeviceStatusEvent statusEvent) {

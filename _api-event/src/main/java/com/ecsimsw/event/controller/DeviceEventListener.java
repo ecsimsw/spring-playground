@@ -2,7 +2,8 @@ package com.ecsimsw.event.controller;
 
 import com.ecsimsw.event.domain.EventMessage;
 import com.ecsimsw.event.dto.DeviceStatusEventMessage;
-import com.ecsimsw.event.service.DataEventService;
+import com.ecsimsw.event.service.EventMessageDeadLetterService;
+import com.ecsimsw.event.service.EventService;
 import com.ecsimsw.event.support.EventThroughputCounter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
@@ -10,8 +11,8 @@ import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.SubscriptionInitialPosition;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.MDC;
@@ -29,11 +30,6 @@ import static com.ecsimsw.event.domain.support.Protocol.DATA;
 @Controller
 public class DeviceEventListener {
 
-    private final ObjectMapper objectMapper;
-    private final DataEventService dataEventService;
-    private final EventThroughputCounter eventThroughputCounter;
-    private final PulsarClient pulsarClient;
-
     @Value("${pulsar.event.secretKey}")
     private String secretKey;
 
@@ -46,6 +42,12 @@ public class DeviceEventListener {
     @Value("${pulsar.event.partitionNumber}")
     private int partitionNumber;
 
+    private final ObjectMapper objectMapper;
+    private final EventService eventService;
+    private final EventThroughputCounter eventThroughputCounter;
+    private final PulsarClient pulsarClient;
+    private final EventMessageDeadLetterService eventMessageDeadLetterService;
+
     @PostConstruct
     public void init() {
         eventThroughputCounter.start(1, TimeUnit.SECONDS);
@@ -57,42 +59,44 @@ public class DeviceEventListener {
         var executor = Executors.newFixedThreadPool(consumerCount);
         IntStream.rangeClosed(1, consumerCount).forEach(
             i -> executor.submit(() -> {
-                try {
-                    MDC.put("threadId", String.valueOf(Thread.currentThread().getId()));
-                    consume();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    MDC.clear();
-                }
+                MDC.put("threadId", String.valueOf(Thread.currentThread().threadId()));
+                consume();
+                MDC.clear();
             })
         );
     }
 
-    private void consume() throws PulsarClientException {
-        var consumer = pulsarClient.newConsumer()
+    @SneakyThrows
+    private void consume() {
+        var consumer = initConsumer();
+        while (!Thread.currentThread().isInterrupted()) {
+            var msg = consumer.receive(1, TimeUnit.SECONDS);
+            if (msg == null) {
+                continue;
+            }
+            try {
+                var eventMessage = EventMessage.from(objectMapper, msg);
+                if (eventMessage.isProtocol(DATA)) {
+                    var dataEvent = DeviceStatusEventMessage.from(objectMapper, eventMessage, secretKey);
+                    eventService.handle(dataEvent);
+                }
+            } catch (Exception e) {
+                eventMessageDeadLetterService.save(new String(msg.getData()));
+            } finally {
+                consumer.acknowledge(msg);
+                eventThroughputCounter.up();
+            }
+        }
+    }
+
+    @SneakyThrows
+    private Consumer<byte[]> initConsumer() {
+        return pulsarClient.newConsumer()
             .topic("persistent://" + topic)
             .subscriptionName(subscriptionName)
             .subscriptionType(SubscriptionType.Shared)
             .subscriptionInitialPosition(SubscriptionInitialPosition.Latest)
             .subscribe();
-        while (!Thread.currentThread().isInterrupted()) {
-            var msg = consumer.receive(1, TimeUnit.SECONDS);
-            try {
-                if (msg != null) {
-                    var eventMessage = EventMessage.from(objectMapper, msg);
-                    if (eventMessage.isProtocol(DATA)) {
-                        var dataEvent = DeviceStatusEventMessage.from(objectMapper, eventMessage, secretKey);
-                        dataEventService.handle(dataEvent);
-                    }
-                    consumer.acknowledge(msg);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                // TODO :: 재시도와 DLQ, 예외 처리
-            }
-            eventThroughputCounter.up();
-        }
     }
 
     @PreDestroy
