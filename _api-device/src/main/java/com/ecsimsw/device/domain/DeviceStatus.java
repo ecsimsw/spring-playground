@@ -23,4 +23,8 @@ public class DeviceStatus {
 
     @Convert(converter = MapToJsonConverter.class)
     private Map<String, Object> status;
+
+    public void updateStatus(String code, Object value) {
+        status.put(code, value);
+    }
 }

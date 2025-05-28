@@ -23,7 +23,7 @@ public class DeviceService {
     @Transactional(readOnly = true)
     public List<DeviceInfoResponse> deviceList(String username) {
         var bindDevices = bindDeviceRepository.findAllByUsername(username);
-        var deviceIds = bindDevices.stream().map(BindDevice::getId).toList();
+        var deviceIds = bindDevices.stream().map(BindDevice::getDeviceId).toList();
         var deviceStatusMap = deviceStatusRepository.findAllByDeviceIdIn(deviceIds).stream()
             .collect(Collectors.toMap(
                 DeviceStatus::getDeviceId,
@@ -31,10 +31,10 @@ public class DeviceService {
             );
         return bindDevices.stream()
             .map(device -> new DeviceInfoResponse(
-                device.getId(),
+                device.getDeviceId(),
                 device.getProductId(),
                 device.isOnline(),
-                deviceStatusMap.get(device.getId())
+                deviceStatusMap.get(device.getDeviceId())
             )).toList();
     }
 
@@ -50,8 +50,8 @@ public class DeviceService {
     }
 
     @Transactional
-    public void bindDevices(String username, List<DeviceInfo> deviceResults) {
-        var bindDevices = deviceResults.stream()
+    public void bindDevices(String username, List<DeviceInfo> deviceInfos) {
+        var bindDevices = deviceInfos.stream()
             .filter(deviceResult -> DeviceType.isSupportedProduct(deviceResult.getPid()))
             .map(deviceResult -> new BindDevice(
                 deviceResult.getId(),
@@ -61,7 +61,7 @@ public class DeviceService {
             )).toList();
         bindDeviceRepository.saveAll(bindDevices);
 
-        var updatedStatus = deviceResults.stream()
+        var updatedStatus = deviceInfos.stream()
             .filter(deviceResult -> DeviceType.isSupportedProduct(deviceResult.getPid()))
             .map(deviceResult -> {
                 var deviceType = DeviceType.resolveByProductId(deviceResult.getPid());
@@ -78,13 +78,13 @@ public class DeviceService {
     }
 
     @Transactional(readOnly = true)
-    public DeviceInfoResponse status(String deviceId) {
+    public DeviceInfoResponse readStatus(String deviceId) {
         var bindDevice = bindDeviceRepository.findById(deviceId)
             .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
         var deviceStatus = deviceStatusRepository.findByDeviceId(deviceId)
             .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
         return new DeviceInfoResponse(
-            bindDevice.getId(),
+            bindDevice.getDeviceId(),
             bindDevice.getProductId(),
             bindDevice.isOnline(),
             deviceStatus.getStatus()

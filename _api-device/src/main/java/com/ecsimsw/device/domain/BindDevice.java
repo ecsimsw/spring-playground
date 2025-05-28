@@ -18,7 +18,7 @@ import lombok.Setter;
 public class BindDevice {
 
     @Id
-    private String id;
+    private String deviceId;
     private String username;
     private String productId;
     private boolean online;
@@ -26,8 +26,8 @@ public class BindDevice {
     @Enumerated(value = EnumType.STRING)
     private DeviceType type;
 
-    public BindDevice(String id, String username, String productId, boolean online) {
-        this.id = id;
+    public BindDevice(String deviceId, String username, String productId, boolean online) {
+        this.deviceId = deviceId;
         this.username = username;
         this.productId = productId;
         this.online = online;

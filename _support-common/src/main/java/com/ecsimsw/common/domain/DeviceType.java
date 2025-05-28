@@ -10,15 +10,15 @@ import java.util.*;
 public enum DeviceType {
     Camera(
         List.of(""),
-        new DeviceStatusCode("online", Boolean.class, false)
+        new DeviceStatusCode("online", Boolean.class)
     ),
     Brunt(
         List.of(""),
-        new DeviceStatusCode("online", Boolean.class, false)
+        new DeviceStatusCode("online", Boolean.class)
     ),
     Plug(
         List.of("uxjr57hvapakd0io"),
-        new DeviceStatusCode("switch_1", Boolean.class, false)
+        new DeviceStatusCode("switch_1", Boolean.class)
     );
 
     private final List<String> productIds;

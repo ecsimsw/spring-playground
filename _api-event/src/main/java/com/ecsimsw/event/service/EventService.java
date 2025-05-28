@@ -37,7 +37,7 @@ public class EventService {
         }
 
         var deviceOwner = optDeviceOwner.get();
-        log.info("Handle status : {}", deviceOwner.getDeviceId());
+        log.info("Handle device : {}", deviceOwner.getDeviceId());
 
         deviceStatus.status().stream()
             .filter(statusMap -> {
@@ -46,6 +46,8 @@ public class EventService {
                 return deviceType.isSupportedStatusCode(code);
             })
             .forEach(statusMap -> {
+                log.info("Handle status : {}", deviceOwner.getDeviceId());
+
                 var code = (String) statusMap.get("code");
                 var value = statusMap.get("value");
 

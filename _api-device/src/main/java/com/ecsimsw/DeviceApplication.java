@@ -8,6 +8,7 @@ public class DeviceApplication {
 
     public static void main(String[] args) {
         var app = new SpringApplication(DeviceApplication.class);
+        app.setAdditionalProfiles("local");
         app.run(args);
     }
 }

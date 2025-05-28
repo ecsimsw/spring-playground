@@ -1,0 +1,37 @@
+package com.ecsimsw.device.controller;
+
+import com.ecsimsw.common.dto.DeviceStatusEvent;
+import com.ecsimsw.device.service.DeviceStatusService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RequiredArgsConstructor
+@RestController
+public class DeviceStatusController {
+
+    private final DeviceStatusService deviceStatusService;
+    private final ObjectMapper objectMapper;
+
+    @KafkaListener(
+        topics = "${kafka.device.status.topic}",
+        groupId = "${kafka.device.status.groupId}",
+        concurrency = "${kafka.device.status.partitionCount}"
+    )
+    public void listenDeviceStatus(String event) {
+        var deviceStatusEvent = convertFromJson(event);
+        deviceStatusService.updateStatus(deviceStatusEvent);
+    }
+
+    private DeviceStatusEvent convertFromJson(String statusEvent) {
+        try {
+            return objectMapper.readValue(statusEvent, DeviceStatusEvent.class);
+        } catch (Exception e) {
+            log.error("Failed to parse json");
+            throw new IllegalArgumentException(e);
+        }
+    }
+}

@@ -4,7 +4,6 @@ import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
-import com.ecsimsw.device.dto.PairingRequest;
 import com.ecsimsw.device.service.DeviceService;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceStatus;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
@@ -31,16 +30,6 @@ public class DeviceController {
         return ApiResponse.success();
     }
 
-    @PostMapping("/api/device/beta/pairing")
-    public ApiResponse<Void> pairing(
-        AuthUser authUser,
-        @RequestBody PairingRequest pairingRequest
-    ) {
-        var deviceResult = externalPlatformService.deviceInfo(pairingRequest.deviceId());
-        deviceService.bindDevices(authUser.username(), List.of(deviceResult));
-        return ApiResponse.success();
-    }
-
     @GetMapping("/api/device/list")
     public ApiResponse<List<DeviceInfoResponse>> list(AuthUser authUser) {
         var result = deviceService.deviceList(authUser.username());
@@ -49,7 +38,7 @@ public class DeviceController {
 
     @GetMapping("/api/device/{deviceId}")
     public ApiResponse<DeviceInfoResponse> status(@PathVariable String deviceId) {
-        var result = deviceService.status(deviceId);
+        var result = deviceService.readStatus(deviceId);
         return ApiResponse.success(result);
     }
 

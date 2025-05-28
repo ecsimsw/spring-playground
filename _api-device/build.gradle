@@ -6,6 +6,9 @@ dependencies {
     implementation project(':_support-common')
     implementation project(':_sdk-external-platform')
 
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
     // db
     runtimeOnly 'com.h2database:h2'
 }
