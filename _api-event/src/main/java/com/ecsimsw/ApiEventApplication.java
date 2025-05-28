@@ -8,7 +8,6 @@ public class ApiEventApplication {
 
     public static void main(String[] args) {
         var app = new SpringApplication(ApiEventApplication.class);
-        app.setAdditionalProfiles("local");
         app.run(args);
     }
 
