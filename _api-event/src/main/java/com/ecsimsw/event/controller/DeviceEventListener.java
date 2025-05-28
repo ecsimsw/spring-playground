@@ -15,7 +15,6 @@ import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.SubscriptionInitialPosition;
 import org.apache.pulsar.client.api.SubscriptionType;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
@@ -50,20 +49,15 @@ public class DeviceEventListener {
 
     @PostConstruct
     public void init() {
-        eventThroughputCounter.start(1, TimeUnit.SECONDS);
+//        eventThroughputCounter.start(1, TimeUnit.SECONDS);
         listen(partitionNumber);
     }
 
     @SneakyThrows
     public void listen(int consumerCount) {
         var executor = Executors.newFixedThreadPool(consumerCount);
-        IntStream.rangeClosed(1, consumerCount).forEach(
-            i -> executor.submit(() -> {
-                MDC.put("threadId", String.valueOf(Thread.currentThread().threadId()));
-                consume();
-                MDC.clear();
-            })
-        );
+        IntStream.rangeClosed(1, consumerCount)
+            .forEach(i -> executor.submit(this::consume));
     }
 
     @SneakyThrows
@@ -84,7 +78,7 @@ public class DeviceEventListener {
                 eventMessageDeadLetterService.save(new String(msg.getData()));
             } finally {
                 consumer.acknowledge(msg);
-                eventThroughputCounter.up();
+//                eventThroughputCounter.up();
             }
         }
     }

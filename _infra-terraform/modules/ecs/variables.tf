@@ -53,3 +53,11 @@ variable "notification_port" {
 variable "notification_version" {
   type = string
 }
+
+variable "event_port" {
+  type = number
+}
+
+variable "event_version" {
+  type = string
+}

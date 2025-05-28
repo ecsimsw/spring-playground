@@ -6,6 +6,7 @@
 ```
 terraform taint module.ecs.aws_ecs_service.ecs_service_account
 terraform taint module.ecs.aws_ecs_service.ecs_service_device
+terraform taint module.ecs.aws_ecs_service.ecs_service_event
 terraform taint module.ecs.aws_ecs_service.ecs_service_notification
 
 terraform apply

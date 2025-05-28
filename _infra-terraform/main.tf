@@ -30,11 +30,13 @@ module "ecs" {
   ecs_security_group_id   = module.ecs.ecs_security_group_id
   ecs_task_execution_role = module.ecs.ecs_task_execution_role
   account_port            = 8851
-  account_version         = "1.0.13"
+  account_version         = "1.0.14"
   device_port             = 8852
-  device_version          = "1.0.3"
+  device_version          = "1.0.4"
   notification_port       = 8854
-  notification_version    = "1.0.7"
+  notification_version    = "1.0.8"
+  event_port              = 8855
+  event_version           = "1.0.3"
 }
 
 module "lb" {
