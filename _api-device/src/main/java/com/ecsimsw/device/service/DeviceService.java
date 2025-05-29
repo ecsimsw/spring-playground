@@ -1,10 +1,11 @@
 package com.ecsimsw.device.service;
 
 import com.ecsimsw.common.domain.DeviceType;
-import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.device.domain.*;
+import com.ecsimsw.device.domain.BindDevice;
+import com.ecsimsw.device.domain.BindDeviceRepository;
+import com.ecsimsw.device.domain.DeviceStatus;
+import com.ecsimsw.device.domain.DeviceStatusRepository;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
-import com.ecsimsw.device.error.DeviceException;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,19 @@ public class DeviceService {
                 DeviceStatus::getStatus)
             );
         return bindDevices.stream()
-            .map(device -> new DeviceInfoResponse(
-                device.getDeviceId(),
-                device.getProductId(),
-                device.isOnline(),
-                deviceStatusMap.get(device.getDeviceId())
-            )).toList();
+            .map(device -> {
+                var deviceType = device.getType();
+                var deviceStatus = deviceStatusMap.get(device.getDeviceId());
+                var parsedStatusMap = deviceStatus.keySet().stream()
+                    .filter(deviceType::isSupportedStatusCode)
+                    .collect(Collectors.toMap(statusCode -> statusCode, deviceStatus::get));
+                return new DeviceInfoResponse(
+                    device.getDeviceId(),
+                    device.getProductId(),
+                    device.isOnline(),
+                    parsedStatusMap
+                );
+            }).toList();
     }
 
     @Transactional
@@ -62,32 +70,20 @@ public class DeviceService {
         bindDeviceRepository.saveAll(bindDevices);
 
         var updatedStatus = deviceInfos.stream()
-            .filter(deviceResult -> DeviceType.isSupportedProduct(deviceResult.getPid()))
-            .map(deviceResult -> {
-                var deviceType = DeviceType.resolveByProductId(deviceResult.getPid());
-                var deviceStatus = deviceResult.getStatus().stream()
-                    .filter(status -> deviceType.isSupportedStatusCode(status.getCode()))
-                    .collect(Collectors.toMap(
-                        it -> it.getCode(),
-                        it -> deviceType.getDeviceStatusCode(it.getCode())
-                            .asValue(String.valueOf(it.getValue()))
-                    ));
-                return new DeviceStatus(deviceResult.getId(), deviceStatus);
-            }).toList();
+            .filter(deviceInfo -> DeviceType.isSupportedProduct(deviceInfo.getPid()))
+            .map(this::deviceInfoToDeviceStatus)
+            .toList();
         deviceStatusRepository.saveAll(updatedStatus);
     }
 
-    @Transactional(readOnly = true)
-    public DeviceInfoResponse readStatus(String deviceId) {
-        var bindDevice = bindDeviceRepository.findById(deviceId)
-            .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
-        var deviceStatus = deviceStatusRepository.findByDeviceId(deviceId)
-            .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
-        return new DeviceInfoResponse(
-            bindDevice.getDeviceId(),
-            bindDevice.getProductId(),
-            bindDevice.isOnline(),
-            deviceStatus.getStatus()
-        );
+    private DeviceStatus deviceInfoToDeviceStatus(DeviceInfo deviceInfo) {
+        var deviceType = DeviceType.resolveByProductId(deviceInfo.getPid());
+        var deviceStatus = deviceInfo.getStatus().stream()
+            .filter(status -> deviceType.isSupportedStatusCode(status.getCode()))
+            .collect(Collectors.toMap(
+                statusCode -> statusCode.getCode(),
+                statusCode -> deviceType.convertValue(statusCode.getCode(), statusCode.getValue())
+            ));
+        return new DeviceStatus(deviceInfo.getId(), deviceType, deviceStatus);
     }
 }

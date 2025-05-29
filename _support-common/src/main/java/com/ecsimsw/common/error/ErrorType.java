@@ -17,6 +17,7 @@ public enum ErrorType {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, ErrorCode.E40009),
     NOT_SUPPORTED_DEVICE(HttpStatus.BAD_REQUEST, ErrorCode.E40010),
     INVALID_DEVICE(HttpStatus.BAD_REQUEST, ErrorCode.E40011),
+    NOT_SUPPORTED_STATUS(HttpStatus.BAD_REQUEST, ErrorCode.E40012),
     UNHANDLED(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.E50001),
     ;
 

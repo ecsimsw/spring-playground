@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class DeviceController {
+public class BindDeviceController {
 
     private final ExternalPlatformService externalPlatformService;
     private final DeviceService deviceService;
@@ -33,12 +33,6 @@ public class DeviceController {
     @GetMapping("/api/device/list")
     public ApiResponse<List<DeviceInfoResponse>> list(AuthUser authUser) {
         var result = deviceService.deviceList(authUser.username());
-        return ApiResponse.success(result);
-    }
-
-    @GetMapping("/api/device/{deviceId}")
-    public ApiResponse<DeviceInfoResponse> status(@PathVariable String deviceId) {
-        var result = deviceService.readStatus(deviceId);
         return ApiResponse.success(result);
     }
 

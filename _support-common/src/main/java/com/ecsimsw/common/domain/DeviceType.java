@@ -48,10 +48,11 @@ public enum DeviceType {
             .anyMatch(it -> it.name().equals(statusCode));
     }
 
-    public DeviceStatusCode getDeviceStatusCode(String statusCode) {
+    public Object convertValue(String statusCode, Object value) {
         return statusCodes.stream()
             .filter(it -> it.name().equals(statusCode))
             .findAny()
-            .orElseThrow(() -> new ApiException(ErrorType.NOT_SUPPORTED_DEVICE));
+            .orElseThrow(() -> new ApiException(ErrorType.NOT_SUPPORTED_DEVICE))
+            .convertValue(value);
     }
 }

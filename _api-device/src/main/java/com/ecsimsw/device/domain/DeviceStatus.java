@@ -1,9 +1,8 @@
 package com.ecsimsw.device.domain;
 
+import com.ecsimsw.common.domain.DeviceType;
 import com.ecsimsw.device.support.MapToJsonConverter;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +19,9 @@ public class DeviceStatus {
 
     @Id
     private String deviceId;
+
+    @Enumerated(value = EnumType.STRING)
+    private DeviceType deviceType;
 
     @Convert(converter = MapToJsonConverter.class)
     private Map<String, Object> status;

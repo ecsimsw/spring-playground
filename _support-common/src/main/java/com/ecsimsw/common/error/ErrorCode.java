@@ -18,5 +18,6 @@ public enum ErrorCode {
     E40009,
     E40010,
     E40011,
+    E40012,
     E50001
 }

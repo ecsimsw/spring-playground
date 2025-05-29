@@ -22,7 +22,7 @@ public class MapToJsonConverter implements AttributeConverter<Map<String, Object
             }
             return objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            e.getStackTrace();
             throw new IllegalArgumentException("failed to parse map -> json", e);
         }
     }
@@ -35,7 +35,7 @@ public class MapToJsonConverter implements AttributeConverter<Map<String, Object
             }
             return objectMapper.readValue(dbData, Map.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getStackTrace();
             throw new IllegalArgumentException("failed to parse json -> map", e);
         }
     }
