@@ -10,8 +10,8 @@ resource "aws_lb_target_group" "aws_lb_tg_event" {
 
   health_check {
     path                = "/api/event/up"
-    interval            = 5
-    timeout             = 2
+    interval            = 30
+    timeout             = 10
     healthy_threshold   = 2
     unhealthy_threshold = 2
     matcher             = "200"
@@ -52,14 +52,14 @@ resource "aws_ecs_task_definition" "ecs_task_event" {
   execution_role_arn = var.ecs_task_execution_role
   network_mode       = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                = 256
+  cpu                = 512
   memory             = 1024
 
   container_definitions = jsonencode([
     {
       name   = "spring-event-svc"
       image  = "${var.ecr_url}:api-event-${var.event_version}"
-      cpu    = 256
+      cpu    = 512
       memory = 1024
       essential = true # If the essential parameter of a container is marked as true, and that container fails or stops for any reason, all other containers that are part of the task are stopped
       portMappings = [

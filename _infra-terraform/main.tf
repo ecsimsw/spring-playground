@@ -5,6 +5,12 @@ terraform {
       version = ">= 5.0.0"
     }
   }
+  backend "s3" {
+    bucket = "sp-2493-terraform-state"
+    key    = "global/s3/terraform.tfstate"
+    region = "ap-northeast-2"
+    encrypt = true
+  }
 }
 
 provider "aws" {
@@ -30,13 +36,13 @@ module "ecs" {
   ecs_security_group_id   = module.ecs.ecs_security_group_id
   ecs_task_execution_role = module.ecs.ecs_task_execution_role
   account_port            = 8851
-  account_version         = "1.0.14"
+  account_version         = "1.0.20"
   device_port             = 8852
-  device_version          = "1.0.4"
+  device_version          = "1.0.9"
   notification_port       = 8854
-  notification_version    = "1.0.8"
+  notification_version    = "1.0.10"
   event_port              = 8855
-  event_version           = "1.0.3"
+  event_version           = "1.0.15"
 }
 
 module "lb" {

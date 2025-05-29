@@ -10,8 +10,8 @@ resource "aws_lb_target_group" "aws_lb_tg_notification" {
 
   health_check {
     path                = "/api/notification/up"
-    interval            = 5
-    timeout             = 2
+    interval            = 30
+    timeout             = 10
     healthy_threshold   = 2
     unhealthy_threshold = 2
     matcher             = "200"

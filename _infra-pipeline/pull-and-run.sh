@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./pull-and-run.sh api-config 1.0.0 8850
+# ./pull-and-run.sh api-config 1.0.1 8850
 
 if [ $# -ne 3 ]; then
   echo "Usage: $0 <MODULE_NAME> <VERSION> <EXTERNAL_PORT>"
