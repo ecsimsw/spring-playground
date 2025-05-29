@@ -24,9 +24,9 @@ public class DeviceController {
     @InternalHandler
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
-        log.info("Refresh : {}", username);
         var deviceInfos = externalPlatformService.getDeviceList(username);
         deviceService.refresh(username, deviceInfos);
+        log.info("Refresh succeed : {}", username);
         return ApiResponse.success();
     }
 

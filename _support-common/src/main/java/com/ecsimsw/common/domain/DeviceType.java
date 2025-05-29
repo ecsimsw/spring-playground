@@ -10,11 +10,13 @@ import java.util.*;
 public enum DeviceType {
     Camera(
         List.of(""),
-        new DeviceStatusCode("online", Boolean.class)
+        new DeviceStatusCode("switch_led", Boolean.class)
     ),
     Brunt(
-        List.of(""),
-        new DeviceStatusCode("online", Boolean.class)
+        List.of("mhf0rqd7uuvz6hf8"),
+        new DeviceStatusCode("switch_led", Boolean.class),
+        new DeviceStatusCode("bright_value", Integer.class),
+        new DeviceStatusCode("work_mode", String.class)
     ),
     Plug(
         List.of("uxjr57hvapakd0io"),

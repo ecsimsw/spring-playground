@@ -24,7 +24,7 @@ public class DeviceStatusEventBrokerClient {
         kafkaTemplate.send(deviceStatusTopic, statusEvent.getDeviceId(), jsonMessage)
             .whenComplete((result, ex) -> {
                 if (ex != null) {
-                    log.info("Thread id : {} ", (Thread.currentThread().getName()));
+                    log.info("failed to produce device status event : {} ", (Thread.currentThread().getName()));
                 }
             });
         log.info("produce device status event : {}", statusEvent.getDeviceId());

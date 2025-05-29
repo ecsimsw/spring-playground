@@ -49,7 +49,6 @@ public class DeviceEventListener {
 
     @PostConstruct
     public void init() {
-//        eventThroughputCounter.start(1, TimeUnit.SECONDS);
         listen(partitionNumber);
     }
 
@@ -78,7 +77,6 @@ public class DeviceEventListener {
                 eventMessageDeadLetterService.save(new String(msg.getData()));
             } finally {
                 consumer.acknowledge(msg);
-//                eventThroughputCounter.up();
             }
         }
     }

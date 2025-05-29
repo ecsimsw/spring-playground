@@ -52,10 +52,10 @@ public class AuthController {
             );
             CompletableFuture.allOf(eventRefreshFuture, deviceRefreshFuture)
                 .join();
-
             return ApiResponse.success(result);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
+            log.error(e.fillInStackTrace().getMessage());
             throw new AccountException(ErrorType.USER_NOT_FOUND);
         }
     }

@@ -23,6 +23,7 @@ public class DeviceOwnerService {
         deviceOwnerRepository.deleteAllByUsername(username);
 
         var deviceOwners = deviceInfos.stream()
+            .filter(deviceInfo -> DeviceType.isSupportedProduct(deviceInfo.getPid()))
             .map(deviceInfo -> new DeviceOwner(
                 deviceInfo.getId(),
                 username,

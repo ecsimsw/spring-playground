@@ -19,10 +19,4 @@ public class NotificationConfig {
     ) {
         this.sender = sender;
     }
-
-    @Profile("!prod")
-    @Bean
-    public JavaMailSender javaMailSender() {
-        return null;
-    }
 }
