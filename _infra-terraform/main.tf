@@ -38,7 +38,7 @@ module "ecs" {
   account_port            = 8851
   account_version         = "1.0.20"
   device_port             = 8852
-  device_version          = "1.0.9"
+  device_version          = "1.0.10"
   notification_port       = 8854
   notification_version    = "1.0.10"
   event_port              = 8855
