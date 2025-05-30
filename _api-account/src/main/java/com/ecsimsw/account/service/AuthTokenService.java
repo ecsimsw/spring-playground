@@ -21,7 +21,6 @@ public class AuthTokenService {
 
     private final UserPasswordRepository userPasswordRepository;
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -52,15 +51,5 @@ public class AuthTokenService {
 
     public void blockToken(String token) {
         blockedUserRepository.save(new BlockedUser(token));
-    }
-
-    @Transactional(readOnly = true)
-    public List<String> roleNames(String username) {
-        var userPassword = userPasswordRepository.findByUsername(username).orElseThrow(() -> new AccountException(ErrorType.FAILED_TO_AUTHENTICATE));
-        var userRole = userRoleRepository.findByUserId(userPassword.userId()).orElseThrow(() -> new AccountException(ErrorType.FAILED_TO_AUTHENTICATE));
-        if (userRole.getIsAdmin()) {
-            return List.of("ADMIN");
-        }
-        return userRole.roleNames();
     }
 }

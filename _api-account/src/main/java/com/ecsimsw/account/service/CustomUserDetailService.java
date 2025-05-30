@@ -4,7 +4,6 @@ import com.ecsimsw.account.domain.UserPasswordRepository;
 import com.ecsimsw.account.domain.UserRoleRepository;
 import com.ecsimsw.account.error.AccountException;
 import com.ecsimsw.common.error.ErrorType;
-import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

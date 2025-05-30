@@ -29,7 +29,7 @@ public class EventService {
         deviceStatus.status().stream()
             .filter(statusMap -> {
                 var code = (String) statusMap.get("code");
-                var deviceType = deviceOwner.getDeviceType();
+                var deviceType = deviceOwner.getProduct();
                 return deviceType.isSupportedStatusCode(code);
             })
             .forEach(statusMap -> {

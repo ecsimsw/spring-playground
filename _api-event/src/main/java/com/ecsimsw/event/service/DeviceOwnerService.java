@@ -1,6 +1,6 @@
 package com.ecsimsw.event.service;
 
-import com.ecsimsw.common.domain.DeviceType;
+import com.ecsimsw.common.domain.Products;
 import com.ecsimsw.event.domain.DeviceOwner;
 import com.ecsimsw.event.domain.DeviceOwnerRepository;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
@@ -23,12 +23,11 @@ public class DeviceOwnerService {
         deviceOwnerRepository.deleteAllByUsername(username);
 
         var deviceOwners = deviceInfos.stream()
-            .filter(deviceInfo -> DeviceType.isSupportedProduct(deviceInfo.getPid()))
+            .filter(deviceInfo -> Products.isSupported(deviceInfo.getPid()))
             .map(deviceInfo -> new DeviceOwner(
                 deviceInfo.getId(),
                 username,
-                deviceInfo.getPid(),
-                DeviceType.resolveByProductId(deviceInfo.getPid())
+                Products.getById(deviceInfo.getPid())
             )).toList();
         deviceOwnerRepository.saveAll(deviceOwners);
     }

@@ -38,9 +38,11 @@ public class BindDeviceController {
 
     @PostMapping("/api/device/{deviceId}")
     public ApiResponse<Void> control(
+        AuthUser authUser,
         @PathVariable String deviceId,
         @RequestBody List<DeviceStatus> deviceStatuses
     ) {
+        deviceService.checkDeviceOwner(authUser.username(), deviceId);
         externalPlatformService.command(deviceId, deviceStatuses);
         return ApiResponse.success();
     }

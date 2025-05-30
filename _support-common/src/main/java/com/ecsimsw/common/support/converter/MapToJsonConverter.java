@@ -1,4 +1,4 @@
-package com.ecsimsw.device.support;
+package com.ecsimsw.common.support.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

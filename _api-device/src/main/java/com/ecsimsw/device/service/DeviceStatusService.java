@@ -28,8 +28,8 @@ public class DeviceStatusService {
             return;
         }
         var deviceStatus = optDeviceStatus.orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
-        var deviceType = deviceStatus.getDeviceType();
-        if(!deviceType.isSupportedStatusCode(statusEvent.getCode())) {
+        var product = deviceStatus.getProduct();
+        if(!product.isSupportedStatusCode(statusEvent.getCode())) {
             log.info("Enter update status but status not supported : {} ", statusEvent.getDeviceId());
             return;
         }
@@ -45,7 +45,7 @@ public class DeviceStatusService {
             .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
         return new DeviceInfoResponse(
             bindDevice.getDeviceId(),
-            bindDevice.getProductId(),
+            bindDevice.getProduct().id(),
             bindDevice.isOnline(),
             deviceStatus.getStatus()
         );

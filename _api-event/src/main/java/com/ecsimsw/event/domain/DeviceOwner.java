@@ -1,7 +1,10 @@
 package com.ecsimsw.event.domain;
 
-import com.ecsimsw.common.domain.DeviceType;
-import jakarta.persistence.*;
+import com.ecsimsw.common.domain.Product;
+import com.ecsimsw.common.support.converter.ProductConverter;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +20,7 @@ public class DeviceOwner {
     @Id
     private String deviceId;
     private String username;
-    private String productId;
 
-    @Enumerated(value = EnumType.STRING)
-    private DeviceType deviceType;
+    @Convert(converter = ProductConverter.class)
+    private Product product;
 }

@@ -1,11 +1,13 @@
 package com.ecsimsw.device.service;
 
-import com.ecsimsw.common.domain.DeviceType;
+import com.ecsimsw.common.domain.Products;
+import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.domain.BindDevice;
 import com.ecsimsw.device.domain.BindDeviceRepository;
 import com.ecsimsw.device.domain.DeviceStatus;
 import com.ecsimsw.device.domain.DeviceStatusRepository;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
+import com.ecsimsw.device.error.DeviceException;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,14 +34,14 @@ public class DeviceService {
             );
         return bindDevices.stream()
             .map(device -> {
-                var deviceType = device.getType();
+                var deviceType = device.getProduct();
                 var deviceStatus = deviceStatusMap.get(device.getDeviceId());
                 var parsedStatusMap = deviceStatus.keySet().stream()
                     .filter(deviceType::isSupportedStatusCode)
                     .collect(Collectors.toMap(statusCode -> statusCode, deviceStatus::get));
                 return new DeviceInfoResponse(
                     device.getDeviceId(),
-                    device.getProductId(),
+                    device.getProduct().id(),
                     device.isOnline(),
                     parsedStatusMap
                 );
@@ -60,7 +62,7 @@ public class DeviceService {
     @Transactional
     public void bindDevices(String username, List<DeviceInfo> deviceInfos) {
         var bindDevices = deviceInfos.stream()
-            .filter(deviceResult -> DeviceType.isSupportedProduct(deviceResult.getPid()))
+            .filter(deviceResult -> Products.isSupported(deviceResult.getPid()))
             .map(deviceResult -> new BindDevice(
                 deviceResult.getId(),
                 username,
@@ -70,20 +72,27 @@ public class DeviceService {
         bindDeviceRepository.saveAll(bindDevices);
 
         var updatedStatus = deviceInfos.stream()
-            .filter(deviceInfo -> DeviceType.isSupportedProduct(deviceInfo.getPid()))
+            .filter(deviceInfo -> Products.isSupported(deviceInfo.getPid()))
             .map(this::deviceInfoToDeviceStatus)
             .toList();
         deviceStatusRepository.saveAll(updatedStatus);
     }
 
     private DeviceStatus deviceInfoToDeviceStatus(DeviceInfo deviceInfo) {
-        var deviceType = DeviceType.resolveByProductId(deviceInfo.getPid());
+        var product = Products.getById(deviceInfo.getPid());
         var deviceStatus = deviceInfo.getStatus().stream()
-            .filter(status -> deviceType.isSupportedStatusCode(status.getCode()))
+            .filter(status -> product.isSupportedStatusCode(status.getCode()))
             .collect(Collectors.toMap(
                 statusCode -> statusCode.getCode(),
-                statusCode -> deviceType.convertValue(statusCode.getCode(), statusCode.getValue())
+                statusCode -> product.convertValue(statusCode.getCode(), statusCode.getValue())
             ));
-        return new DeviceStatus(deviceInfo.getId(), deviceType, deviceStatus);
+        return new DeviceStatus(deviceInfo.getId(), product, deviceStatus);
+    }
+
+    public void checkDeviceOwner(String username, String deviceId) {
+        if(bindDeviceRepository.existsByDeviceIdAndUsername(deviceId, username)) {
+            return;
+        }
+        throw new DeviceException(ErrorType.FORBIDDEN, "Not device owner");
     }
 }

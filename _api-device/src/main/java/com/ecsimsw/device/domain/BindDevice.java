@@ -1,9 +1,10 @@
 package com.ecsimsw.device.domain;
 
-import com.ecsimsw.common.domain.DeviceType;
+import com.ecsimsw.common.domain.Product;
+import com.ecsimsw.common.domain.Products;
+import com.ecsimsw.common.support.converter.ProductConverter;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,17 +21,15 @@ public class BindDevice {
     @Id
     private String deviceId;
     private String username;
-    private String productId;
     private boolean online;
 
-    @Enumerated(value = EnumType.STRING)
-    private DeviceType type;
+    @Convert(converter = ProductConverter.class)
+    private Product product;
 
     public BindDevice(String deviceId, String username, String productId, boolean online) {
         this.deviceId = deviceId;
         this.username = username;
-        this.productId = productId;
         this.online = online;
-        this.type = DeviceType.resolveByProductId(productId);
+        this.product = Products.getById(productId);
     }
 }
