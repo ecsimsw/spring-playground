@@ -42,8 +42,12 @@ public class BindDeviceController {
         @PathVariable String deviceId,
         @RequestBody List<DeviceStatus> deviceStatuses
     ) {
-        deviceService.checkDeviceOwner(authUser.username(), deviceId);
-        externalPlatformService.command(deviceId, deviceStatuses);
+        var bindDevice = deviceService.getUserDevice(authUser.username(), deviceId);
+        externalPlatformService.command(
+            deviceId,
+            bindDevice.productId(),
+            deviceStatuses
+        );
         return ApiResponse.success();
     }
 }

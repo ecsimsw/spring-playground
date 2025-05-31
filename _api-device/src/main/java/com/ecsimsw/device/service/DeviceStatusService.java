@@ -43,11 +43,6 @@ public class DeviceStatusService {
             .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
         var deviceStatus = deviceStatusRepository.findByDeviceId(deviceId)
             .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
-        return new DeviceInfoResponse(
-            bindDevice.getDeviceId(),
-            bindDevice.getProduct().id(),
-            bindDevice.isOnline(),
-            deviceStatus.getStatus()
-        );
+        return DeviceInfoResponse.of(bindDevice, deviceStatus.getStatus());
     }
 }

@@ -26,26 +26,19 @@ public class DeviceService {
     @Transactional(readOnly = true)
     public List<DeviceInfoResponse> deviceList(String username) {
         var bindDevices = bindDeviceRepository.findAllByUsername(username);
-        var deviceIds = bindDevices.stream().map(BindDevice::getDeviceId).toList();
+        var deviceIds = bindDevices.stream()
+            .map(BindDevice::getDeviceId)
+            .toList();
         var deviceStatusMap = deviceStatusRepository.findAllByDeviceIdIn(deviceIds).stream()
             .collect(Collectors.toMap(
                 DeviceStatus::getDeviceId,
                 DeviceStatus::getStatus)
             );
         return bindDevices.stream()
-            .map(device -> {
-                var deviceType = device.getProduct();
-                var deviceStatus = deviceStatusMap.get(device.getDeviceId());
-                var parsedStatusMap = deviceStatus.keySet().stream()
-                    .filter(deviceType::isSupportedStatusCode)
-                    .collect(Collectors.toMap(statusCode -> statusCode, deviceStatus::get));
-                return new DeviceInfoResponse(
-                    device.getDeviceId(),
-                    device.getProduct().id(),
-                    device.isOnline(),
-                    parsedStatusMap
-                );
-            }).toList();
+            .map(device -> DeviceInfoResponse.of(
+                device,
+                deviceStatusMap.get(device.getDeviceId())
+            )).toList();
     }
 
     @Transactional
@@ -55,7 +48,6 @@ public class DeviceService {
             .map(DeviceInfo::getId)
             .toList();
         deviceStatusRepository.deleteAllByDeviceIdIn(deviceIds);
-
         bindDevices(username, deviceResults);
     }
 
@@ -67,6 +59,7 @@ public class DeviceService {
                 deviceResult.getId(),
                 username,
                 deviceResult.getPid(),
+                deviceResult.getName(),
                 deviceResult.isOnline()
             )).toList();
         bindDeviceRepository.saveAll(bindDevices);
@@ -89,10 +82,9 @@ public class DeviceService {
         return new DeviceStatus(deviceInfo.getId(), product, deviceStatus);
     }
 
-    public void checkDeviceOwner(String username, String deviceId) {
-        if(bindDeviceRepository.existsByDeviceIdAndUsername(deviceId, username)) {
-            return;
-        }
-        throw new DeviceException(ErrorType.FORBIDDEN, "Not device owner");
+    public DeviceInfoResponse getUserDevice(String username, String deviceId) {
+        var device = bindDeviceRepository.findByUsernameAndDeviceId(username, deviceId)
+            .orElseThrow(() -> new DeviceException(ErrorType.FORBIDDEN, "Not device owner"));
+        return DeviceInfoResponse.of(device);
     }
 }

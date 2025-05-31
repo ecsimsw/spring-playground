@@ -22,14 +22,39 @@ public class BindDevice {
     private String deviceId;
     private String username;
     private boolean online;
+    private String name;
 
     @Convert(converter = ProductConverter.class)
     private Product product;
 
-    public BindDevice(String deviceId, String username, String productId, boolean online) {
-        this.deviceId = deviceId;
-        this.username = username;
-        this.online = online;
-        this.product = Products.getById(productId);
+    public BindDevice(
+        String deviceId,
+        String username,
+        String productId,
+        String name,
+        boolean online
+    ) {
+        this(
+            deviceId,
+            username,
+            online,
+            name,
+            Products.getById(productId)
+        );
+    }
+
+    public BindDevice(
+        String deviceId,
+        String username,
+        String productId,
+        boolean online
+    ) {
+        this(
+            deviceId,
+            username,
+            productId,
+            Products.getById(productId).type().name(),
+            online
+        );
     }
 }
