@@ -1,5 +1,5 @@
 group = 'com.ecsimsw'
-version = '1.0.10'
+version = '1.0.11'
 
 dependencies {
     implementation project(':_support-common')
@@ -9,6 +9,9 @@ dependencies {
 
     // fcm
     implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
 
     // db
     runtimeOnly 'com.h2database:h2'

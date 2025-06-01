@@ -126,7 +126,7 @@ resource "aws_ecs_service" "ecs_service_device" {
   task_definition = aws_ecs_task_definition.ecs_task_device.arn
   desired_count   = 1
   launch_type     = null
-  health_check_grace_period_seconds = 120
+  health_check_grace_period_seconds = 300
   force_new_deployment = true
 
   network_configuration {

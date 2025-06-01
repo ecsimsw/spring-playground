@@ -27,9 +27,9 @@ public class DeviceStatusService {
             log.info("Enter update status but device not found : {} ", statusEvent.getDeviceId());
             return;
         }
-        var deviceStatus = optDeviceStatus.orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
+        var deviceStatus = optDeviceStatus.orElseThrow();
         var product = deviceStatus.getProduct();
-        if(!product.isSupportedStatusCode(statusEvent.getCode())) {
+        if(!product.isStatusCode(statusEvent.getCode())) {
             log.info("Enter update status but status not supported : {} ", statusEvent.getDeviceId());
             return;
         }

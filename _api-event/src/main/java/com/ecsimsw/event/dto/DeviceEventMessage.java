@@ -8,16 +8,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public record DeviceStatusEventMessage(
+public record DeviceEventMessage(
     String dataId,
     String devId,
     String productKey,
     List<Map<String, Object>> status
 ) {
-    public static DeviceStatusEventMessage from(ObjectMapper objectMapper, EventMessage eventMessage, String secretKey) {
+    public static DeviceEventMessage from(ObjectMapper objectMapper, EventMessage eventMessage, String secretKey) {
         try {
             var decryptedBody = AESBase64Decrypt.decrypt(eventMessage.data(), secretKey);
-            return objectMapper.readValue(decryptedBody, DeviceStatusEventMessage.class);
+            return objectMapper.readValue(decryptedBody, DeviceEventMessage.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("failed to consume event", e);
         }

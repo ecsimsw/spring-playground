@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class NotificationController {
+public class UserFcmController {
 
     private final FcmService fcmService;
 

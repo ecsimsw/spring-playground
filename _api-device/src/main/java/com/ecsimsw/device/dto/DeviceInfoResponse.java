@@ -31,7 +31,7 @@ public record DeviceInfoResponse(
     ) {
         var product = device.getProduct();
         var deviceStatusMap = deviceStatus.keySet().stream()
-            .filter(product::isSupportedStatusCode)
+            .filter(product::isStatusCode)
             .collect(Collectors.toMap(statusCode -> statusCode, deviceStatus::get));
         return new DeviceInfoResponse(
             device.getDeviceId(),

@@ -74,10 +74,10 @@ public class DeviceService {
     private DeviceStatus deviceInfoToDeviceStatus(DeviceInfo deviceInfo) {
         var product = Products.getById(deviceInfo.getPid());
         var deviceStatus = deviceInfo.getStatus().stream()
-            .filter(status -> product.isSupportedStatusCode(status.getCode()))
+            .filter(status -> product.isStatusCode(status.getCode()))
             .collect(Collectors.toMap(
                 statusCode -> statusCode.getCode(),
-                statusCode -> product.convertValue(statusCode.getCode(), statusCode.getValue())
+                statusCode -> product.parseValue(statusCode.getCode(), statusCode.getValue())
             ));
         return new DeviceStatus(deviceInfo.getId(), product, deviceStatus);
     }

@@ -1,5 +1,6 @@
 package com.ecsimsw.event.service;
 
+import com.ecsimsw.common.dto.DeviceAlertEvent;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class DeviceStatusEventBrokerClient {
+public class DeviceEventBrokerClient {
 
     @Value("${kafka.device.status.topic}")
     private String deviceStatusTopic;
+
+    @Value("${kafka.device.alert.topic}")
+    private String deviceEventTopic;
 
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
@@ -30,9 +34,29 @@ public class DeviceStatusEventBrokerClient {
         log.info("produce device status event : {}", statusEvent.getDeviceId());
     }
 
+    public void produceDeviceAlert(DeviceAlertEvent alertEvent) {
+        var jsonMessage = convertAsJson(alertEvent);
+        kafkaTemplate.send(deviceEventTopic, alertEvent.getDeviceId(), jsonMessage)
+            .whenComplete((result, ex) -> {
+                if (ex != null) {
+                    log.info("failed to produce device alert event : {} ", (Thread.currentThread().getName()));
+                }
+            });
+        log.info("produce device alert event : {}", alertEvent.getDeviceId());
+    }
+
     private String convertAsJson(DeviceStatusEvent statusEvent) {
         try {
             return objectMapper.writeValueAsString(statusEvent);
+        } catch (Exception e) {
+            log.error("Failed to parse json");
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private String convertAsJson(DeviceAlertEvent alertEvent) {
+        try {
+            return objectMapper.writeValueAsString(alertEvent);
         } catch (Exception e) {
             log.error("Failed to parse json");
             throw new IllegalArgumentException(e);

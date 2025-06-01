@@ -1,7 +1,7 @@
 package com.ecsimsw.event.controller;
 
 import com.ecsimsw.event.domain.EventMessage;
-import com.ecsimsw.event.dto.DeviceStatusEventMessage;
+import com.ecsimsw.event.dto.DeviceEventMessage;
 import com.ecsimsw.event.service.EventMessageDeadLetterService;
 import com.ecsimsw.event.service.EventService;
 import com.ecsimsw.event.support.EventThroughputCounter;
@@ -70,7 +70,7 @@ public class DeviceEventListener {
             try {
                 var eventMessage = EventMessage.from(objectMapper, msg);
                 if (eventMessage.isProtocol(DATA)) {
-                    var dataEvent = DeviceStatusEventMessage.from(objectMapper, eventMessage, secretKey);
+                    var dataEvent = DeviceEventMessage.from(objectMapper, eventMessage, secretKey);
                     eventService.handle(dataEvent);
                 }
             } catch (Exception e) {

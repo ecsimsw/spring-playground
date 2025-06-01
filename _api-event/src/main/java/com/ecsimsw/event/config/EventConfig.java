@@ -1,10 +1,8 @@
 package com.ecsimsw.event.config;
 
-import com.ecsimsw.event.support.PulsarAuthentication;
-import org.apache.pulsar.client.api.Consumer;
+import com.ecsimsw.springsdkexternalplatform.config.PulsarAuthentication;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,26 +11,24 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class EventConfig {
 
-    @Value("${pulsar.event.url}")
-    private String serverUrl;
-
-    @Value("${pulsar.event.accessId}")
-    private String accessId;
-
-    @Value("${pulsar.event.accessKey}")
-    private String accessKey;
-
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
-    @Bean
-    public PulsarClient pulsarClient() throws PulsarClientException {
+    public PulsarClient pulsarClient(
+        @Value("${pulsar.event.url}")
+        String serverUrl,
+        @Value("${pulsar.event.accessId}")
+        String accessId,
+        @Value("${pulsar.event.accessKey}")
+        String accessKey
+    ) throws PulsarClientException {
         return PulsarClient.builder()
             .serviceUrl(serverUrl)
             .allowTlsInsecureConnection(true)
             .authentication(new PulsarAuthentication(accessId, accessKey))
             .build();
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }
