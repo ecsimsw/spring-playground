@@ -1,5 +1,5 @@
 group = 'com.ecsimsw'
-version = '1.0.22'
+version = '1.0.23'
 
 dependencies {
     // modules
@@ -11,6 +11,10 @@ dependencies {
 
     // web socket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // mqtt
+    implementation 'org.springframework.boot:spring-boot-starter-integration'
+    implementation 'org.springframework.integration:spring-integration-mqtt'
 
     // db
     runtimeOnly 'com.h2database:h2'

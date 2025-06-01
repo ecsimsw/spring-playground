@@ -6,6 +6,7 @@ import com.ecsimsw.device.domain.BindDeviceRepository;
 import com.ecsimsw.device.domain.DeviceStatusRepository;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.error.DeviceException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,14 @@ public class DeviceStatusService {
 
     private final DeviceStatusRepository deviceStatusRepository;
     private final BindDeviceRepository bindDeviceRepository;
+    private final DeviceEventWebSocketService deviceEventWebSocketService;
+    private final ObjectMapper objectMapper;
+
+    @Transactional
+    public void updateStatus(String message) {
+        var deviceStatusEvent = convertFromJson(message);
+        updateStatus(deviceStatusEvent);
+    }
 
     @Transactional
     public void updateStatus(DeviceStatusEvent statusEvent) {
@@ -37,6 +46,19 @@ public class DeviceStatusService {
         deviceStatusRepository.save(deviceStatus);
     }
 
+    // TODO :: Refactor
+    public void sendSocket(String message) {
+        var statusEvent = convertFromJson(message);
+        var deviceId = statusEvent.getDeviceId();
+        var optBindDevice = bindDeviceRepository.findById(deviceId);
+        if(optBindDevice.isEmpty()) {
+            return;
+        }
+        var bindDevice = optBindDevice
+            .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
+        deviceEventWebSocketService.sendMessage(bindDevice.getUsername(), message);
+    }
+
     @Transactional(readOnly = true)
     public DeviceInfoResponse readStatus(String username, String deviceId) {
         var bindDevice = bindDeviceRepository.findByUsernameAndDeviceId(username, deviceId)
@@ -44,5 +66,14 @@ public class DeviceStatusService {
         var deviceStatus = deviceStatusRepository.findByDeviceId(deviceId)
             .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
         return DeviceInfoResponse.of(bindDevice, deviceStatus.getStatus());
+    }
+
+    private DeviceStatusEvent convertFromJson(String statusEvent) {
+        try {
+            return objectMapper.readValue(statusEvent, DeviceStatusEvent.class);
+        } catch (Exception e) {
+            log.error("Failed to parse json");
+            throw new IllegalArgumentException(e);
+        }
     }
 }

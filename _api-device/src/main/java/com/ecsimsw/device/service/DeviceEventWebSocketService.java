@@ -1,23 +1,22 @@
-package com.ecsimsw.device.controller;
+package com.ecsimsw.device.service;
 
 import io.micrometer.common.lang.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@EnableScheduling
 @Slf4j
-@Controller
-public class DeviceEventWebSocketController extends TextWebSocketHandler {
+@EnableScheduling
+@Service
+public class DeviceEventWebSocketService extends TextWebSocketHandler {
 
     private final Map<String, WebSocketSession> userSessions = new ConcurrentHashMap<>();
 
@@ -29,18 +28,19 @@ public class DeviceEventWebSocketController extends TextWebSocketHandler {
         log.info("connected : {}", username);
     }
 
-    @Scheduled(fixedRate = 1000)
-    public void sendHiMessageToAll() {
-        try {
-            for (var session : userSessions.values()) {
-                if(session.isOpen()) {
-                    log.info("send : {}", "hi");
-                    session.sendMessage(new TextMessage("hi"));
+    public void sendMessage(String username, String message) {
+        // TODO :: 사용자 특정
+        userSessions.values().stream()
+            .filter(WebSocketSession::isOpen)
+            .forEach(session -> {
+                try {
+                    session.sendMessage(new TextMessage(message));
+                } catch (Exception e) {
+                    // TODO :: 예외 처리
+                    e.fillInStackTrace();
+                    log.error("failed to send event : {}", e.getMessage());
                 }
-            }
-        } catch (Exception e) {
-            e.fillInStackTrace();
-        }
+            });
     }
 
     @Override
