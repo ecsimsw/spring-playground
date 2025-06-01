@@ -38,9 +38,9 @@ public class DeviceStatusService {
     }
 
     @Transactional(readOnly = true)
-    public DeviceInfoResponse readStatus(String deviceId) {
-        var bindDevice = bindDeviceRepository.findById(deviceId)
-            .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
+    public DeviceInfoResponse readStatus(String username, String deviceId) {
+        var bindDevice = bindDeviceRepository.findByUsernameAndDeviceId(username, deviceId)
+            .orElseThrow(() -> new DeviceException(ErrorType.FORBIDDEN));
         var deviceStatus = deviceStatusRepository.findByDeviceId(deviceId)
             .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
         return DeviceInfoResponse.of(bindDevice, deviceStatus.getStatus());

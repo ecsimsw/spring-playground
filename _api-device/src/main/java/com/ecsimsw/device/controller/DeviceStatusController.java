@@ -1,6 +1,7 @@
 package com.ecsimsw.device.controller;
 
 import com.ecsimsw.common.dto.ApiResponse;
+import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceStatusService;
@@ -21,8 +22,11 @@ public class DeviceStatusController {
     private final ObjectMapper objectMapper;
 
     @GetMapping("/api/device/{deviceId}")
-    public ApiResponse<DeviceInfoResponse> status(@PathVariable String deviceId) {
-        var result = deviceStatusService.readStatus(deviceId);
+    public ApiResponse<DeviceInfoResponse> status(
+        AuthUser authUser,
+        @PathVariable String deviceId
+    ) {
+        var result = deviceStatusService.readStatus(authUser.username(), deviceId);
         return ApiResponse.success(result);
     }
 
