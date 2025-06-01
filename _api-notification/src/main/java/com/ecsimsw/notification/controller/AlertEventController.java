@@ -1,7 +1,6 @@
 package com.ecsimsw.notification.controller;
 
 import com.ecsimsw.common.dto.DeviceAlertEvent;
-import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.ecsimsw.notification.service.DeviceAlertService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class AlertEventController {
     )
     public void listenDeviceAlert(String event) {
         var deviceAlertEvent = convertFromJson(event);
-        deviceAlertService.readAlert(deviceAlertEvent);
+        deviceAlertService.alert(deviceAlertEvent);
     }
 
     private DeviceAlertEvent convertFromJson(String alertEvent) {

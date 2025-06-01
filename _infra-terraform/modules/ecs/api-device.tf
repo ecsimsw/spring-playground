@@ -52,14 +52,14 @@ resource "aws_ecs_task_definition" "ecs_task_device" {
   network_mode       = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                = 256
-  memory             = 512
+  memory             = 1024
 
   container_definitions = jsonencode([
     {
       name   = "spring-device-svc"
       image  = "${var.ecr_url}:api-device-${var.device_version}"
       cpu    = 256
-      memory = 512
+      memory = 1024
       essential = true # If the essential parameter of a container is marked as true, and that container fails or stops for any reason, all other containers that are part of the task are stopped
       portMappings = [
         {

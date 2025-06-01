@@ -38,11 +38,11 @@ module "ecs" {
   account_port            = 8851
   account_version         = "1.0.22"
   device_port             = 8852
-  device_version          = "1.0.16"
+  device_version          = "1.0.17"
   notification_port       = 8854
-  notification_version    = "1.0.11"
+  notification_version    = "1.0.13"
   event_port              = 8855
-  event_version           = "1.0.17"
+  event_version           = "1.0.18"
 }
 
 module "lb" {

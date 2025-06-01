@@ -4,6 +4,7 @@ import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.notification.dto.FcmMessageRequest;
 import com.ecsimsw.notification.service.FcmService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class GlobalController {
@@ -32,6 +34,7 @@ public class GlobalController {
 
     @GetMapping("/api/notification/up")
     public ResponseEntity<String> health() {
+        log.info("up : {}", version);
         return ResponseEntity.ok(version);
     }
 }

@@ -53,14 +53,14 @@ resource "aws_ecs_task_definition" "ecs_task_notification" {
   network_mode       = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                = 256
-  memory             = 512
+  memory             = 1024
 
   container_definitions = jsonencode([
     {
       name   = "spring-notification-svc"
       image  = "${var.ecr_url}:api-notification-${var.notification_version}"
       cpu    = 256
-      memory = 512
+      memory = 1024
       essential = true # If the essential parameter of a container is marked as true, and that container fails or stops for any reason, all other containers that are part of the task are stopped
       portMappings = [
         {
@@ -127,7 +127,7 @@ resource "aws_ecs_service" "ecs_service_notification" {
   task_definition = aws_ecs_task_definition.ecs_task_notification.arn
   desired_count   = 1
   launch_type     = null
-  health_check_grace_period_seconds = 120
+  health_check_grace_period_seconds = 300
   force_new_deployment = true
 
   network_configuration {
