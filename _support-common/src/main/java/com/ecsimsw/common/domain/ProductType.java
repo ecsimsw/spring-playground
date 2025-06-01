@@ -25,6 +25,11 @@ public enum ProductType {
         List.of(
             new DeviceCode("switch", "switch_1", Boolean.class)
         )
+    ),
+    Power(
+        List.of(
+            new DeviceCode("switch", "", Boolean.class)
+        )
     );
 
     public final List<DeviceCode> statusCodes;

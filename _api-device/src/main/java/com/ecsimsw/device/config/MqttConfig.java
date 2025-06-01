@@ -1,5 +1,7 @@
 package com.ecsimsw.device.config;
 
+import com.ecsimsw.device.service.MqttBetaHandlerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -10,12 +12,15 @@ import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
+@RequiredArgsConstructor
 @Configuration
 public class MqttConfig {
 
-    private final String MQTT_BROKER = "tcp://hejdev1.goqual.com:1883";
-    private final String CLIENT_ID = "spring-listener";
-    private final String TOPIC = "cmnd/hejspm_12C724/POWER16";
+    private static final String MQTT_BROKER = "tcp://hejdev1.goqual.com:1883";
+    private static final String CLIENT_ID = "ecsimsw";
+    private static final String TOPIC = "stat/hejspm_12C724/RESULT";
+
+    private final MqttBetaHandlerService mqttBetaHandlerService;
 
     @Bean
     public MessageChannel mqttInputChannel() {
@@ -24,8 +29,11 @@ public class MqttConfig {
 
     @Bean
     public MessageProducer inbound() {
-        MqttPahoMessageDrivenChannelAdapter adapter =
-            new MqttPahoMessageDrivenChannelAdapter(MQTT_BROKER, CLIENT_ID, TOPIC);
+        var adapter = new MqttPahoMessageDrivenChannelAdapter(
+            MQTT_BROKER,
+            CLIENT_ID,
+            TOPIC
+        );
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setQos(0);
@@ -37,9 +45,11 @@ public class MqttConfig {
     @ServiceActivator(inputChannel = "mqttInputChannel")
     public MessageHandler handler() {
         return message -> {
-            String topic = message.getHeaders().get("mqtt_receivedTopic").toString();
-            String payload = message.getPayload().toString();
-            System.out.println("[Listener] 수신 토픽: " + topic + ", 메시지: " + payload);
+            var topic = message.getHeaders()
+                .get("mqtt_receivedTopic")
+                .toString();
+            var payload = message.getPayload().toString();
+            mqttBetaHandlerService.handle(topic, payload);
         };
     }
 }
