@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "aws_lb_tg_event" {
 
 resource "aws_lb_listener_rule" "alb_listener_rule_event" {
   listener_arn = var.alb_listener_arn
-  priority     = 93
+  priority     = 3
 
   action {
     type             = "forward"
@@ -101,7 +101,7 @@ resource "aws_ecs_task_definition" "ecs_task_event" {
 # ECS_SG
 
 resource "aws_security_group" "ecs_event_sg" {
-  name   = "spring-playground-ecs-event-sg"
+  name   = "sp-ecs-event-sg"
   vpc_id = var.vpc_id
 
   ingress {

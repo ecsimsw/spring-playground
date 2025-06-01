@@ -4,9 +4,8 @@ import java.util.List;
 
 public enum ProductType {
     Camera(
-        new DeviceStatusCode("switch", Boolean.class),
-        new DeviceStatusCode("bright", Integer.class),
-        new DeviceStatusCode("mode", String.class)
+        new DeviceStatusCode("indicator", Boolean.class),
+        new DeviceStatusCode("privateMode", Boolean.class)
     ),
     Brunt(
         new DeviceStatusCode("switch", Boolean.class),

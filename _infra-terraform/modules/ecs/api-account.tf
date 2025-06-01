@@ -23,7 +23,7 @@ resource "aws_lb_target_group" "aws_lb_tg_account" {
 
 resource "aws_lb_listener_rule" "alb_listener_rule_account" {
   listener_arn = var.alb_listener_arn
-  priority     = 91
+  priority     = 1
 
   action {
     type             = "forward"
@@ -100,7 +100,7 @@ resource "aws_ecs_task_definition" "ecs_task_account" {
 # ECS_SG
 
 resource "aws_security_group" "ecs_account_sg" {
-  name   = "spring-playground-ecs-account-sg"
+  name   = "sp-ecs-account-sg"
   vpc_id = var.vpc_id
 
   ingress {

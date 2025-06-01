@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "aws_lb_tg_notification" {
 
 resource "aws_lb_listener_rule" "alb_listener_rule_notification" {
   listener_arn = var.alb_listener_arn
-  priority     = 100
+  priority     = 4
 
   action {
     type             = "forward"
@@ -101,7 +101,7 @@ resource "aws_ecs_task_definition" "ecs_task_notification" {
 # ECS_SG
 
 resource "aws_security_group" "ecs_notification_sg" {
-  name   = "spring-playground-ecs-notification-sg"
+  name   = "sp-ecs-notification-sg"
   vpc_id = var.vpc_id
 
   ingress {

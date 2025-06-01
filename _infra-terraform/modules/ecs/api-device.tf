@@ -23,7 +23,7 @@ resource "aws_lb_target_group" "aws_lb_tg_device" {
 
 resource "aws_lb_listener_rule" "alb_listener_rule_device" {
   listener_arn = var.alb_listener_arn
-  priority     = 92
+  priority     = 2
 
   action {
     type             = "forward"
@@ -100,7 +100,7 @@ resource "aws_ecs_task_definition" "ecs_task_device" {
 # ECS_SG
 
 resource "aws_security_group" "ecs_device_sg" {
-  name   = "spring-playground-ecs-device-sg"
+  name   = "sp-ecs-device-sg"
   vpc_id = var.vpc_id
 
   ingress {

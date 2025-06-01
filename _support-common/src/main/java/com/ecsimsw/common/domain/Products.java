@@ -9,7 +9,8 @@ public class Products {
 
     public static final List<Product> PRODUCTS = List.of(
         new Product("mhf0rqd7uuvz6hf8", ProductType.Brunt),
-        new Product("uxjr57hvapakd0io", ProductType.Plug)
+        new Product("uxjr57hvapakd0io", ProductType.Plug),
+        new Product("3cwbcqiz8qixphvu", ProductType.Camera)
     );
 
     public static Product getById(String productId) {
