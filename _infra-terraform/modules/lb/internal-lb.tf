@@ -23,6 +23,7 @@ resource "aws_lb" "internal_alb" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.internal_alb_sg.id]
   subnets            = var.private_subnet_ids
+  idle_timeout       = 3600
 }
 
 resource "aws_lb_listener" "internal_alb_listener" {

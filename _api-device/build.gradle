@@ -1,5 +1,5 @@
 group = 'com.ecsimsw'
-version = '1.0.17'
+version = '1.0.22'
 
 dependencies {
     // modules
@@ -8,6 +8,9 @@ dependencies {
 
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
+
+    // web socket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     // db
     runtimeOnly 'com.h2database:h2'

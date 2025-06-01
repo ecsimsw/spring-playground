@@ -3,6 +3,7 @@ resource "aws_lb" "external_nlb" {
   internal           = false
   load_balancer_type = "network"
   subnets            = var.public_subnet_ids
+  idle_timeout       = 3600
 }
 
 resource "aws_lb_listener" "external_nlb_listener" {

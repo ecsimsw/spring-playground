@@ -52,15 +52,15 @@ resource "aws_ecs_task_definition" "ecs_task_event" {
   execution_role_arn = var.ecs_task_execution_role
   network_mode       = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                = 512
-  memory             = 1024
+  cpu                = 1024
+  memory             = 2048
 
   container_definitions = jsonencode([
     {
       name   = "spring-event-svc"
       image  = "${var.ecr_url}:api-event-${var.event_version}"
-      cpu    = 512
-      memory = 1024
+      cpu    = 1024
+      memory = 2048
       essential = true # If the essential parameter of a container is marked as true, and that container fails or stops for any reason, all other containers that are part of the task are stopped
       portMappings = [
         {
