@@ -1,7 +1,8 @@
 package com.ecsimsw.device.config;
 
-import com.ecsimsw.device.service.MqttBetaHandlerService;
+import com.ecsimsw.device.controller.MqttSpmController;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -16,11 +17,10 @@ import org.springframework.messaging.MessageHandler;
 @Configuration
 public class MqttConfig {
 
-    private static final String MQTT_BROKER = "tcp://hejdev1.goqual.com:1883";
-    private static final String CLIENT_ID = "ecsimsw";
-    private static final String TOPIC = "stat/hejspm_12C724/RESULT";
+    @Value("${mqtt.device.broker}")
+    private String brokerEndpoint;
 
-    private final MqttBetaHandlerService mqttBetaHandlerService;
+    private final MqttSpmController mqttSpmController;
 
     @Bean
     public MessageChannel mqttInputChannel() {
@@ -30,9 +30,9 @@ public class MqttConfig {
     @Bean
     public MessageProducer inbound() {
         var adapter = new MqttPahoMessageDrivenChannelAdapter(
-            MQTT_BROKER,
-            CLIENT_ID,
-            TOPIC
+            brokerEndpoint,
+            "ecsimsw",
+            "stat/hejspm_12C724/RESULT"
         );
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
@@ -48,8 +48,9 @@ public class MqttConfig {
             var topic = message.getHeaders()
                 .get("mqtt_receivedTopic")
                 .toString();
-            var payload = message.getPayload().toString();
-            mqttBetaHandlerService.handle(topic, payload);
+            var payload = message.getPayload()
+                .toString();
+            mqttSpmController.handle(topic, payload);
         };
     }
 }

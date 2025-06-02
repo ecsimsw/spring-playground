@@ -32,13 +32,13 @@ public class DeviceStatusService {
     public void updateStatus(DeviceStatusEvent statusEvent) {
         var deviceId = statusEvent.getDeviceId();
         var optDeviceStatus = deviceStatusRepository.findByDeviceId(deviceId);
-        if(optDeviceStatus.isEmpty()) {
+        if (optDeviceStatus.isEmpty()) {
             log.info("Enter update status but device not found : {} ", statusEvent.getDeviceId());
             return;
         }
         var deviceStatus = optDeviceStatus.orElseThrow();
         var product = deviceStatus.getProduct();
-        if(!product.isStatusCode(statusEvent.getCode())) {
+        if (!product.isStatusCode(statusEvent.getCode())) {
             log.info("Enter update status but status not supported : {} ", statusEvent.getDeviceId());
             return;
         }
@@ -49,13 +49,11 @@ public class DeviceStatusService {
     // TODO :: Refactor
     public void sendSocket(String message) {
         var statusEvent = convertFromJson(message);
-        var deviceId = statusEvent.getDeviceId();
-        var optBindDevice = bindDeviceRepository.findById(deviceId);
-        if(optBindDevice.isEmpty()) {
+        var optBindDevice = bindDeviceRepository.findById(statusEvent.getDeviceId());
+        if (optBindDevice.isEmpty()) {
             return;
         }
-        var bindDevice = optBindDevice
-            .orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
+        var bindDevice = optBindDevice.orElseThrow(() -> new DeviceException(ErrorType.INVALID_DEVICE));
         deviceEventWebSocketService.sendMessage(bindDevice.getUsername(), message);
     }
 
