@@ -1,6 +1,9 @@
 package com.ecsimsw.device.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.common.lang.Nullable;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
@@ -15,9 +18,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @EnableScheduling
+@RequiredArgsConstructor
 @Service
 public class DeviceEventWebSocketService extends TextWebSocketHandler {
 
+    private final ObjectMapper objectMapper;
     private final Map<String, WebSocketSession> userSessions = new ConcurrentHashMap<>();
 
     @Override
@@ -28,13 +33,14 @@ public class DeviceEventWebSocketService extends TextWebSocketHandler {
         log.info("connected : {}", username);
     }
 
-    public void sendMessage(String username, String message) {
-        // TODO :: 사용자 특정
+    @SneakyThrows
+    public void sendMessage(String username, Object message) {
+        var messageAsString = objectMapper.writeValueAsString(message);
         userSessions.values().stream()
             .filter(WebSocketSession::isOpen)
             .forEach(session -> {
                 try {
-                    session.sendMessage(new TextMessage(message));
+                    session.sendMessage(new TextMessage(messageAsString));
                 } catch (Exception e) {
                     // TODO :: 예외 처리
                     e.fillInStackTrace();

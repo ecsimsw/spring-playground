@@ -15,7 +15,7 @@ import org.springframework.messaging.MessageHandler;
 
 @RequiredArgsConstructor
 @Configuration
-public class MqttConfig {
+public class MqttSpmConfig {
 
     @Value("${mqtt.device.broker}")
     private String brokerEndpoint;

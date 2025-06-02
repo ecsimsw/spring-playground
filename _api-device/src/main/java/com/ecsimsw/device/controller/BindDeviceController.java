@@ -11,6 +11,8 @@ import com.ecsimsw.springsdkexternalplatform.dto.DeviceStatus;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,16 +30,12 @@ public class BindDeviceController {
     public ApiResponse<Void> refresh(@PathVariable String username) {
         var deviceInfos = externalPlatformService.getDeviceList(username);
         deviceService.refresh(username, deviceInfos);
-
-        // XXX :: Add dummies
-        if (username.contains("0000")) {
-            deviceService.bindDevices(username, List.of(
-                new DeviceInfo("POWER2", "POWER2", Products.Power.productId, false, List.of(new DeviceStatus("switch", true))),
-                new DeviceInfo("POWER8", "POWER8", Products.Power.productId, false, List.of(new DeviceStatus("switch", true))),
-                new DeviceInfo("POWER11", "POWER4", Products.Power.productId, false, List.of(new DeviceStatus("switch", true))),
-                new DeviceInfo("POWER13", "POWER13", Products.Power.productId, false, List.of(new DeviceStatus("switch", true)))
-            ));
-        }
+        deviceService.bindDevices(username, List.of(
+            new DeviceInfo("POWER2", "POWER2", Products.Power.productId, true, List.of(new DeviceStatus("switch", false))),
+            new DeviceInfo("POWER8", "POWER8", Products.Power.productId, true, List.of(new DeviceStatus("switch", false))),
+            new DeviceInfo("POWER11", "POWER4", Products.Power.productId, true, List.of(new DeviceStatus("switch", false))),
+            new DeviceInfo("POWER13", "POWER13", Products.Power.productId, true, List.of(new DeviceStatus("switch", false)))
+        ));
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();
     }

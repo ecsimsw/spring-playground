@@ -5,12 +5,12 @@ public record Product(
     ProductType type
 ) {
 
-    public boolean isStatusCode(String code) {
+    public boolean hasStatusCode(String code) {
         return type.statusCodes.stream()
             .anyMatch(it -> it.name().equals(code));
     }
 
-    public boolean isAlertCode(String code) {
+    public boolean hasAlertCode(String code) {
         return type.alertCodes.stream()
             .anyMatch(it -> it.name().equals(code));
     }

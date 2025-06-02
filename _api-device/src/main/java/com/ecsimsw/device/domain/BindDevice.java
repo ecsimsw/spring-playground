@@ -34,27 +34,6 @@ public class BindDevice {
         String name,
         boolean online
     ) {
-        this(
-            deviceId,
-            username,
-            online,
-            name,
-            Products.getById(productId)
-        );
-    }
-
-    public BindDevice(
-        String deviceId,
-        String username,
-        String productId,
-        boolean online
-    ) {
-        this(
-            deviceId,
-            username,
-            productId,
-            Products.getById(productId).type().name(),
-            online
-        );
+        this(deviceId, username, online, name, Products.getById(productId));
     }
 }

@@ -45,18 +45,9 @@ public class DeviceEventBrokerClient {
         log.info("produce device alert event : {}", alertEvent.getDeviceId());
     }
 
-    private String convertAsJson(DeviceStatusEvent statusEvent) {
+    private String convertAsJson(Object objectMessage) {
         try {
-            return objectMapper.writeValueAsString(statusEvent);
-        } catch (Exception e) {
-            log.error("Failed to parse json");
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    private String convertAsJson(DeviceAlertEvent alertEvent) {
-        try {
-            return objectMapper.writeValueAsString(alertEvent);
+            return objectMapper.writeValueAsString(objectMessage);
         } catch (Exception e) {
             log.error("Failed to parse json");
             throw new IllegalArgumentException(e);

@@ -32,13 +32,13 @@ public class DeviceService {
         var deviceStatusMap = deviceStatusRepository.findAllByDeviceIdIn(deviceIds).stream()
             .collect(Collectors.toMap(
                 DeviceStatus::getDeviceId,
-                DeviceStatus::getStatus)
-            );
+                DeviceStatus::getStatus
+            ));
         return bindDevices.stream()
-            .map(device -> DeviceInfoResponse.of(
-                device,
-                deviceStatusMap.get(device.getDeviceId())
-            )).toList();
+            .map(device -> {
+                var deviceStatus = deviceStatusMap.get(device.getDeviceId());
+                return DeviceInfoResponse.of(device, deviceStatus);
+            }).toList();
     }
 
     @Transactional
@@ -74,7 +74,7 @@ public class DeviceService {
     private DeviceStatus deviceInfoToDeviceStatus(DeviceInfo deviceInfo) {
         var product = Products.getById(deviceInfo.getPid());
         var deviceStatus = deviceInfo.getStatus().stream()
-            .filter(status -> product.isStatusCode(status.getCode()))
+            .filter(status -> product.hasStatusCode(status.getCode()))
             .collect(Collectors.toMap(
                 statusCode -> statusCode.getCode(),
                 statusCode -> product.parseValue(statusCode.getCode(), statusCode.getValue())

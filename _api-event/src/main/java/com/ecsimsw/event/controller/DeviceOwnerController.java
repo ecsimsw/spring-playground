@@ -22,7 +22,7 @@ public class DeviceOwnerController {
     @PostMapping("/api/event/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
         var deviceInfos = externalPlatformService.getDeviceList(username);
-        deviceOwnerService.refresh(username, deviceInfos);
+        deviceOwnerService.updateAll(username, deviceInfos);
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();
     }

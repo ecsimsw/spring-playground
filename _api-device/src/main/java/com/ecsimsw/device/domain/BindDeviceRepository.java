@@ -11,7 +11,5 @@ public interface BindDeviceRepository extends JpaRepository<BindDevice, String> 
 
     void deleteAllByUsername(String username);
 
-    boolean existsByDeviceIdAndUsername(String deviceId, String username);
-
     Optional<BindDevice> findByUsernameAndDeviceId(String username, String deviceId);
 }

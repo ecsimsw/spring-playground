@@ -14,10 +14,11 @@ public class EventMessageDeadLetterService {
 
     private final ReactiveMongoTemplate mongoTemplate;
 
-    public void save(String failedEventMessage) {
-        mongoTemplate.save(failedEventMessage, DEAD_LETTER_COLLECTION_NAME).subscribe(
-            data -> log.info("Succeed to save event message dead letter to mongodb : {}", failedEventMessage),
-            error -> log.error("Failed to save event message dead letter to mongodb : {}", failedEventMessage)
-        );
+    public void save(String deadLetter) {
+        mongoTemplate.save(deadLetter, DEAD_LETTER_COLLECTION_NAME)
+            .subscribe(
+                data -> log.info("Succeed to save event message dead letter to mongodb : {}", deadLetter),
+                error -> log.error("Failed to save event message dead letter to mongodb : {}", deadLetter)
+            );
     }
 }

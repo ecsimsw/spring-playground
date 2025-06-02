@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Getter
@@ -15,4 +16,8 @@ public class DeviceStatusEvent {
     private final Object value;
     private final LocalDateTime timestamp = LocalDateTime.now();
     private final String messageHash = UUID.randomUUID().toString();
+
+    public Map<String, Object> statusAsMap() {
+        return Map.of(code, value);
+    }
 }

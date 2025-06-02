@@ -38,7 +38,7 @@ public class EventService {
             var deviceType = deviceOwner.getProduct();
             var code = deviceType.parseCode((String) statusMap.get("code"));
             var value = statusMap.get("value");
-            if (deviceType.isStatusCode(code)) {
+            if (deviceType.hasStatusCode(code)) {
                 log.info("Handle device status : {} {}", deviceOwner.getDeviceId(), code);
 
                 var statusEvent = new DeviceStatusEvent(eventMessage.devId(), code, value);
@@ -48,7 +48,7 @@ public class EventService {
                 deviceEventHistoryService.save(statusHistory);
             }
 
-            if (deviceType.isAlertCode(code)) {
+            if (deviceType.hasAlertCode(code)) {
                 log.info("Handle device alert : {} {}", deviceOwner.getDeviceId(), code);
 
                 var alertEvent = new DeviceAlertEvent(eventMessage.devId(), deviceOwner.getUsername(), code, value);

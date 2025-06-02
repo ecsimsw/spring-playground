@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface DeviceStatusRepository extends JpaRepository<DeviceStatus, String> {
 
     void deleteAllByDeviceIdIn(List<String> deviceIds);
+
     Optional<DeviceStatus> findByDeviceId(String deviceId);
+    
     List<DeviceStatus> findAllByDeviceIdIn(List<String> deviceIds);
 }

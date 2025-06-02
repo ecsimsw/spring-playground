@@ -30,6 +30,8 @@ public class DeviceStatus {
     private Map<String, Object> status;
 
     public void updateStatus(String code, Object value) {
-        status.put(code, value);
+        if (product.hasStatusCode(code)) {
+            status.put(code, value);
+        }
     }
 }

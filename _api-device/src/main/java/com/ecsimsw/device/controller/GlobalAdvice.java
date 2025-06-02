@@ -32,14 +32,14 @@ public class GlobalAdvice {
         NoResourceFoundException.class
     })
     public ApiResponse<ApiErrorResult> invalidRequest(Exception e) {
-        e.printStackTrace();
+        e.fillInStackTrace();
         var exception = new ApiException(ErrorType.INVALID_REQUEST);
         return ApiResponse.error(exception);
     }
 
     @ExceptionHandler(Exception.class)
     public ApiResponse<ApiErrorResult> unhandled(Exception e) {
-        e.printStackTrace();
+        e.fillInStackTrace();
         log.error("unhandled : {}", e.getMessage());
         var exception = new ApiException(ErrorType.UNHANDLED);
         return ApiResponse.error(exception);
