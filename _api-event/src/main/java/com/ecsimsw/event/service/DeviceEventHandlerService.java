@@ -5,8 +5,9 @@ import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.ecsimsw.event.domain.DeviceAlertHistory;
 import com.ecsimsw.event.domain.DeviceStatusHistory;
 import com.ecsimsw.event.domain.DeviceOwnerRepository;
-import com.ecsimsw.event.dto.DeviceEventMessage;
+import com.ecsimsw.springsdkexternalplatform.dto.DeviceEventMessage;
 import com.ecsimsw.springsdkexternalplatform.domain.Products;
+import com.ecsimsw.springsdkexternalplatform.service.PulsarBrokerHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class EventService {
+public class DeviceEventHandlerService implements PulsarBrokerHandler {
 
     private final DeviceOwnerRepository deviceOwnerRepository;
     private final DeviceEventBrokerClient deviceEventBrokerClient;
