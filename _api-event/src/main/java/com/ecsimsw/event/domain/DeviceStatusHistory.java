@@ -32,8 +32,8 @@ public class DeviceStatusHistory {
         return "DeviceStatusHistory{" +
             "id='" + id + '\'' +
             ", deviceId='" + deviceId + '\'' +
-            ", code='" + code + '\'' +
-            ", value=" + value +
+            ", tuyaCode='" + code + '\'' +
+            ", spCode=" + value +
             ", timestamp=" + timestamp +
             '}';
     }

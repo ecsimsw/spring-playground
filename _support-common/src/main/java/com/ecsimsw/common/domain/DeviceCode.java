@@ -2,7 +2,6 @@ package com.ecsimsw.common.domain;
 
 public record DeviceCode(
     String name,
-    String originName, // TODO :: refactor
     Class<?> type
 ) {
     public Object convertValue(Object value) {

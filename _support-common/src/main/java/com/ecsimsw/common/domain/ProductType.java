@@ -6,29 +6,29 @@ import java.util.List;
 public enum ProductType {
     Camera(
         List.of(
-            new DeviceCode("indicator", "basic_indicator", Boolean.class),
-            new DeviceCode("privateMode", "basic_private", Boolean.class),
-            new DeviceCode("motionDetect", "motion_switch", Boolean.class)
+            new DeviceCode("indicator", Boolean.class),
+            new DeviceCode("privateMode", Boolean.class),
+            new DeviceCode("motionDetect", Boolean.class)
         ),
         List.of(
-            new DeviceCode("linkage", "linkage", Boolean.class)
+            new DeviceCode("linkage", Boolean.class)
         )
     ),
     Brunt(
         List.of(
-            new DeviceCode("switch", "switch_led", Boolean.class),
-            new DeviceCode("bright", "bright_value", Integer.class),
-            new DeviceCode("mode", "work_mode", String.class)
+            new DeviceCode("switch", Boolean.class),
+            new DeviceCode("bright", Integer.class),
+            new DeviceCode("mode", String.class)
         )
     ),
     Plug(
         List.of(
-            new DeviceCode("switch", "switch_1", Boolean.class)
+            new DeviceCode("switch", Boolean.class)
         )
     ),
     Power(
         List.of(
-            new DeviceCode("switch", "", Boolean.class)
+            new DeviceCode("switch", Boolean.class)
         )
     );
 

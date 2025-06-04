@@ -3,6 +3,7 @@ package com.ecsimsw.event.config;
 import com.ecsimsw.springsdkexternalplatform.config.PulsarAuthentication;
 import com.ecsimsw.springsdkexternalplatform.service.PulsarBrokerHandler;
 import com.ecsimsw.springsdkexternalplatform.service.PulsarBrokerListenerService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.springframework.beans.factory.annotation.Value;

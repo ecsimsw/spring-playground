@@ -1,18 +1,16 @@
 package com.ecsimsw.device.controller;
 
+import com.ecsimsw.common.domain.Products;
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
-import com.ecsimsw.springsdkexternalplatform.domain.Products;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceStatus;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

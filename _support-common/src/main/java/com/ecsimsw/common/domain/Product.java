@@ -28,18 +28,4 @@ public record Product(
         }
         return value;
     }
-
-    public String parseCode(String originCode) {
-        for (var statusCode : type.statusCodes) {
-            if (statusCode.originName().equals(originCode)) {
-                return statusCode.name();
-            }
-        }
-        for (var alertCode : type.alertCodes) {
-            if (alertCode.originName().equals(originCode)) {
-                return alertCode.name();
-            }
-        }
-        return originCode;
-    }
 }
