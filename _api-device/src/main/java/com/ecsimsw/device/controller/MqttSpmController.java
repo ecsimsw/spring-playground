@@ -5,6 +5,7 @@ import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.error.DeviceException;
 import com.ecsimsw.device.service.DeviceEventWebSocketService;
 import com.ecsimsw.device.service.DeviceStatusService;
+import com.ecsimsw.springsdkexternalplatform.domain.PlatformProducts;
 import com.ecsimsw.springsdkexternalplatform.domain.Products;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class MqttSpmController {
     @SneakyThrows
     public void handle(String topic, String payload) {
         log.info(topic + " : " + payload);
-        if(topic.contains(Products.Power.productId)) {
+        if(topic.contains(PlatformProducts.PRODUCTS.Power.productId)) {
             Map<String, String> map = objectMapper.readValue(payload, Map.class);
             for(var deviceId : map.keySet()) {
                 var statusEvent = parseStatusEvent(deviceId, map);

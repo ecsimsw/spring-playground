@@ -28,7 +28,6 @@ public class DeviceEventHandlerService implements PulsarBrokerHandler {
             return;
         }
 
-
         DeviceOwner deviceOwnerd = null;
         if(eventMessage.deviceId().equals("s8616242a58d13cc66xszg")) {
             deviceOwnerd = new DeviceOwner(

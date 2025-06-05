@@ -1,12 +1,10 @@
 package com.ecsimsw.device.controller;
 
-import com.ecsimsw.common.domain.Products;
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
-import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceStatus;
 import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +25,7 @@ public class BindDeviceController {
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
         var deviceInfos = externalPlatformService.getDeviceList(username);
-        deviceService.refresh(username, deviceInfos);
-        deviceService.bindDevices(username, List.of(
-            new DeviceInfo("POWER2", "POWER2", Products.Power.productId, true, List.of(new DeviceStatus("switch", false))),
-            new DeviceInfo("POWER8", "POWER8", Products.Power.productId, true, List.of(new DeviceStatus("switch", false))),
-            new DeviceInfo("POWER11", "POWER4", Products.Power.productId, true, List.of(new DeviceStatus("switch", false))),
-            new DeviceInfo("POWER13", "POWER13", Products.Power.productId, true, List.of(new DeviceStatus("switch", false)))
-        ));
+        deviceService.deleteAndSaveAll(username, deviceInfos);
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();
     }

@@ -32,7 +32,7 @@ public class DeviceAlertHistory {
         return "DeviceAlertHistory{" +
             "id='" + id + '\'' +
             ", deviceId='" + deviceId + '\'' +
-            ", tuyaCode='" + code + '\'' +
+            ", platformCode='" + code + '\'' +
             ", spCode=" + value +
             ", timestamp=" + timestamp +
             '}';

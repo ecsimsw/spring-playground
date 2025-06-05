@@ -42,7 +42,7 @@ public class DeviceService {
     }
 
     @Transactional
-    public void refresh(String username, List<DeviceInfo> deviceResults) {
+    public void deleteAndSaveAll(String username, List<DeviceInfo> deviceResults) {
         bindDeviceRepository.deleteAllByUsername(username);
         var deviceIds = deviceResults.stream()
             .map(DeviceInfo::getId)
