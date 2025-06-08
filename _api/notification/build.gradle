@@ -2,7 +2,7 @@ group = 'com.ecsimsw'
 version = '1.0.14'
 
 dependencies {
-    implementation project(':_support-common')
+    implementation project(':_support:common')
 
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-mail'

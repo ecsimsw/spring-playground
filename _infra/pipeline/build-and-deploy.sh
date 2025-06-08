@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # 사용법 예시:
-# ./build-and-deploy.sh api-config
-# ./build-and-deploy.sh api-account
-# ./build-and-deploy.sh api-device
-# ./build-and-deploy.sh api-notification
+# ./build-and-deploy.sh config
+# ./build-and-deploy.sh account
+# ./build-and-deploy.sh device
+# ./build-and-deploy.sh event
+# ./build-and-deploy.sh notification
 
 if [ $# -ne 1 ]; then
   echo "use : $0 <MODULE_NAME>"
@@ -14,8 +15,8 @@ fi
 
 REPO_NAME="spring-playground"
 MODULE_NAME="$1"
-ROOT_DIR="../"
-MODULE_GRADLE_FILE="${ROOT_DIR}_$MODULE_NAME/build.gradle"
+ROOT_DIR="../../"
+MODULE_GRADLE_FILE="${ROOT_DIR}/_api/$MODULE_NAME/build.gradle"
 
 if [ ! -f "$MODULE_GRADLE_FILE" ]; then
   echo "Not exists build.gradle : $MODULE_GRADLE_FILE"
@@ -31,14 +32,14 @@ fi
 
 echo "Version found: $VERSION"
 
-(cd "$ROOT_DIR" && ./gradlew ":_$MODULE_NAME:build")
+(cd "$ROOT_DIR" && ./gradlew ":_api/$MODULE_NAME:build")
 BUILD_RESULT=$?
 if [ $BUILD_RESULT -ne 0 ]; then
   echo "Gradle build failed!"
   exit 2
 fi
 
-JAR_PATH="${ROOT_DIR}_$MODULE_NAME/build/libs/_$MODULE_NAME-$VERSION.jar"
+JAR_PATH="${ROOT_DIR}_api/$MODULE_NAME/build/libs/_$MODULE_NAME-$VERSION.jar"
 IMAGE_TAG="${MODULE_NAME}-${VERSION}"
 
 if [ ! -f "$JAR_PATH" ]; then

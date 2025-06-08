@@ -6,7 +6,7 @@ group = 'com.ecsimsw'
 version = '1.0.0'
 
 dependencies {
-    implementation project(':_support-common')
+    implementation project(':_support:common')
 
     // paypal sdk
     implementation 'com.paypal.sdk:rest-api-sdk:1.14.0'
