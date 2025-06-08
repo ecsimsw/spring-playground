@@ -10,7 +10,6 @@ public class ApiConfigApplication {
 
     public static void main(String[] args) {
         var app = new SpringApplication(ApiConfigApplication.class);
-//        app.setAdditionalProfiles("native");
         app.run(args);
     }
 
