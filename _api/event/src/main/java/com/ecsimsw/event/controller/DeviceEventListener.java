@@ -1,6 +1,6 @@
 package com.ecsimsw.event.controller;
 
-import com.ecsimsw.springsdkexternalplatform.service.PulsarBrokerListenerService;
+import com.ecsimsw.springsdkexternalplatform.service.TuyaPulsarDeviceEventController;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +18,12 @@ public class DeviceEventListener {
     @Value("${pulsar.event.partitionNumber}")
     private int partitionNumber;
 
-    private final PulsarBrokerListenerService pulsarBrokerListenerService;
+    private final TuyaPulsarDeviceEventController tuyaPulsarDeviceEventController;
 
     @PostConstruct
     public void listen() {
         var executor = Executors.newFixedThreadPool(partitionNumber);
         IntStream.rangeClosed(1, partitionNumber)
-            .forEach(i -> executor.submit(pulsarBrokerListenerService::consume));
+            .forEach(i -> executor.submit(tuyaPulsarDeviceEventController::consume));
     }
 }

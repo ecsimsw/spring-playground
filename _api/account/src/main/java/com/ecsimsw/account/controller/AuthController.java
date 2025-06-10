@@ -12,7 +12,7 @@ import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.support.client.DeviceClient;
 import com.ecsimsw.common.support.client.EventClient;
-import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
+import com.ecsimsw.springsdkexternalplatform.service.Platform1DeviceApiHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -33,7 +32,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final AuthTokenService authTokenService;
-    private final ExternalPlatformService externalPlatformService;
+    private final Platform1DeviceApiHandler platform1DeviceApiHandler;
     private final UserService userService;
     private final DeviceClient deviceClient;
     private final EventClient eventClient;
@@ -41,7 +40,7 @@ public class AuthController {
     @PostMapping("/api/account/beta/login")
     public ApiResponse<AuthTokenResponse> testLogin(@RequestBody LogInRequest request) {
         try {
-            var uid = externalPlatformService.getUserIdByUsername(request.username());
+            var uid = platform1DeviceApiHandler.getUserIdByUsername(request.username());
             userService.betaCreate(new SignUpRequest(request.username(), "password"));
             var result = authTokenService.betaIssue(request.username(), uid);
 

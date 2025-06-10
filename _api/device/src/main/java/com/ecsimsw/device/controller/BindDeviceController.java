@@ -6,7 +6,7 @@ import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
 import com.ecsimsw.springsdkexternalplatform.dto.DeviceStatus;
-import com.ecsimsw.springsdkexternalplatform.service.ExternalPlatformService;
+import com.ecsimsw.springsdkexternalplatform.service.Platform1DeviceApiHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,13 @@ import java.util.List;
 @RestController
 public class BindDeviceController {
 
-    private final ExternalPlatformService externalPlatformService;
+    private final Platform1DeviceApiHandler platform1DeviceApiHandler;
     private final DeviceService deviceService;
 
     @InternalHandler
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
-        var deviceInfos = externalPlatformService.getDeviceList(username);
+        var deviceInfos = platform1DeviceApiHandler.getDeviceList(username);
         deviceService.deleteAndSaveAll(username, deviceInfos);
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();
@@ -43,7 +43,7 @@ public class BindDeviceController {
         @RequestBody List<DeviceStatus> deviceStatuses
     ) {
         var bindDevice = deviceService.getUserDevice(authUser.username(), deviceId);
-        externalPlatformService.command(deviceId, bindDevice.productId(), deviceStatuses);
+        platform1DeviceApiHandler.command(deviceId, bindDevice.productId(), deviceStatuses);
         return ApiResponse.success();
     }
 }

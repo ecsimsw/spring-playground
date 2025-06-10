@@ -1,6 +1,6 @@
-[submodule "_sdk-external-platform-1"]
-	path = _sdk/external-platform-1
-	url = https://github.com/ecsimsw/spring-sdk-external-platform1.git
-[submodule "_sdk-external-platform-2"]
-	path = _sdk/external-platform-2
-	url = https://github.com/ecsimsw/spring-sdk-external-platform2.git
+[submodule "_sdk-external-platform-ty"]
+	path = _sdk/external-platform-ty
+	url = https://github.com/ecsimsw/external-platform-ty.git
+[submodule "_sdk-external-platform-tb"]
+	path = _sdk/external-platform-tb
+	url = https://github.com/ecsimsw/external-platform-tb.git
