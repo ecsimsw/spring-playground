@@ -8,7 +8,7 @@ import com.ecsimsw.device.domain.DeviceStatus;
 import com.ecsimsw.device.domain.DeviceStatusRepository;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.error.DeviceException;
-import com.ecsimsw.springsdkexternalplatform.dto.DeviceInfo;
+import com.ecsimsw.sdkty.dto.DeviceInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

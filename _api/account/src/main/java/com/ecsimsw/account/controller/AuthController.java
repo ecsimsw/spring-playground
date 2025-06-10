@@ -12,7 +12,7 @@ import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.support.client.DeviceClient;
 import com.ecsimsw.common.support.client.EventClient;
-import com.ecsimsw.springsdkexternalplatform.service.Platform1DeviceApiHandler;
+import com.ecsimsw.sdkty.service.Platform1DeviceApiHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

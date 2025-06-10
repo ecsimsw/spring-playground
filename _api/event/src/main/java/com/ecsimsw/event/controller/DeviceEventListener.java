@@ -1,6 +1,6 @@
 package com.ecsimsw.event.controller;
 
-import com.ecsimsw.springsdkexternalplatform.service.TuyaPulsarDeviceEventController;
+import com.ecsimsw.sdkty.service.TuyaPulsarDeviceEventController;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

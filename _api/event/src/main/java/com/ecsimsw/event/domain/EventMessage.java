@@ -1,6 +1,6 @@
 package com.ecsimsw.event.domain;
 
-import com.ecsimsw.springsdkexternalplatform.domain.Protocol;
+import com.ecsimsw.sdkty.domain.Protocol;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pulsar.client.api.Message;
 import org.slf4j.Logger;

@@ -7,8 +7,8 @@ import com.ecsimsw.event.domain.DeviceAlertHistory;
 import com.ecsimsw.event.domain.DeviceOwner;
 import com.ecsimsw.event.domain.DeviceStatusHistory;
 import com.ecsimsw.event.domain.DeviceOwnerRepository;
-import com.ecsimsw.springsdkexternalplatform.dto.DeviceEventMessage;
-import com.ecsimsw.springsdkexternalplatform.service.Platform1DeviceEventHandler;
+import com.ecsimsw.sdkty.dto.DeviceEventMessage;
+import com.ecsimsw.sdkty.service.PlatformTyEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class DeviceEventHandlerServiceHandler implements Platform1DeviceEventHandler {
+public class DeviceEventHandlerServiceService implements PlatformTyEventService {
 
     private final DeviceOwnerRepository deviceOwnerRepository;
     private final DeviceEventBrokerClient deviceEventBrokerClient;

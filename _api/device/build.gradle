@@ -4,7 +4,7 @@ version = '1.0.30'
 dependencies {
     // modules
     implementation project(':_support:common')
-    implementation project(':_sdk:external-platform-1')
+    implementation project(':_sdk:external-platform-ty')
 
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'

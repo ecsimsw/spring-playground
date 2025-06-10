@@ -3,7 +3,7 @@ package com.ecsimsw.event.controller;
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.event.service.DeviceOwnerService;
-import com.ecsimsw.springsdkexternalplatform.service.Platform1DeviceApiHandler;
+import com.ecsimsw.sdkty.service.Platform1DeviceApiHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PathVariable;
