@@ -2,7 +2,6 @@ package com.ecsimsw.device.service;
 
 import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.device.domain.BindDevice;
 import com.ecsimsw.device.domain.BindDeviceRepository;
 import com.ecsimsw.device.domain.DeviceStatus;
 import com.ecsimsw.device.domain.DeviceStatusRepository;
@@ -13,8 +12,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,18 +29,16 @@ public class DeviceStatusService {
         if (optBindDevice.isEmpty()) {
             return;
         }
-        var bindDevice = optBindDevice.orElseThrow();
         var savedStatus = deviceStatusRepository.findByDeviceId(deviceId);
-        savedStatus.ifPresentOrElse(
-            oldStatus -> {
-                oldStatus.updateStatus(statusEvent.getCode(), statusEvent.getValue());
-                deviceStatusRepository.save(oldStatus);
-            },
-            () -> {
-                var status = new DeviceStatus(deviceId, bindDevice.getProduct(), statusEvent.statusAsMap());
-                deviceStatusRepository.save(status);
-            }
-        );
+        if (savedStatus.isEmpty()) {
+            var productType = optBindDevice.get().getProduct();
+            var status = new DeviceStatus(deviceId, productType, statusEvent.statusAsMap());
+            deviceStatusRepository.save(status);
+            return;
+        }
+        var oldStatus = savedStatus.get();
+        oldStatus.updateStatus(statusEvent.getCode(), statusEvent.getValue());
+        deviceStatusRepository.save(oldStatus);
     }
 
     @Transactional(readOnly = true)

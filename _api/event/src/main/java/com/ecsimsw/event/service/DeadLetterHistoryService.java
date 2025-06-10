@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class EventMessageDeadLetterService {
+public class DeadLetterHistoryService {
 
     private static final String DEAD_LETTER_COLLECTION_NAME = "event_message_dead_letter";
 

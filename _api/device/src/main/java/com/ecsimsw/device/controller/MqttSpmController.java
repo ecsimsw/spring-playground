@@ -5,7 +5,6 @@ import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.error.DeviceException;
 import com.ecsimsw.device.service.DeviceEventWebSocketService;
 import com.ecsimsw.device.service.DeviceStatusService;
-import com.ecsimsw.sdkty.domain.PlatformProducts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

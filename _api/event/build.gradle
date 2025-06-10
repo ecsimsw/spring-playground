@@ -5,6 +5,7 @@ dependencies {
     // Modules
     implementation project(':_support:common')
     implementation project(':_sdk:external-platform-ty')
+    implementation project(':_sdk:external-platform-tb')
 
     // WebFlux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'

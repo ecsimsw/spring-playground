@@ -1,4 +1,4 @@
-package com.ecsimsw.event.service;
+package com.ecsimsw.event.support;
 
 import com.ecsimsw.common.dto.DeviceAlertEvent;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
