@@ -32,7 +32,7 @@ public class DeviceStatusHistory {
         return "DeviceStatusHistory{" +
             "id='" + id + '\'' +
             ", deviceId='" + deviceId + '\'' +
-            ", tbCode='" + code + '\'' +
+            ", platformCode='" + code + '\'' +
             ", spCode=" + value +
             ", timestamp=" + timestamp +
             '}';
