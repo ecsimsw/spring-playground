@@ -21,7 +21,6 @@ public class AuthTokenService {
 
     private final UserPasswordRepository userPasswordRepository;
     private final UserRepository userRepository;
-    private final BlockedUserRepository blockedUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
@@ -47,9 +46,5 @@ public class AuthTokenService {
         var uid = RefreshToken.fromToken(tokenSecret, rt).uid();
         refreshTokenRepository.findByUsername(username).orElseThrow(() -> new AccountException(ErrorType.INVALID_TOKEN));
         return betaIssue(username, uid);
-    }
-
-    public void blockToken(String token) {
-        blockedUserRepository.save(new BlockedUser(token));
     }
 }

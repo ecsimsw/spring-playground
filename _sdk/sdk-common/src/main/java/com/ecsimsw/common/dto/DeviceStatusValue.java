@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class DeviceStatus {
+public class DeviceStatusValue {
 	private String code;
 	private Object value;
 }

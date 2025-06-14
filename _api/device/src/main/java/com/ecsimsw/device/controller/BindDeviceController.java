@@ -2,11 +2,11 @@ package com.ecsimsw.device.controller;
 
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
+import com.ecsimsw.common.dto.DeviceStatusValue;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
-import com.ecsimsw.sdkty.dto.DeviceStatus;
-import com.ecsimsw.sdkty.service.PlatformTyApiService;
+import com.ecsimsw.sdkty.service.TyApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,13 @@ import java.util.List;
 @RestController
 public class BindDeviceController {
 
-    private final PlatformTyApiService platformTyApiService;
+    private final TyApiService tyApiService;
     private final DeviceService deviceService;
 
     @InternalHandler
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
-        var deviceInfos = platformTyApiService.getDeviceList(username);
+        var deviceInfos = tyApiService.getDeviceList(username);
         deviceService.deleteAndSaveAll(username, deviceInfos);
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();
@@ -40,10 +40,10 @@ public class BindDeviceController {
     public ApiResponse<Void> control(
         AuthUser authUser,
         @PathVariable String deviceId,
-        @RequestBody List<DeviceStatus> deviceStatuses
+        @RequestBody List<DeviceStatusValue> deviceStatusValues
     ) {
         var bindDevice = deviceService.getUserDevice(authUser.username(), deviceId);
-        platformTyApiService.command(deviceId, bindDevice.productId(), deviceStatuses);
+        tyApiService.command(deviceId, bindDevice.productId(), deviceStatusValues);
         return ApiResponse.success();
     }
 }

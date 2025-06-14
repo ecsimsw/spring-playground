@@ -2,14 +2,14 @@ package com.ecsimsw.event.service;
 
 import com.ecsimsw.common.domain.Products;
 import com.ecsimsw.common.dto.DeviceAlertEvent;
+import com.ecsimsw.common.dto.DeviceEventMessage;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
+import com.ecsimsw.common.service.PlatformEventHandler;
 import com.ecsimsw.event.domain.DeviceAlertHistory;
 import com.ecsimsw.event.domain.DeviceOwner;
-import com.ecsimsw.event.domain.DeviceStatusHistory;
 import com.ecsimsw.event.domain.DeviceOwnerRepository;
+import com.ecsimsw.event.domain.DeviceStatusHistory;
 import com.ecsimsw.event.support.DeviceEventBrokerClient;
-import com.ecsimsw.sdkty.dto.DeviceEventMessage;
-import com.ecsimsw.sdkty.service.PlatformTyEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,15 +17,22 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class DeviceEventTyService implements PlatformTyEventService {
+public class DeviceEventHandler implements PlatformEventHandler {
 
     private final DeviceOwnerRepository deviceOwnerRepository;
     private final DeviceEventBrokerClient deviceEventBrokerClient;
     private final DeviceEventHistoryService deviceEventHistoryService;
 
+    public void handle(String eventMessage) {
+        if(eventMessage.contains("deviceId")) {
+            return;
+        }
+        System.out.println(eventMessage);
+    }
+
     public void handle(DeviceEventMessage eventMessage) {
         var productId = eventMessage.productId();
-        if(!Products.isSupported(productId)) {
+        if (!Products.isSupported(productId)) {
             return;
         }
 
