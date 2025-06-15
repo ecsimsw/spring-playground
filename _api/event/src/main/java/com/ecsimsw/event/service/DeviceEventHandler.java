@@ -24,7 +24,7 @@ public class DeviceEventHandler implements PlatformEventHandler {
     private final DeviceEventHistoryService deviceEventHistoryService;
 
     public void handle(String eventMessage) {
-        if(eventMessage.contains("deviceId")) {
+        if (eventMessage.contains("deviceId")) {
             return;
         }
         System.out.println(eventMessage);
