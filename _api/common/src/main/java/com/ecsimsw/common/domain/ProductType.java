@@ -33,7 +33,7 @@ public enum ProductType {
     ),
     Presence_Sensor(
         List.of(
-            new DeviceCode("switch", Boolean.class)
+            new DeviceCode("human_motion_state", Boolean.class)
         )
     );
 
