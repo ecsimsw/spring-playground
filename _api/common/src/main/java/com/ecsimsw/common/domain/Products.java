@@ -11,7 +11,8 @@ public class Products {
         new Product("mhf0rqd7uuvz6hf8", ProductType.Brunt),
         new Product("uxjr57hvapakd0io", ProductType.Plug),
         new Product("3cwbcqiz8qixphvu", ProductType.Camera),
-        new Product("hejspm_12C724", ProductType.Power)
+        new Product("hejspm_12C724", ProductType.Power),
+        new Product("o9a6at9cyfchb47y", ProductType.Presence_Sensor)
     );
 
     public static Product getById(String productId) {

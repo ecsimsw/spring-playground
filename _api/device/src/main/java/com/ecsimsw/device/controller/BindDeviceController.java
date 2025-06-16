@@ -6,6 +6,7 @@ import com.ecsimsw.common.dto.DeviceStatusValue;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
+import com.ecsimsw.device.service.RpcService;
 import com.ecsimsw.sdkty.service.TyApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class BindDeviceController {
 
     private final TyApiService tyApiService;
     private final DeviceService deviceService;
+    private final RpcService rpcService;
 
     @InternalHandler
     @PostMapping("/api/device/beta/refresh/{username}")
@@ -27,6 +29,8 @@ public class BindDeviceController {
         var deviceInfos = tyApiService.getDeviceList(username);
         deviceService.deleteAndSaveAll(username, deviceInfos);
         log.info("Refresh succeed : {}", username);
+
+        rpcService.connect("52868143a4e57c1e4112");
         return ApiResponse.success();
     }
 

@@ -30,6 +30,11 @@ public enum ProductType {
         List.of(
             new DeviceCode("switch", Boolean.class)
         )
+    ),
+    Presence_Sensor(
+        List.of(
+            new DeviceCode("switch", Boolean.class)
+        )
     );
 
     public final List<DeviceCode> statusCodes;
