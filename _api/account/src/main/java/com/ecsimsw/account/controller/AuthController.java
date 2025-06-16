@@ -12,8 +12,7 @@ import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.common.support.client.DeviceClient;
 import com.ecsimsw.common.support.client.EventClient;
-import com.ecsimsw.sdkty.service.Platform1DeviceApiHandler;
-import jakarta.servlet.http.HttpServletRequest;
+import com.ecsimsw.sdkty.service.TyApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -32,7 +30,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final AuthTokenService authTokenService;
-    private final Platform1DeviceApiHandler platform1DeviceApiHandler;
+    private final TyApiService tyApiService;
     private final UserService userService;
     private final DeviceClient deviceClient;
     private final EventClient eventClient;
@@ -40,7 +38,7 @@ public class AuthController {
     @PostMapping("/api/account/beta/login")
     public ApiResponse<AuthTokenResponse> testLogin(@RequestBody LogInRequest request) {
         try {
-            var uid = platform1DeviceApiHandler.getUserIdByUsername(request.username());
+            var uid = tyApiService.getUserIdByUsername(request.username());
             userService.betaCreate(new SignUpRequest(request.username(), "password"));
             var result = authTokenService.betaIssue(request.username(), uid);
 
@@ -74,19 +72,5 @@ public class AuthController {
     public ApiResponse<AuthTokenResponse> reissue(@RequestBody ReissueRequest request) {
         var result = authTokenService.reissue(request.refreshToken());
         return ApiResponse.success(result);
-    }
-
-    @PostMapping("/api/account/logout")
-    public ApiResponse<Void> logout(HttpServletRequest request) {
-        getToken(request).ifPresent(authTokenService::blockToken);
-        return ApiResponse.success();
-    }
-
-    private Optional<String> getToken(HttpServletRequest request) {
-        var authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return Optional.empty();
-        }
-        return Optional.of(authHeader.substring("Bearer ".length()));
     }
 }

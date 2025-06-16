@@ -10,6 +10,7 @@ import com.ecsimsw.event.domain.DeviceOwner;
 import com.ecsimsw.event.domain.DeviceOwnerRepository;
 import com.ecsimsw.event.domain.DeviceStatusHistory;
 import com.ecsimsw.event.support.DeviceEventBrokerClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,15 @@ public class DeviceEventHandler implements PlatformEventHandler {
     private final DeviceOwnerRepository deviceOwnerRepository;
     private final DeviceEventBrokerClient deviceEventBrokerClient;
     private final DeviceEventHistoryService deviceEventHistoryService;
+    private final ObjectMapper objectMapper;
 
     public void handle(String eventMessage) {
-        if (eventMessage.contains("deviceId")) {
-            return;
+        try {
+            var deviceEventMessage = objectMapper.readValue(eventMessage, DeviceEventMessage.class);
+            handle(deviceEventMessage);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
         }
-        System.out.println(eventMessage);
     }
 
     public void handle(DeviceEventMessage eventMessage) {

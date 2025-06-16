@@ -2,7 +2,6 @@ package com.ecsimsw.event.config;
 
 import com.ecsimsw.common.service.TbEventConsumer;
 import com.ecsimsw.event.service.DeviceEventHandler;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +19,8 @@ public class PlatformTbEventBrokerConfig {
     @Bean
     public TbEventConsumer tbEventConsumer() {
         return new TbEventConsumer(
-            serverUrl,
-            deviceEventHandler
+            serverUrl
+//            deviceEventHandler
         );
     }
 }

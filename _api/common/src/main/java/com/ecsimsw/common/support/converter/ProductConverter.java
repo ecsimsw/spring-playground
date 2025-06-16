@@ -2,7 +2,6 @@ package com.ecsimsw.common.support.converter;
 
 import com.ecsimsw.common.domain.Product;
 import com.ecsimsw.common.domain.Products;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
