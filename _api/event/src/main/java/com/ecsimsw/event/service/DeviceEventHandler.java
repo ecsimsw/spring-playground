@@ -4,12 +4,16 @@ import com.ecsimsw.common.domain.Products;
 import com.ecsimsw.common.dto.DeviceAlertEvent;
 import com.ecsimsw.common.dto.DeviceEventMessage;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
+import com.ecsimsw.common.dto.PairingEventMessage;
 import com.ecsimsw.common.service.PlatformEventHandler;
+import com.ecsimsw.common.support.client.DeviceClient;
+import com.ecsimsw.common.support.client.EventClient;
 import com.ecsimsw.event.domain.DeviceAlertHistory;
 import com.ecsimsw.event.domain.DeviceOwner;
 import com.ecsimsw.event.domain.DeviceOwnerRepository;
 import com.ecsimsw.event.domain.DeviceStatusHistory;
 import com.ecsimsw.event.support.DeviceEventBrokerClient;
+import com.ecsimsw.sdkty.domain.TyUserIdRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +28,19 @@ public class DeviceEventHandler implements PlatformEventHandler {
     private final DeviceEventBrokerClient deviceEventBrokerClient;
     private final DeviceEventHistoryService deviceEventHistoryService;
     private final ObjectMapper objectMapper;
+    private final TyUserIdRepository tyUserInfoRepository;
+    private final DeviceClient deviceClient;
+    private final EventClient eventClient;
 
+    @Override
+    public void handlePairingEvent(PairingEventMessage pairingEventMessage) {
+        var userId = pairingEventMessage.userId();
+        var tyUserInfo = tyUserInfoRepository.findById(userId).orElseThrow();
+        deviceClient.refresh(tyUserInfo.getTuyaUsername());
+        eventClient.refresh(tyUserInfo.getTuyaUsername());
+    }
+
+    @Override
     public void handle(String eventMessage) {
         try {
             var deviceEventMessage = objectMapper.readValue(eventMessage, DeviceEventMessage.class);
@@ -35,6 +51,11 @@ public class DeviceEventHandler implements PlatformEventHandler {
     }
 
     public void handle(DeviceEventMessage eventMessage) {
+        if(eventMessage.deviceId().equals("s8fd9d7900d4e15a3d8ykz")) {
+            System.out.println(eventMessage);
+            return;
+        }
+
         var productId = eventMessage.productId();
         if (!Products.isSupported(productId)) {
             return;
