@@ -51,11 +51,6 @@ public class DeviceEventHandler implements PlatformEventHandler {
     }
 
     public void handle(DeviceEventMessage eventMessage) {
-        if(eventMessage.deviceId().equals("s8fd9d7900d4e15a3d8ykz")) {
-            System.out.println(eventMessage);
-            return;
-        }
-
         var productId = eventMessage.productId();
         if (!Products.isSupported(productId)) {
             return;

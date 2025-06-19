@@ -33,10 +33,14 @@ public class RpcService {
 
     public void connect(String deviceId) {
         var bindDevice = bindDeviceRepository.findById(deviceId)
-            .orElseThrow(() -> new IllegalArgumentException("Not a valid device"));
+            .orElseThrow(() -> new IllegalArgumentException("Not a valid device : " + deviceId));
+        if(MQTT_CLIENTS.containsKey(deviceId)) {
+            return;
+        }
         if(bindDevice.getProduct().type() == ProductType.Brunt) {
             var mqttClient = tbRpcListener.listenTbRpc(deviceId, bruntRpcCallback(bindDevice));
             MQTT_CLIENTS.put(deviceId, mqttClient);
+            log.info("Rpc connected : {}", deviceId);
         }
     }
 
@@ -48,7 +52,7 @@ public class RpcService {
             public void messageArrived(String topic, MqttMessage message) {
                 try {
                     var payload = new String(message.getPayload());
-                    log.info("recv RPC : {}", payload);
+                    log.info("Recv RPC : {}", payload);
                     var payloadMap = objectMapper.readValue(payload, Map.class);
                     if(product.type() == ProductType.Brunt) {
                         var code = (String) payloadMap.get("method");
@@ -63,7 +67,7 @@ public class RpcService {
 
             @Override
             public void connectionLost(Throwable cause) {
-                log.info("connection lost");
+                log.info("Connection lost");
                 if (MQTT_CLIENTS.containsKey(deviceId)) {
                     var mqttClient = MQTT_CLIENTS.get(deviceId);
                     tbRpcListener.close(mqttClient);

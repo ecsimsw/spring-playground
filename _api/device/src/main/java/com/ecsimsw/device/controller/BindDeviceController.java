@@ -3,6 +3,7 @@ package com.ecsimsw.device.controller;
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.common.dto.DeviceStatusValue;
+import com.ecsimsw.common.service.TbApiService;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
@@ -20,17 +21,22 @@ import java.util.List;
 public class BindDeviceController {
 
     private final TyApiService tyApiService;
+    private final TbApiService tbApiService;
     private final DeviceService deviceService;
     private final RpcService rpcService;
 
     @InternalHandler
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
-        var deviceInfos = tyApiService.getDeviceList(username);
-        deviceService.deleteAndSaveAll(username, deviceInfos);
+        var tyDeviceInfos = tyApiService.getDeviceList(username);
+        deviceService.deleteAndSaveAll(username, tyDeviceInfos);
+        tyDeviceInfos.forEach(
+            ttyDevice -> {
+                tbApiService.updateCredential(ttyDevice.getId());
+                rpcService.connect(ttyDevice.getId());
+            }
+        );
         log.info("Refresh succeed : {}", username);
-
-        rpcService.connect("52868143a4e57c1e4112");
         return ApiResponse.success();
     }
 
