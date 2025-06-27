@@ -23,7 +23,8 @@ dependencies {
     // web socket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-    // H2
+    // db
+    runtimeOnly 'mysql:mysql-connector-java:8.0.33'
     runtimeOnly 'com.h2database:h2'
 }
 

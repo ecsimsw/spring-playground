@@ -15,6 +15,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8'
 
     // db
+    runtimeOnly 'mysql:mysql-connector-java:8.0.33'
     runtimeOnly 'com.h2database:h2'
 }
 

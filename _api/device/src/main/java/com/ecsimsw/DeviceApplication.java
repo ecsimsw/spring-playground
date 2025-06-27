@@ -1,7 +1,5 @@
 package com.ecsimsw;
 
-//import com.ecsimsw.common.service.TbApiService;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

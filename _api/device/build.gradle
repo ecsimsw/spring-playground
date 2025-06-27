@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.springframework.integration:spring-integration-mqtt'
 
     // db
+    runtimeOnly 'mysql:mysql-connector-java:8.0.33'
     runtimeOnly 'com.h2database:h2'
 }
 
