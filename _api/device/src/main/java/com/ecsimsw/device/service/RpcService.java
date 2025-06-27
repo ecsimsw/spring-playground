@@ -1,7 +1,7 @@
 package com.ecsimsw.device.service;
 
 import com.ecsimsw.common.domain.ProductType;
-import com.ecsimsw.common.dto.DeviceStatusValue;
+import com.ecsimsw.sdkcommon.dto.DeviceStatusValue;
 import com.ecsimsw.common.service.TbRpcListener;
 import com.ecsimsw.device.domain.BindDevice;
 import com.ecsimsw.device.domain.BindDeviceRepository;

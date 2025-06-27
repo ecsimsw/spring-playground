@@ -2,10 +2,10 @@ package com.ecsimsw.event.service;
 
 import com.ecsimsw.common.domain.Products;
 import com.ecsimsw.common.dto.DeviceAlertEvent;
-import com.ecsimsw.common.dto.DeviceEventMessage;
+import com.ecsimsw.sdkcommon.dto.DeviceEventMessage;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
-import com.ecsimsw.common.dto.PairingEventMessage;
-import com.ecsimsw.common.service.PlatformEventHandler;
+import com.ecsimsw.sdkcommon.dto.PairingEventMessage;
+import com.ecsimsw.sdkcommon.service.PlatformEventHandler;
 import com.ecsimsw.common.support.client.DeviceClient;
 import com.ecsimsw.common.support.client.EventClient;
 import com.ecsimsw.event.domain.DeviceAlertHistory;
@@ -36,8 +36,8 @@ public class DeviceEventHandler implements PlatformEventHandler {
     public void handlePairingEvent(PairingEventMessage pairingEventMessage) {
         var userId = pairingEventMessage.userId();
         var tyUserInfo = tyUserInfoRepository.findById(userId).orElseThrow();
-        deviceClient.refresh(tyUserInfo.getTuyaUsername());
-        eventClient.refresh(tyUserInfo.getTuyaUsername());
+        deviceClient.refresh(tyUserInfo.getUsername());
+        eventClient.refresh(tyUserInfo.getUsername());
     }
 
     @Override

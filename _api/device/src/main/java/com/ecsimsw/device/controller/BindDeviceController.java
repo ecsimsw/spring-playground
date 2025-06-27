@@ -2,12 +2,10 @@ package com.ecsimsw.device.controller;
 
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
-import com.ecsimsw.common.dto.DeviceStatusValue;
-import com.ecsimsw.common.service.TbApiService;
+import com.ecsimsw.sdkcommon.dto.DeviceStatusValue;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
-import com.ecsimsw.device.service.RpcService;
 import com.ecsimsw.sdkty.service.TyApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +25,7 @@ public class BindDeviceController {
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
         var tyDeviceInfos = tyApiService.getDeviceList(username);
+        // TODO :: ty device info 갖고 가지 말자
         deviceService.deleteAndSaveAll(username, tyDeviceInfos);
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();

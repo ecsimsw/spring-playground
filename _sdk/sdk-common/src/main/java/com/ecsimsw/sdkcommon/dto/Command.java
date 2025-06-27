@@ -1,4 +1,4 @@
-package com.ecsimsw.common.dto;
+package com.ecsimsw.sdkcommon.dto;
 
 public record Command(
     String code,

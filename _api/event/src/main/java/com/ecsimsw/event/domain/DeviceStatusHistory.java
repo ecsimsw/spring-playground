@@ -33,7 +33,7 @@ public class DeviceStatusHistory {
             "id='" + id + '\'' +
             ", deviceId='" + deviceId + '\'' +
             ", platformCode='" + code + '\'' +
-            ", spCode=" + value +
+            ", commonCode=" + value +
             ", timestamp=" + timestamp +
             '}';
     }
