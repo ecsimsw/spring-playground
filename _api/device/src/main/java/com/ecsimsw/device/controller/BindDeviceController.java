@@ -21,21 +21,13 @@ import java.util.List;
 public class BindDeviceController {
 
     private final TyApiService tyApiService;
-    private final TbApiService tbApiService;
     private final DeviceService deviceService;
-    private final RpcService rpcService;
 
     @InternalHandler
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
         var tyDeviceInfos = tyApiService.getDeviceList(username);
         deviceService.deleteAndSaveAll(username, tyDeviceInfos);
-        tyDeviceInfos.forEach(
-            ttyDevice -> {
-                tbApiService.updateCredential(ttyDevice.getId());
-                rpcService.connect(ttyDevice.getId());
-            }
-        );
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();
     }
