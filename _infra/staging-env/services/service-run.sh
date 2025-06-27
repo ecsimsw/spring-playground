@@ -1,0 +1,17 @@
+#!/bin/bash
+
+ACCOUNT_VERSION="1.0.23"
+DEVICE_VERSION="1.0.31"
+NOTIFICATION_VERSION="1.0.15"
+EVENT_VERSION="1.0.20"
+
+cp .env .env.bak
+
+sed -i "s/^ACCOUNT_VERSION=.*/ACCOUNT_VERSION=${ACCOUNT_VERSION}/" .env
+sed -i "s/^DEVICE_VERSION=.*/DEVICE_VERSION=${DEVICE_VERSION}/" .env
+sed -i "s/^NOTIFICATION_VERSION=.*/NOTIFICATION_VERSION=${NOTIFICATION_VERSION}/" .env
+sed -i "s/^EVENT_VERSION=.*/EVENT_VERSION=${EVENT_VERSION}/" .env
+
+docker compose down
+docker compose pull
+docker compose up -d
