@@ -1,6 +1,5 @@
 package com.ecsimsw.notification.domain;
 
-import com.ecsimsw.common.domain.EmailType;
 import com.ecsimsw.notification.domain.form.EmailForm;
 import com.ecsimsw.notification.domain.form.SignUpForm;
 import com.ecsimsw.notification.domain.form.TempPasswordForm;

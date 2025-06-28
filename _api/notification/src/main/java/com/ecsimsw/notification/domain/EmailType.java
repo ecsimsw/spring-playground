@@ -1,4 +1,4 @@
-package com.ecsimsw.common.domain;
+package com.ecsimsw.notification.domain;
 
 public enum EmailType {
     SIGN_UP,

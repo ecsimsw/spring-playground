@@ -1,6 +1,5 @@
 package com.ecsimsw.notification.domain;
 
-import com.ecsimsw.common.domain.EmailType;
 import com.ecsimsw.notification.domain.support.EmailOutBoxArgumentsConverter;
 import jakarta.persistence.*;
 import lombok.Builder;
