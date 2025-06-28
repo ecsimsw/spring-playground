@@ -8,7 +8,7 @@ import com.ecsimsw.device.domain.DeviceStatus;
 import com.ecsimsw.device.domain.DeviceStatusRepository;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.error.DeviceException;
-import com.ecsimsw.sdkty.dto.DeviceInfo;
+import com.ecsimsw.sdkty.dto.DeviceStatusResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,18 +42,18 @@ public class DeviceService {
     }
 
     @Transactional
-    public void deleteAndSaveAll(String username, List<DeviceInfo> deviceResults) {
+    public void deleteAndSaveAll(String username, List<DeviceStatusResponse> deviceResults) {
         bindDeviceRepository.deleteAllByUsername(username);
         var deviceIds = deviceResults.stream()
-            .map(DeviceInfo::getId)
+            .map(DeviceStatusResponse::getId)
             .toList();
         deviceStatusRepository.deleteAllByDeviceIdIn(deviceIds);
         bindDevices(username, deviceResults);
     }
 
     @Transactional
-    public void bindDevices(String username, List<DeviceInfo> deviceInfos) {
-        var bindDevices = deviceInfos.stream()
+    public void bindDevices(String username, List<DeviceStatusResponse> deviceStatusResponses) {
+        var bindDevices = deviceStatusResponses.stream()
             .filter(deviceResult -> Products.isSupported(deviceResult.getPid()))
             .map(deviceResult -> new BindDevice(
                 deviceResult.getId(),
@@ -64,22 +64,22 @@ public class DeviceService {
             )).toList();
         bindDeviceRepository.saveAll(bindDevices);
 
-        var updatedStatus = deviceInfos.stream()
+        var updatedStatus = deviceStatusResponses.stream()
             .filter(deviceInfo -> Products.isSupported(deviceInfo.getPid()))
             .map(this::deviceInfoToDeviceStatus)
             .toList();
         deviceStatusRepository.saveAll(updatedStatus);
     }
 
-    private DeviceStatus deviceInfoToDeviceStatus(DeviceInfo deviceInfo) {
-        var product = Products.getById(deviceInfo.getPid());
-        var deviceStatus = deviceInfo.getStatus().stream()
+    private DeviceStatus deviceInfoToDeviceStatus(DeviceStatusResponse deviceStatusResponse) {
+        var product = Products.getById(deviceStatusResponse.getPid());
+        var deviceStatus = deviceStatusResponse.getStatus().stream()
             .filter(status -> product.hasStatusCode(status.code()))
             .collect(Collectors.toMap(
                 statusCode -> statusCode.code(),
                 statusCode -> product.parseValue(statusCode.code(), statusCode.value())
             ));
-        return new DeviceStatus(deviceInfo.getId(), product, deviceStatus);
+        return new DeviceStatus(deviceStatusResponse.getId(), product, deviceStatus);
     }
 
     public DeviceInfoResponse getUserDevice(String username, String deviceId) {

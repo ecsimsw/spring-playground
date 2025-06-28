@@ -23,9 +23,9 @@ public class PlatformTyEventBrokerConfig {
     public PulsarClient pulsarClient(
         @Value("${ty.pulsar.event.url}")
         String serverUrl,
-        @Value("${ty.pulsar.event.accessId}")
+        @Value("${ty.auth.accessId}")
         String accessId,
-        @Value("${ty.pulsar.event.accessKey}")
+        @Value("${ty.auth.accessKey}")
         String accessKey
     ) {
         return PulsarClient.builder()

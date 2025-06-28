@@ -1,6 +1,6 @@
 package com.ecsimsw.sdkcommon.dto;
 
-public record Command(
+public record DeviceCommand(
     String code,
     Object value
 ) {
