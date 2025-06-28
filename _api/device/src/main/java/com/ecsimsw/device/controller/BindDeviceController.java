@@ -2,7 +2,7 @@ package com.ecsimsw.device.controller;
 
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
-import com.ecsimsw.sdkcommon.dto.DeviceStatusValue;
+import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
@@ -24,9 +24,8 @@ public class BindDeviceController {
     @InternalHandler
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
-        var tyDeviceInfos = tyApiService.getDeviceList(username);
-        // TODO :: ty device info 갖고 가지 말자
-        deviceService.deleteAndSaveAll(username, tyDeviceInfos);
+        var tyDeviceList = tyApiService.getDeviceList(username);
+        deviceService.deleteAndSaveAll(username, tyDeviceList);
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();
     }
@@ -41,10 +40,10 @@ public class BindDeviceController {
     public ApiResponse<Void> control(
         AuthUser authUser,
         @PathVariable String deviceId,
-        @RequestBody List<DeviceStatusValue> deviceStatusValues
+        @RequestBody List<CommonDeviceStatus> commonDeviceStatuses
     ) {
         var bindDevice = deviceService.getUserDevice(authUser.username(), deviceId);
-        tyApiService.command(deviceId, bindDevice.productId(), deviceStatusValues);
+        tyApiService.command(deviceId, bindDevice.productId(), commonDeviceStatuses);
         return ApiResponse.success();
     }
 }

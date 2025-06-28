@@ -2,9 +2,9 @@ package com.ecsimsw.event.service;
 
 import com.ecsimsw.common.domain.Products;
 import com.ecsimsw.common.dto.DeviceAlertEvent;
-import com.ecsimsw.sdkcommon.dto.DeviceEventMessage;
+import com.ecsimsw.sdkcommon.dto.event.DeviceEventMessage;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
-import com.ecsimsw.sdkcommon.dto.PairingEventMessage;
+import com.ecsimsw.sdkcommon.dto.event.PairingEventMessage;
 import com.ecsimsw.sdkcommon.service.PlatformEventHandler;
 import com.ecsimsw.common.support.client.DeviceClient;
 import com.ecsimsw.common.support.client.EventClient;

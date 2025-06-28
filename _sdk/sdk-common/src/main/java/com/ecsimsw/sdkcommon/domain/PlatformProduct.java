@@ -8,16 +8,44 @@ import java.util.List;
 public class PlatformProduct {
 
     private final String id;
-    private final List<DevicePoint> statusCodes;
-    private final List<DevicePoint> alertCodes;
+    private final List<DevicePoint> statusDevicePoints;
+    private final List<DevicePoint> alertDevicePoints;
+
+    public DevicePoint devicePointFromPlatformCode(String code) {
+        for (var statusCode : statusDevicePoints) {
+            if (statusCode.isPlatformCode(code)) {
+                return statusCode;
+            }
+        }
+        for (var alertCode : alertDevicePoints) {
+            if (alertCode.isPlatformCode(code)) {
+                return alertCode;
+            }
+        }
+        throw new IllegalArgumentException("No device point found for platform code: " + code);
+    }
+
+    public DevicePoint devicePointFromCommonCode(String code) {
+        for (var statusCode : statusDevicePoints) {
+            if (statusCode.isCommonCode(code)) {
+                return statusCode;
+            }
+        }
+        for (var alertCode : alertDevicePoints) {
+            if (alertCode.isCommonCode(code)) {
+                return alertCode;
+            }
+        }
+        throw new IllegalArgumentException("No device point found for platform code: " + code);
+    }
 
     public String asCommonCode(String platformCode) {
-        for (var statusCode : statusCodes) {
+        for (var statusCode : statusDevicePoints) {
             if (statusCode.platformCode().equals(platformCode)) {
                 return statusCode.commonCode();
             }
         }
-        for (var alertCode : alertCodes) {
+        for (var alertCode : alertDevicePoints) {
             if (alertCode.platformCode().equals(platformCode)) {
                 return alertCode.commonCode();
             }
@@ -26,12 +54,12 @@ public class PlatformProduct {
     }
 
     public String asPlatformCode(String commonCode) {
-        for (var statusCode : statusCodes) {
+        for (var statusCode : statusDevicePoints) {
             if (statusCode.commonCode().equals(commonCode)) {
                 return statusCode.platformCode();
             }
         }
-        for (var alertCode : alertCodes) {
+        for (var alertCode : alertDevicePoints) {
             if (alertCode.commonCode().equals(commonCode)) {
                 return alertCode.platformCode();
             }

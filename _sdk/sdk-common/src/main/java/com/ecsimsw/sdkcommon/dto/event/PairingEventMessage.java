@@ -1,4 +1,4 @@
-package com.ecsimsw.sdkcommon.dto;
+package com.ecsimsw.sdkcommon.dto.event;
 
 public record PairingEventMessage(
     String userId,

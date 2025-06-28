@@ -8,7 +8,8 @@ import com.ecsimsw.device.domain.DeviceStatus;
 import com.ecsimsw.device.domain.DeviceStatusRepository;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.error.DeviceException;
-import com.ecsimsw.sdkty.dto.DeviceStatusResponse;
+import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
+import com.ecsimsw.sdkcommon.dto.api.DeviceListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,44 +43,41 @@ public class DeviceService {
     }
 
     @Transactional
-    public void deleteAndSaveAll(String username, List<DeviceStatusResponse> deviceResults) {
+    public void deleteAndSaveAll(String username, List<DeviceListResponse> deviceList) {
         bindDeviceRepository.deleteAllByUsername(username);
-        var deviceIds = deviceResults.stream()
-            .map(DeviceStatusResponse::getId)
+        var deviceIds = deviceList.stream()
+            .map(DeviceListResponse::id)
             .toList();
         deviceStatusRepository.deleteAllByDeviceIdIn(deviceIds);
-        bindDevices(username, deviceResults);
+        bindDevices(username, deviceList);
     }
 
     @Transactional
-    public void bindDevices(String username, List<DeviceStatusResponse> deviceStatusResponses) {
-        var bindDevices = deviceStatusResponses.stream()
-            .filter(deviceResult -> Products.isSupported(deviceResult.getPid()))
+    public void bindDevices(String username, List<DeviceListResponse> deviceList) {
+        var bindDevices = deviceList.stream()
+            .filter(deviceResult -> Products.isSupported(deviceResult.productId()))
             .map(deviceResult -> new BindDevice(
-                deviceResult.getId(),
+                deviceResult.id(),
                 username,
-                deviceResult.getPid(),
-                deviceResult.getName(),
-                deviceResult.isOnline()
+                deviceResult.productId(),
+                deviceResult.name(),
+                deviceResult.online()
             )).toList();
         bindDeviceRepository.saveAll(bindDevices);
 
-        var updatedStatus = deviceStatusResponses.stream()
-            .filter(deviceInfo -> Products.isSupported(deviceInfo.getPid()))
-            .map(this::deviceInfoToDeviceStatus)
-            .toList();
+        var updatedStatus = deviceList.stream()
+            .filter(deviceInfo -> Products.isSupported(deviceInfo.productId()))
+            .map(device -> {
+                var product = Products.getById(device.productId());
+                var deviceStatus = device.status().stream()
+                    .filter(status -> product.hasStatusCode(status.code()))
+                    .collect(Collectors.toMap(
+                        CommonDeviceStatus::code,
+                        statusCode -> product.parseValue(statusCode.code(), statusCode.value())
+                    ));
+                return new DeviceStatus(device.id(), product, deviceStatus);
+            }).toList();
         deviceStatusRepository.saveAll(updatedStatus);
-    }
-
-    private DeviceStatus deviceInfoToDeviceStatus(DeviceStatusResponse deviceStatusResponse) {
-        var product = Products.getById(deviceStatusResponse.getPid());
-        var deviceStatus = deviceStatusResponse.getStatus().stream()
-            .filter(status -> product.hasStatusCode(status.code()))
-            .collect(Collectors.toMap(
-                statusCode -> statusCode.code(),
-                statusCode -> product.parseValue(statusCode.code(), statusCode.value())
-            ));
-        return new DeviceStatus(deviceStatusResponse.getId(), product, deviceStatus);
     }
 
     public DeviceInfoResponse getUserDevice(String username, String deviceId) {

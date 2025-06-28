@@ -1,7 +1,7 @@
 package com.ecsimsw.sdkcommon.service;
 
-import com.ecsimsw.sdkcommon.dto.DeviceEventMessage;
-import com.ecsimsw.sdkcommon.dto.PairingEventMessage;
+import com.ecsimsw.sdkcommon.dto.event.DeviceEventMessage;
+import com.ecsimsw.sdkcommon.dto.event.PairingEventMessage;
 
 public interface PlatformEventHandler {
 
