@@ -1,6 +1,7 @@
 package com.ecsimsw.notification.service;
 
 import com.ecsimsw.notification.domain.EmailForms;
+import com.ecsimsw.notification.domain.EmailType;
 import com.ecsimsw.notification.domain.EmailOutBox;
 import com.ecsimsw.notification.domain.EmailOutBoxRepository;
 import com.ecsimsw.notification.service.client.EmailClient;
