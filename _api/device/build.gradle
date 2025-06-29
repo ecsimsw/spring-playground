@@ -4,8 +4,8 @@ version = '1.0.31'
 dependencies {
     // modules
     implementation project(':_api:common')
-    implementation project(':_sdk:external-platform-tb')
-    implementation project(':_sdk:external-platform-ty')
+    implementation project(':_sdk:platform-tb')
+    implementation project(':_sdk:platform-ty')
     implementation project(':_sdk:sdk-common')
 
     // Kafka
