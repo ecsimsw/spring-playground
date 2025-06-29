@@ -11,6 +11,20 @@ public class PlatformProduct {
     private final List<DevicePoint> statusDevicePoints;
     private final List<DevicePoint> alertDevicePoints;
 
+    public boolean isSupportedPlatformCode(String code) {
+        return statusDevicePoints.stream()
+            .anyMatch(it -> it.isPlatformCode(code))
+            || alertDevicePoints.stream()
+            .anyMatch(it -> it.isPlatformCode(code));
+    }
+
+    public boolean isSupportedCommonCode(String code) {
+        return statusDevicePoints.stream()
+            .anyMatch(it -> it.isCommonCode(code))
+            || alertDevicePoints.stream()
+            .anyMatch(it -> it.isCommonCode(code));
+    }
+
     public DevicePoint devicePointFromPlatformCode(String code) {
         for (var statusCode : statusDevicePoints) {
             if (statusCode.isPlatformCode(code)) {
@@ -38,33 +52,4 @@ public class PlatformProduct {
         }
         throw new IllegalArgumentException("No device point found for platform code: " + code);
     }
-
-    public String asCommonCode(String platformCode) {
-        for (var statusCode : statusDevicePoints) {
-            if (statusCode.platformCode().equals(platformCode)) {
-                return statusCode.commonCode();
-            }
-        }
-        for (var alertCode : alertDevicePoints) {
-            if (alertCode.platformCode().equals(platformCode)) {
-                return alertCode.commonCode();
-            }
-        }
-        return platformCode;
-    }
-
-    public String asPlatformCode(String commonCode) {
-        for (var statusCode : statusDevicePoints) {
-            if (statusCode.commonCode().equals(commonCode)) {
-                return statusCode.platformCode();
-            }
-        }
-        for (var alertCode : alertDevicePoints) {
-            if (alertCode.commonCode().equals(commonCode)) {
-                return alertCode.platformCode();
-            }
-        }
-        return commonCode;
-    }
-
 }

@@ -2,10 +2,10 @@ package com.ecsimsw.device.controller;
 
 import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
-import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceService;
+import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
 import com.ecsimsw.sdkty.service.TyApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -3,27 +3,29 @@ package com.ecsimsw.common.domain;
 import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Products {
 
-    public static final List<Product> PRODUCTS = List.of(
-        new Product("mhf0rqd7uuvz6hf8", ProductType.Brunt),
-        new Product("uxjr57hvapakd0io", ProductType.Plug),
-        new Product("3cwbcqiz8qixphvu", ProductType.Camera),
-        new Product("hejspm_12C724", ProductType.Power),
-        new Product("o9a6at9cyfchb47y", ProductType.Presence_Sensor)
-    );
+    public static final Map<String, ProductType> PRODUCTS = new HashMap<>();
+
+    static {
+        PRODUCTS.put("mhf0rqd7uuvz6hf8", ProductType.Brunt);
+        PRODUCTS.put("uxjr57hvapakd0io", ProductType.Plug);
+        PRODUCTS.put("3cwbcqiz8qixphvu", ProductType.Camera);
+        PRODUCTS.put("hejspm_12C724", ProductType.Power);
+        PRODUCTS.put("o9a6at9cyfchb47y", ProductType.Presence_Sensor);
+    }
 
     public static Product getById(String productId) {
-        return PRODUCTS.stream()
-            .filter(product -> product.id().contains(productId))
-            .findAny()
-            .orElseThrow(() -> new ApiException(ErrorType.NOT_SUPPORTED_DEVICE));
+        if(PRODUCTS.containsKey(productId)) {
+            PRODUCTS.get(productId);
+        }
+        throw new ApiException(ErrorType.NOT_SUPPORTED_DEVICE);
     }
 
     public static boolean isSupported(String productId) {
-        return PRODUCTS.stream()
-            .anyMatch(product -> product.id().equals(productId));
+        return PRODUCTS.containsKey(productId);
     }
 }

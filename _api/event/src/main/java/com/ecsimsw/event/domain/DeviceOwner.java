@@ -23,12 +23,4 @@ public class DeviceOwner {
 
     @Convert(converter = ProductConverter.class)
     private Product product;
-
-    public boolean hasStatusCode(String code) {
-        return product.hasStatusCode(code);
-    }
-
-    public boolean hasAlertCode(String code) {
-        return product.hasAlertCode(code);
-    }
 }

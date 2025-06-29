@@ -22,64 +22,36 @@ import java.util.stream.Collectors;
 public class DeviceService {
 
     private final BindDeviceRepository bindDeviceRepository;
-    private final DeviceStatusRepository deviceStatusRepository;
 
     @Transactional(readOnly = true)
     public List<DeviceInfoResponse> deviceList(String username) {
         var bindDevices = bindDeviceRepository.findAllByUsername(username);
-        var deviceIds = bindDevices.stream()
-            .map(BindDevice::getDeviceId)
-            .toList();
-        var deviceStatusMap = deviceStatusRepository.findAllByDeviceIdIn(deviceIds).stream()
-            .collect(Collectors.toMap(
-                DeviceStatus::getDeviceId,
-                DeviceStatus::getStatus
-            ));
         return bindDevices.stream()
-            .map(device -> {
-                var deviceStatus = deviceStatusMap.get(device.getDeviceId());
-                return DeviceInfoResponse.of(device, deviceStatus);
-            }).toList();
+            .map(DeviceInfoResponse::of)
+            .toList();
     }
 
     @Transactional
     public void deleteAndSaveAll(String username, List<DeviceListResponse> deviceList) {
         bindDeviceRepository.deleteAllByUsername(username);
-        var deviceIds = deviceList.stream()
-            .map(DeviceListResponse::id)
-            .toList();
-        deviceStatusRepository.deleteAllByDeviceIdIn(deviceIds);
-        bindDevices(username, deviceList);
-    }
-
-    @Transactional
-    public void bindDevices(String username, List<DeviceListResponse> deviceList) {
         var bindDevices = deviceList.stream()
-            .filter(deviceResult -> Products.isSupported(deviceResult.productId()))
-            .map(deviceResult -> new BindDevice(
-                deviceResult.id(),
-                username,
-                deviceResult.productId(),
-                deviceResult.name(),
-                deviceResult.online()
-            )).toList();
-        bindDeviceRepository.saveAll(bindDevices);
-
-        var updatedStatus = deviceList.stream()
-            .filter(deviceInfo -> Products.isSupported(deviceInfo.productId()))
+            .filter(device -> Products.isSupported(device.productId()))
             .map(device -> {
                 var product = Products.getById(device.productId());
+                var bindDevice = new BindDevice(device.id(), username, product, device.name(), device.online());
                 var deviceStatus = device.status().stream()
                     .filter(status -> product.hasStatusCode(status.code()))
                     .collect(Collectors.toMap(
-                        CommonDeviceStatus::code,
-                        statusCode -> product.parseValue(statusCode.code(), statusCode.value())
+                        status -> status.code(),
+                        status -> product.parseValue(status.code(), status.value())
                     ));
-                return new DeviceStatus(device.id(), product, deviceStatus);
+                bindDevice.setStatus(deviceStatus);
+                return bindDevice;
             }).toList();
-        deviceStatusRepository.saveAll(updatedStatus);
+        bindDeviceRepository.saveAll(bindDevices);
     }
 
+    @Transactional
     public DeviceInfoResponse getUserDevice(String username, String deviceId) {
         var device = bindDeviceRepository.findByUsernameAndDeviceId(username, deviceId)
             .orElseThrow(() -> new DeviceException(ErrorType.FORBIDDEN, "Not device owner"));

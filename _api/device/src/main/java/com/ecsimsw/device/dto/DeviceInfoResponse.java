@@ -13,23 +13,10 @@ public record DeviceInfoResponse(
     boolean online,
     Map<String, Object> status
 ) {
-    public static DeviceInfoResponse of(
-        BindDevice device
-    ) {
-        return new DeviceInfoResponse(
-            device.getDeviceId(),
-            device.getProduct().id(),
-            device.getName(),
-            device.isOnline(),
-            new HashMap<>()
-        );
-    }
 
-    public static DeviceInfoResponse of(
-        BindDevice device,
-        Map<String, Object> deviceStatus
-    ) {
+    public static DeviceInfoResponse of(BindDevice device) {
         var product = device.getProduct();
+        var deviceStatus = device.getStatus();
         var deviceStatusMap = deviceStatus.keySet().stream()
             .filter(product::hasStatusCode)
             .collect(Collectors.toMap(statusCode -> statusCode, deviceStatus::get));
