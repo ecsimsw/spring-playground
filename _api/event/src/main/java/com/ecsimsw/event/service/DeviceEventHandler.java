@@ -12,7 +12,7 @@ import com.ecsimsw.event.support.DeviceEventBrokerClient;
 import com.ecsimsw.sdkcommon.dto.event.DeviceEventMessage;
 import com.ecsimsw.sdkcommon.dto.event.PairingEventMessage;
 import com.ecsimsw.sdkcommon.service.PlatformEventHandler;
-import com.ecsimsw.sdkty.domain.TyProducts;
+import com.ecsimsw.sdkcommon.domain.PlatformProducts;
 import com.ecsimsw.sdkty.domain.TyUserIdRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,32 +41,30 @@ public class DeviceEventHandler implements PlatformEventHandler {
     @Override
     public void handle(DeviceEventMessage eventMessage) {
         var productId = eventMessage.productId();
-        if (!TyProducts.isSupported(productId)) {
+        if (!PlatformProducts.isSupported(productId)) {
             return;
         }
 
-        log.info("Handle device : {} {}", productId, eventMessage.statuses());
-        return;
+        var optDeviceOwner = deviceOwnerRepository.findById(eventMessage.deviceId());
+        if (optDeviceOwner.isEmpty()) {
+            log.info("Handle unkown device : {} {}", productId, eventMessage.statuses());
+            return;
+        }
 
-//        var optDeviceOwner = deviceOwnerRepository.findById(eventMessage.deviceId());
-//        if (optDeviceOwner.isEmpty()) {
-//            return;
-//        }
-//
-//        var deviceOwner = optDeviceOwner.get();
-//        log.info("Handle device : {} {}", deviceOwner.getDeviceId(), eventMessage.statuses());
-//
-//        eventMessage.statuses().forEach(statusMap -> {
-//            var product = deviceOwner.getProduct();
-//            var code = statusMap.code();
-//            var value = statusMap.value();
-//            if (product.hasStatusCode(code)) {
-//                handleStatusEvent(eventMessage, deviceOwner, code, value);
-//            }
-//            if (product.hasAlertCode(code)) {
-//                handleAlertEvent(eventMessage, deviceOwner, code, value);
-//            }
-//        });
+        var deviceOwner = optDeviceOwner.get();
+        log.info("Handle bind device : {} {}", deviceOwner.getDeviceId(), eventMessage.statuses());
+
+        eventMessage.statuses().forEach(commonDeviceStatus -> {
+            var product = PlatformProducts.getById(productId);
+            var code = commonDeviceStatus.code();
+            var value = commonDeviceStatus.value();
+            if (product.isStatusCode(code)) {
+                handleStatusEvent(eventMessage, deviceOwner, code, value);
+            }
+            if (product.isAlertCode(code)) {
+                handleAlertEvent(eventMessage, deviceOwner, code, value);
+            }
+        });
     }
 
     private void handleStatusEvent(DeviceEventMessage eventMessage, DeviceOwner deviceOwner, String code, Object value) {

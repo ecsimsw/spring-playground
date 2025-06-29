@@ -24,7 +24,7 @@ public class BindDeviceController {
     @InternalHandler
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
-        var tyDeviceList = tyApiService.getDeviceList(username);
+        var tyDeviceList = tyApiService.getDeviceListByUsername(username);
         deviceService.deleteAndSaveAll(username, tyDeviceList);
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();

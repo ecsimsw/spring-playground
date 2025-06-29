@@ -21,7 +21,7 @@ public class DeviceOwnerController {
     @InternalHandler
     @PostMapping("/api/event/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
-        var deviceInfos = tyApiService.getDeviceList(username);
+        var deviceInfos = tyApiService.getDeviceListByUsername(username);
         deviceOwnerService.updateAll(username, deviceInfos);
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();

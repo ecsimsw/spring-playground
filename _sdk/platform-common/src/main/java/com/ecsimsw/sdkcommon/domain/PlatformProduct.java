@@ -10,16 +10,24 @@ import java.util.List;
 public abstract class PlatformProduct {
 
     public final String id;
-    public final List<String> statusPlatformCode;
-    public final List<String> alertPlatformCode;
+    public final List<String> supportedPlatformCode;
+    public final List<String> statusCommonCode;
+    public final List<String> alertCommonCode;
 
     public abstract CommonDeviceStatus toCommonStatus(PlatformDeviceStatus platformDeviceStatus);
 
     public abstract PlatformDeviceStatus fromCommonStatus(CommonDeviceStatus commonDeviceStatus);
 
-    public boolean isSupportedPlatformCode(String code) {
-        return statusPlatformCode.stream().anyMatch(it -> it.equals(code))
-            || alertPlatformCode.stream().anyMatch(it -> it.equals(code));
+    public boolean isSupportedPlatformCode(String platformCode) {
+        return supportedPlatformCode.contains(platformCode);
+    }
+
+    public boolean isAlertCode(String commonCode) {
+        return alertCommonCode.contains(commonCode);
+    }
+
+    public boolean isStatusCode(String commonCode) {
+        return statusCommonCode.contains(commonCode);
     }
 
     protected Object convertValueType(Object value, Class<?> type) {

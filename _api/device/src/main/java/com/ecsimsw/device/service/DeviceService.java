@@ -1,16 +1,19 @@
 package com.ecsimsw.device.service;
 
-import com.ecsimsw.common.domain.Products;
+//import com.ecsimsw.common.domain.Products;
+import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.domain.BindDevice;
 import com.ecsimsw.device.domain.BindDeviceRepository;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.error.DeviceException;
+import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
 import com.ecsimsw.sdkcommon.dto.api.DeviceListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,20 +34,27 @@ public class DeviceService {
     @Transactional
     public void deleteAndSaveAll(String username, List<DeviceListResponse> deviceList) {
         bindDeviceRepository.deleteAllByUsername(username);
-        var bindDevices = deviceList.stream()
-            .filter(device -> Products.isSupported(device.productId()))
-            .map(device -> {
-                var product = Products.getById(device.productId());
-                var bindDevice = new BindDevice(device.id(), username, product, device.name(), device.online());
+
+        var bindDevices = new ArrayList<BindDevice>();
+        for(var device : deviceList) {
+//            if(!Products.isSupported(device.productId())) {
+//                System.out.println(device.productId());
+//                continue;
+//            }
+            try {
+//                var product = Products.getById(device.productId());
+                var bindDevice = new BindDevice(device.id(), username, device.productId(), device.name(), device.online());
                 var deviceStatus = device.status().stream()
-                    .filter(status -> product.hasStatusCode(status.code()))
                     .collect(Collectors.toMap(
-                        status -> status.code(),
-                        status -> product.parseValue(status.code(), status.value())
+                        CommonDeviceStatus::code,
+                        CommonDeviceStatus::value
                     ));
                 bindDevice.setStatus(deviceStatus);
-                return bindDevice;
-            }).toList();
+                bindDevices.add(bindDevice);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         bindDeviceRepository.saveAll(bindDevices);
     }
 

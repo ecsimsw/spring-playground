@@ -15,17 +15,12 @@ public record DeviceInfoResponse(
 ) {
 
     public static DeviceInfoResponse of(BindDevice device) {
-        var product = device.getProduct();
-        var deviceStatus = device.getStatus();
-        var deviceStatusMap = deviceStatus.keySet().stream()
-            .filter(product::hasStatusCode)
-            .collect(Collectors.toMap(statusCode -> statusCode, deviceStatus::get));
         return new DeviceInfoResponse(
             device.getDeviceId(),
-            device.getProduct().id(),
+            device.getProductId(),
             device.getName(),
             device.isOnline(),
-            deviceStatusMap
+            device.getStatus()
         );
     }
 }
