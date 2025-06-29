@@ -8,7 +8,7 @@ if [ $# -ne 4 ]; then
   exit 1
 fi
 
-REPO_NAME="spring-playground"
+REPO_NAME="hejhome-pro"
 MODULE_NAME="$1"
 VERSION="$2"
 PORT="$3"

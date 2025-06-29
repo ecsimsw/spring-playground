@@ -6,7 +6,7 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-REPO_NAME="spring-playground"
+REPO_NAME="hejhome-pro"
 MODULE_NAME="$1"
 ROOT_DIR="../.."
 MODULE_GRADLE_FILE="${ROOT_DIR}/_api/$MODULE_NAME/build.gradle"
