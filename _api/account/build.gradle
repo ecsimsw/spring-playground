@@ -4,9 +4,9 @@ version = '1.0.22'
 dependencies {
     // modules
     implementation project(':_api:common')
-    implementation project(':_sdk:sdk-common')
-    implementation project(':_sdk:external-platform-tb')
-    implementation project(':_sdk:external-platform-ty')
+    implementation project(':_sdk:platform-common')
+    implementation project(':_sdk:platform-tb')
+    implementation project(':_sdk:platform-ty')
 
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security'
