@@ -5,7 +5,7 @@ import com.ecsimsw.sdkcommon.dto.event.PairingEventMessage;
 
 public interface PlatformEventHandler {
 
-    void handle(DeviceEventMessage deviceEventMessage);
+    void handleDeviceEvent(DeviceEventMessage deviceEventMessage);
 
     void handlePairingEvent(PairingEventMessage pairingEventMessage);
 }

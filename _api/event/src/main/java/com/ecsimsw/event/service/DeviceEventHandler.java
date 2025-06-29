@@ -9,10 +9,11 @@ import com.ecsimsw.event.domain.DeviceOwner;
 import com.ecsimsw.event.domain.DeviceOwnerRepository;
 import com.ecsimsw.event.domain.DeviceStatusHistory;
 import com.ecsimsw.event.support.DeviceEventBrokerClient;
+import com.ecsimsw.event.support.EventLatencyCounter;
+import com.ecsimsw.sdkcommon.domain.PlatformProducts;
 import com.ecsimsw.sdkcommon.dto.event.DeviceEventMessage;
 import com.ecsimsw.sdkcommon.dto.event.PairingEventMessage;
 import com.ecsimsw.sdkcommon.service.PlatformEventHandler;
-import com.ecsimsw.sdkcommon.domain.PlatformProducts;
 import com.ecsimsw.sdkty.domain.TyUserIdRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class DeviceEventHandler implements PlatformEventHandler {
     private final TyUserIdRepository tyUserInfoRepository;
     private final DeviceClient deviceClient;
     private final EventClient eventClient;
+    private final EventLatencyCounter eventLatencyCounter = new EventLatencyCounter(10_000);
 
     @Override
     public void handlePairingEvent(PairingEventMessage pairingEventMessage) {
@@ -39,15 +41,15 @@ public class DeviceEventHandler implements PlatformEventHandler {
     }
 
     @Override
-    public void handle(DeviceEventMessage eventMessage) {
+    public void handleDeviceEvent(DeviceEventMessage eventMessage) {
+        eventLatencyCounter.check(eventMessage.timestamp());
+
         var productId = eventMessage.productId();
         if (!PlatformProducts.isSupported(productId)) {
             return;
         }
-
         var optDeviceOwner = deviceOwnerRepository.findById(eventMessage.deviceId());
         if (optDeviceOwner.isEmpty()) {
-            log.info("Handle unkown device : {} {}", productId, eventMessage.statuses());
             return;
         }
 
