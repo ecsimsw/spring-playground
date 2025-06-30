@@ -42,7 +42,7 @@ public class TyPlugMini_uxjr57hvapakd0io extends PlatformProduct {
         var commonValue = commonDeviceStatus.value();
         if ("switch".equals(commonCode)) {
             var platformValue = convertValueType(commonValue, Boolean.class);
-            return new PlatformDeviceStatus("switch_led", platformValue);
+            return new PlatformDeviceStatus("switch_1", platformValue);
         }
         if ("cur_current".equals(commonCode)) {
             var platformValue = convertValueType(commonValue, String.class);
