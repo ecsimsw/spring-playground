@@ -10,19 +10,16 @@ public class PlatformProducts {
     public static final Map<String, PlatformProduct> PRODUCTS = new HashMap<>();
 
     static {
-        var brunt = new TyBrunt_xxz2xizxhbkqnzhl();
-        PRODUCTS.put(brunt.id, new TyBrunt_xxz2xizxhbkqnzhl());
+        var brunt = new Ty_xxz2xizxhbkqnzhl();
+        var homeCameraProPlus = new Ty_3cwbcqiz8qixphvu();
+        var plugMini = new Ty_uxjr57hvapakd0io();
+        var presenceSensor = new Ty_o9a6at9cyfchb47y();
+        var power = new Ty_mhf0rqd7uuvz6hf8();
 
-        var homeCameraProPlus = new HomeCameraProPlus_3cwbcqiz8qixphvu();
+        PRODUCTS.put(brunt.id, new Ty_xxz2xizxhbkqnzhl());
         PRODUCTS.put(homeCameraProPlus.id, homeCameraProPlus);
-
-        var plugMini = new TyPlugMini_uxjr57hvapakd0io();
         PRODUCTS.put(plugMini.id, plugMini);
-
-        var presenceSensor = new TyPresenceSensor_o9a6at9cyfchb47y();
         PRODUCTS.put(presenceSensor.id, presenceSensor);
-
-        var power = new TyPower_mhf0rqd7uuvz6hf8();
         PRODUCTS.put("hejspm_12C724", power);
     }
 

@@ -1,19 +1,18 @@
 package com.ecsimsw.sdkcommon.domain.product;
 
 import com.ecsimsw.sdkcommon.domain.PlatformProduct;
-import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
-import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
+import com.ecsimsw.sdkcommon.domain.ProductType;
+import com.ecsimsw.sdkcommon.dto.*;
 
-import java.util.List;
+public class Ty_xxz2xizxhbkqnzhl extends PlatformProduct {
 
-public class TyBrunt_xxz2xizxhbkqnzhl extends PlatformProduct {
-
-    public TyBrunt_xxz2xizxhbkqnzhl() {
+    public Ty_xxz2xizxhbkqnzhl() {
         super(
             "xxz2xizxhbkqnzhl",
-            List.of("switch_led", "bright_value", "work_mode"),
-            List.of("switch", "bright", "mode"),
-            List.of()
+            ProductType.BLUNT,
+            SupportedPlatformCodes.of("switch_led", "bright_value", "work_mode"),
+            StatusCommonCodes.of("switch", "bright", "mode"),
+            AlertCommonCodes.of()
         );
     }
 

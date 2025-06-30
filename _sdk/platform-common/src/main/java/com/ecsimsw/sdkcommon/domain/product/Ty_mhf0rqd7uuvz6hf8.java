@@ -1,19 +1,18 @@
 package com.ecsimsw.sdkcommon.domain.product;
 
 import com.ecsimsw.sdkcommon.domain.PlatformProduct;
-import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
-import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
+import com.ecsimsw.sdkcommon.domain.ProductType;
+import com.ecsimsw.sdkcommon.dto.*;
 
-import java.util.List;
+public class Ty_mhf0rqd7uuvz6hf8 extends PlatformProduct {
 
-public class TyPower_mhf0rqd7uuvz6hf8 extends PlatformProduct {
-
-    public TyPower_mhf0rqd7uuvz6hf8() {
+    public Ty_mhf0rqd7uuvz6hf8() {
         super(
             "mhf0rqd7uuvz6hf8",
-            List.of("switch_led", "bright_value", "work_mode"),
-            List.of("switch", "bright", "mode"),
-            List.of()
+            ProductType.POWER,
+            SupportedPlatformCodes.of("switch_led", "bright_value", "work_mode"),
+            StatusCommonCodes.of("switch", "bright", "mode"),
+            AlertCommonCodes.of()
         );
     }
 

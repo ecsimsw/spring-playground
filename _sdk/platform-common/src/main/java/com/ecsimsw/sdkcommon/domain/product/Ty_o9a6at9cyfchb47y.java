@@ -1,19 +1,18 @@
 package com.ecsimsw.sdkcommon.domain.product;
 
 import com.ecsimsw.sdkcommon.domain.PlatformProduct;
-import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
-import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
+import com.ecsimsw.sdkcommon.domain.ProductType;
+import com.ecsimsw.sdkcommon.dto.*;
 
-import java.util.List;
+public class Ty_o9a6at9cyfchb47y extends PlatformProduct {
 
-public class TyPresenceSensor_o9a6at9cyfchb47y extends PlatformProduct {
-
-    public TyPresenceSensor_o9a6at9cyfchb47y() {
+    public Ty_o9a6at9cyfchb47y() {
         super(
             "o9a6at9cyfchb47y",
-            List.of("add_ele"),
-            List.of("add_ele"),
-            List.of()
+            ProductType.PRESENCE_SENSOR,
+            SupportedPlatformCodes.of("add_ele"),
+            StatusCommonCodes.of("add_ele"),
+            AlertCommonCodes.of()
         );
     }
 

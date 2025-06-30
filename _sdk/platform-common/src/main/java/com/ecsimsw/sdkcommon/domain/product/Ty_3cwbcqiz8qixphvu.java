@@ -1,19 +1,18 @@
 package com.ecsimsw.sdkcommon.domain.product;
 
 import com.ecsimsw.sdkcommon.domain.PlatformProduct;
-import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
-import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
+import com.ecsimsw.sdkcommon.domain.ProductType;
+import com.ecsimsw.sdkcommon.dto.*;
 
-import java.util.List;
+public class Ty_3cwbcqiz8qixphvu extends PlatformProduct {
 
-public class HomeCameraProPlus_3cwbcqiz8qixphvu extends PlatformProduct {
-
-    public HomeCameraProPlus_3cwbcqiz8qixphvu() {
+    public Ty_3cwbcqiz8qixphvu() {
         super(
             "3cwbcqiz8qixphvu",
-            List.of("basic_indicator", "basic_private", "motion_switch"),
-            List.of("indicator", "privateMode", "motionDetect"),
-            List.of("linkage")
+            ProductType.CAMERA,
+            SupportedPlatformCodes.of("basic_indicator", "basic_private", "motion_switch"),
+            StatusCommonCodes.of("indicator", "privateMode", "motionDetect"),
+            AlertCommonCodes.of("linkage")
         );
     }
 

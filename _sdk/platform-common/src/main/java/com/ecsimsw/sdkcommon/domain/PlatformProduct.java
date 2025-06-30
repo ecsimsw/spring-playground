@@ -1,33 +1,31 @@
 package com.ecsimsw.sdkcommon.domain;
 
-import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
-import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
+import com.ecsimsw.sdkcommon.dto.*;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 public abstract class PlatformProduct {
 
     public final String id;
-    public final List<String> supportedPlatformCodes;
-    public final List<String> statusCommonCodes;
-    public final List<String> alertCommonCodes;
+    public final ProductType productType;
+    public final SupportedPlatformCodes supportedPlatformCodes;
+    public final StatusCommonCodes statusCommonCodes;
+    public final AlertCommonCodes alertCommonCodes;
 
     public abstract CommonDeviceStatus toCommonStatus(PlatformDeviceStatus platformDeviceStatus);
 
     public abstract PlatformDeviceStatus fromCommonStatus(CommonDeviceStatus commonDeviceStatus);
 
     public boolean isSupportedPlatformCode(String platformCode) {
-        return supportedPlatformCodes.contains(platformCode);
-    }
-
-    public boolean isAlertCode(String commonCode) {
-        return alertCommonCodes.contains(commonCode);
+        return supportedPlatformCodes.isSupport(platformCode);
     }
 
     public boolean isStatusCode(String commonCode) {
         return statusCommonCodes.contains(commonCode);
+    }
+
+    public boolean isAlertCode(String commonCode) {
+        return alertCommonCodes.contains(commonCode);
     }
 
     protected Object convertValueType(Object value, Class<?> type) {

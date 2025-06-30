@@ -1,19 +1,18 @@
 package com.ecsimsw.sdkcommon.domain.product;
 
 import com.ecsimsw.sdkcommon.domain.PlatformProduct;
-import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
-import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
+import com.ecsimsw.sdkcommon.domain.ProductType;
+import com.ecsimsw.sdkcommon.dto.*;
 
-import java.util.List;
+public class Ty_uxjr57hvapakd0io extends PlatformProduct {
 
-public class TyPlugMini_uxjr57hvapakd0io extends PlatformProduct {
-
-    public TyPlugMini_uxjr57hvapakd0io() {
+    public Ty_uxjr57hvapakd0io() {
         super(
             "uxjr57hvapakd0io",
-            List.of("switch_1", "cur_current", "cur_power", "cur_voltage"),
-            List.of("switch", "cur_current", "cur_power", "cur_voltage"),
-            List.of()
+            ProductType.PLUG,
+            SupportedPlatformCodes.of("switch_1", "cur_current", "cur_power", "cur_voltage"),
+            StatusCommonCodes.of("switch", "cur_current", "cur_power", "cur_voltage"),
+            AlertCommonCodes.of()
         );
     }
 
