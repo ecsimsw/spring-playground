@@ -6,11 +6,11 @@ import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
 
 import java.util.List;
 
-public class Power extends PlatformProduct {
+public class TyBrunt_xxz2xizxhbkqnzhl extends PlatformProduct {
 
-    public Power() {
+    public TyBrunt_xxz2xizxhbkqnzhl() {
         super(
-            "mhf0rqd7uuvz6hf8",
+            "xxz2xizxhbkqnzhl",
             List.of("switch_led", "bright_value", "work_mode"),
             List.of("switch", "bright", "mode"),
             List.of()

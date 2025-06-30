@@ -6,9 +6,9 @@ import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
 
 import java.util.List;
 
-public class Brunt extends PlatformProduct {
+public class TyPower_mhf0rqd7uuvz6hf8 extends PlatformProduct {
 
-    public Brunt() {
+    public TyPower_mhf0rqd7uuvz6hf8() {
         super(
             "mhf0rqd7uuvz6hf8",
             List.of("switch_led", "bright_value", "work_mode"),

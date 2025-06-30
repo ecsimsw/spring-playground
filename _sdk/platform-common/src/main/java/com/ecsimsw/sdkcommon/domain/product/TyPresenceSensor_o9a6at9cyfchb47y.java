@@ -6,9 +6,9 @@ import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
 
 import java.util.List;
 
-public class PresenceSensor extends PlatformProduct {
+public class TyPresenceSensor_o9a6at9cyfchb47y extends PlatformProduct {
 
-    public PresenceSensor() {
+    public TyPresenceSensor_o9a6at9cyfchb47y() {
         super(
             "o9a6at9cyfchb47y",
             List.of("add_ele"),

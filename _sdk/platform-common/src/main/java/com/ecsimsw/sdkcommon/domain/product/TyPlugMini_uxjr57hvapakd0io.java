@@ -6,9 +6,9 @@ import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
 
 import java.util.List;
 
-public class PlugMini extends PlatformProduct {
+public class TyPlugMini_uxjr57hvapakd0io extends PlatformProduct {
 
-    public PlugMini() {
+    public TyPlugMini_uxjr57hvapakd0io() {
         super(
             "uxjr57hvapakd0io",
             List.of("switch_1", "cur_current", "cur_power", "cur_voltage"),

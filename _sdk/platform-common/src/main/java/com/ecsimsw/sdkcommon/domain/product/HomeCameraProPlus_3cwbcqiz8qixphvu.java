@@ -6,9 +6,9 @@ import com.ecsimsw.sdkcommon.dto.PlatformDeviceStatus;
 
 import java.util.List;
 
-public class HomeCameraProPlus extends PlatformProduct {
+public class HomeCameraProPlus_3cwbcqiz8qixphvu extends PlatformProduct {
 
-    public HomeCameraProPlus() {
+    public HomeCameraProPlus_3cwbcqiz8qixphvu() {
         super(
             "3cwbcqiz8qixphvu",
             List.of("basic_indicator", "basic_private", "motion_switch"),
