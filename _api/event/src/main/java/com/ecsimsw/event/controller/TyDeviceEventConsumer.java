@@ -24,7 +24,7 @@ public class TyDeviceEventConsumer {
         topics = "${ty.pulsar.event.topic}",
         subscriptionName = "${ty.pulsar.event.subscriptionName}",
         subscriptionType = SubscriptionType.Shared,
-        concurrency = "${ty.pulsar.event.partitionNumber}}"
+        concurrency = "${ty.pulsar.event.partitionNumber}"
     )
     public void receiveMessage(Message<byte[]> message) {
         try {

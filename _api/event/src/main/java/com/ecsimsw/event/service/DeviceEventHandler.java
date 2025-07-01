@@ -30,7 +30,6 @@ public class DeviceEventHandler implements PlatformEventHandler {
     private final TyUserIdRepository tyUserInfoRepository;
     private final DeviceClient deviceClient;
     private final EventClient eventClient;
-    private final EventLatencyCounter eventLatencyCounter = new EventLatencyCounter(10_000);
 
     @Override
     public void handlePairingEvent(PairingEventMessage pairingEventMessage) {
@@ -42,8 +41,6 @@ public class DeviceEventHandler implements PlatformEventHandler {
 
     @Override
     public void handleDeviceEvent(DeviceEventMessage eventMessage) {
-        eventLatencyCounter.check(eventMessage.timestamp());
-
         var productId = eventMessage.productId();
         if (!PlatformProducts.isSupported(productId)) {
             return;
