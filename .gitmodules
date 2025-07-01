@@ -4,3 +4,6 @@
 [submodule "_sdk/platform-ty"]
 	path = _sdk/platform-ty
 	url = https://github.com/ecsimsw/sdk-external-platform-ty.git
+[submodule "_sdk/platform-ak"]
+	path = _sdk/platform-ak
+	url = https://github.com/ecsimsw/sdk-external-platform-ak.git

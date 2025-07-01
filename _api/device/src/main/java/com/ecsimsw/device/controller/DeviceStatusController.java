@@ -6,7 +6,6 @@ import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceBindService;
 import com.ecsimsw.device.service.DeviceStatusService;
-import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
 import com.ecsimsw.sdkty.service.TyApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,7 @@ public class DeviceStatusController {
     private final ObjectMapper objectMapper;
 
     @GetMapping("/api/device/{deviceId}")
-    public ApiResponse<DeviceInfoResponse> status(AuthUser authUser, @PathVariable String deviceId) {
+    public ApiResponse<DeviceInfoResponse> getStatus(AuthUser authUser, @PathVariable String deviceId) {
         var result = deviceStatusService.readStatus(authUser.username(), deviceId);
         return ApiResponse.success(result);
     }
@@ -49,7 +48,7 @@ public class DeviceStatusController {
         groupId = "${kafka.device.status.groupId}",
         concurrency = "${kafka.device.status.partitionCount}"
     )
-    public void listenDeviceStatus(String message) {
+    public void listenStatus(String message) {
         var statusEvent = convertFromJson(message);
         log.info("Handle device status event {} {}", statusEvent.getDeviceId(), statusEvent.statusAsMap());
         deviceStatusService.updateStatus(statusEvent);
