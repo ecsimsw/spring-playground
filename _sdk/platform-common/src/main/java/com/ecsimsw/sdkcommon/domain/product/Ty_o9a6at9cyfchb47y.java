@@ -10,6 +10,7 @@ public class Ty_o9a6at9cyfchb47y extends PlatformProduct {
         super(
             "o9a6at9cyfchb47y",
             ProductType.PRESENCE_SENSOR,
+            SupportedCommonCodes.of("add_ele"),
             SupportedPlatformCodes.of("add_ele"),
             StatusCommonCodes.of("add_ele"),
             AlertCommonCodes.of()

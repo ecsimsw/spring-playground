@@ -4,27 +4,44 @@ import com.ecsimsw.common.dto.ApiResponse;
 import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
+import com.ecsimsw.device.service.DeviceBindService;
 import com.ecsimsw.device.service.DeviceStatusService;
+import com.ecsimsw.sdkcommon.dto.CommonDeviceStatus;
+import com.ecsimsw.sdkty.service.TyApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class DeviceStatusController {
 
+    private final TyApiService tyApiService;
     private final DeviceStatusService deviceStatusService;
+    private final DeviceBindService deviceBindService;
     private final ObjectMapper objectMapper;
 
     @GetMapping("/api/device/{deviceId}")
     public ApiResponse<DeviceInfoResponse> status(AuthUser authUser, @PathVariable String deviceId) {
         var result = deviceStatusService.readStatus(authUser.username(), deviceId);
         return ApiResponse.success(result);
+    }
+
+    @PostMapping("/api/device/{deviceId}")
+    public ApiResponse<Void> control(
+        AuthUser authUser,
+        @PathVariable String deviceId,
+        @RequestBody List<Map<String, Object>> commonDeviceStatuses
+    ) {
+        var bindDevice = deviceBindService.getUserDevice(authUser.username(), deviceId);
+        tyApiService.command(deviceId, bindDevice.productId(), commonDeviceStatuses);
+        return ApiResponse.success();
     }
 
     @KafkaListener(

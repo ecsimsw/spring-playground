@@ -11,6 +11,7 @@ public class Ty_mhf0rqd7uuvz6hf8 extends PlatformProduct {
         super(
             "mhf0rqd7uuvz6hf8",
             ProductType.BLUNT,
+            SupportedCommonCodes.of("switch", "bright", "mode"),
             SupportedPlatformCodes.of("switch_led", "bright_value", "work_mode"),
             StatusCommonCodes.of("switch", "bright", "mode"),
             AlertCommonCodes.of()

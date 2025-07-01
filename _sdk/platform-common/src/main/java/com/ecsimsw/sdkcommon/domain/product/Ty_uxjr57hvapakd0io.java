@@ -10,6 +10,7 @@ public class Ty_uxjr57hvapakd0io extends PlatformProduct {
         super(
             "uxjr57hvapakd0io",
             ProductType.PLUG,
+            SupportedCommonCodes.of("switch", "cur_current", "cur_power"),
             SupportedPlatformCodes.of("switch_1", "cur_current", "cur_power", "cur_voltage"),
             StatusCommonCodes.of("switch", "cur_current", "cur_power", "cur_voltage"),
             AlertCommonCodes.of()

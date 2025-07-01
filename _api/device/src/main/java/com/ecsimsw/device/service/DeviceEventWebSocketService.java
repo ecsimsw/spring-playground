@@ -1,5 +1,6 @@
 package com.ecsimsw.device.service;
 
+import com.ecsimsw.common.dto.DeviceStatusUpdateEvent;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.error.DeviceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,21 +41,20 @@ public class DeviceEventWebSocketService extends TextWebSocketHandler {
     }
 
     @SneakyThrows
-    public void sendMessage(String username, Object message) {
-        var messageAsString = objectMapper.writeValueAsString(message);
-        userSessions.values().stream()
-            .filter(WebSocketSession::isOpen)
-            .forEach(session -> {
-                try {
-                    session.sendMessage(new TextMessage(messageAsString));
-                } catch (Exception e) {
-                    // TODO :: 예외 처리
-                    e.fillInStackTrace();
-                    log.error("failed to send event : {}", e.getMessage());
-                }
-            });
+    public void sendStatus(String username, DeviceStatusUpdateEvent updateEvent) {
+        try {
+            if(!userSessions.containsKey(username)) {
+                return;
+            }
+            var sessions = userSessions.get(username);
+            sessions.sendMessage(new TextMessage(objectMapper.writeValueAsString(updateEvent)));
+            log.info("[web socket] send status {} {}", username, updateEvent);
+        } catch (Exception e) {
+            e.fillInStackTrace();
+            log.error("[web socket] failed to send event : {}", e.getMessage());
+        }
     }
-//
+
     @Override
     public void afterConnectionClosed(@Nullable WebSocketSession session, @Nullable CloseStatus status) throws IOException {
         if(session.getUri() == null) {
@@ -67,17 +67,4 @@ public class DeviceEventWebSocketService extends TextWebSocketHandler {
             log.info("closed : {}", username);
         }
     }
-//
-//    @Scheduled(fixedDelay = 10_000)
-//    public void cleanupClosedSessions() {
-//        for (var userSession : userSessions.keySet()) {
-//            synchronized (userSession) {
-//                if(userSessions.)
-//                userSessions.removeIf(userSession -> !userSession.isOpen());
-//            }
-//            if (sessions.isEmpty()) {
-//                userSessions.remove(entry.getKey());
-//            }
-//        }
-//    }
 }

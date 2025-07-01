@@ -42,7 +42,7 @@ public class DeviceStatusService {
     public void sendSocket(DeviceStatusEvent statusEvent) {
         var optBindDevice = bindDeviceRepository.findById(statusEvent.getDeviceId());
         optBindDevice.ifPresent(
-            bindDevice -> deviceEventWebSocketService.sendMessage(bindDevice.getUsername(), statusEvent)
+            bindDevice -> deviceEventWebSocketService.sendStatus(bindDevice.getUsername(), statusEvent.updateEvent())
         );
     }
 }

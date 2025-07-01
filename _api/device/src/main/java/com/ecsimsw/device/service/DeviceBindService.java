@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class DeviceService {
+public class DeviceBindService {
 
     private final BindDeviceRepository bindDeviceRepository;
 

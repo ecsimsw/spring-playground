@@ -20,4 +20,11 @@ public class DeviceStatusEvent {
     public Map<String, Object> statusAsMap() {
         return Map.of(code, value);
     }
+
+    public DeviceStatusUpdateEvent updateEvent() {
+        return new DeviceStatusUpdateEvent(
+            deviceId,
+            statusAsMap()
+        );
+    }
 }

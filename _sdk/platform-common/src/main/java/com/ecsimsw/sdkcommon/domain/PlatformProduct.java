@@ -8,6 +8,7 @@ public abstract class PlatformProduct {
 
     public final String id;
     public final ProductType productType;
+    public final SupportedCommonCodes supportedCommonCodes;
     public final SupportedPlatformCodes supportedPlatformCodes;
     public final StatusCommonCodes statusCommonCodes;
     public final AlertCommonCodes alertCommonCodes;
@@ -18,6 +19,10 @@ public abstract class PlatformProduct {
 
     public boolean isSupportedPlatformCode(String platformCode) {
         return supportedPlatformCodes.isSupport(platformCode);
+    }
+
+    public boolean isSupportedCommonCode(String commonCode) {
+        return supportedCommonCodes.isSupport(commonCode);
     }
 
     public boolean isStatusCode(String commonCode) {
