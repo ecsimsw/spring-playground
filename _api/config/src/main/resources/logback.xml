@@ -15,11 +15,11 @@
 
     <!-- prod profile : console + file appender -->
     <springProfile name="prod">
-        <property name="LOG_PATH" value="/logs/account/"/>
+        <property name="LOG_PATH" value="/logs/config/"/>
         <appender name="PROD_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/account-prod.log</file>
+            <file>${LOG_PATH}/config-prod.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/account-prod.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/config-prod.%d{yyyy-MM-dd}.log</fileNamePattern>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
             <encoder>

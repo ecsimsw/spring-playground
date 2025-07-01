@@ -1,5 +1,7 @@
 package com.ecsimsw.device.service;
 
+import com.ecsimsw.common.error.ErrorType;
+import com.ecsimsw.device.error.DeviceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.common.lang.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.Map;
@@ -27,7 +30,10 @@ public class DeviceEventWebSocketService extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(@Nullable WebSocketSession session) throws IOException {
-        var username = session.getId();
+        if(session.getUri() == null) {
+            throw new DeviceException(ErrorType.INVALID_REQUEST, "Session doesn't have user info");
+        }
+        var username = UriComponentsBuilder.fromUri(session.getUri()).build().getQueryParams().getFirst("username");
         userSessions.put(username, session);
         session.sendMessage(new TextMessage("Successfully connected"));
         log.info("connected : {}", username);
@@ -48,13 +54,15 @@ public class DeviceEventWebSocketService extends TextWebSocketHandler {
                 }
             });
     }
-
+//
     @Override
     public void afterConnectionClosed(@Nullable WebSocketSession session, @Nullable CloseStatus status) throws IOException {
-        var username = session.getId();
+        if(session.getUri() == null) {
+            return;
+        }
+        var username = UriComponentsBuilder.fromUri(session.getUri()).build().getQueryParams().getFirst("username");
         var sessions = userSessions.get(username);
         synchronized (sessions) {
-            session.sendMessage(new TextMessage("Successfully closed"));
             userSessions.remove(username);
             log.info("closed : {}", username);
         }

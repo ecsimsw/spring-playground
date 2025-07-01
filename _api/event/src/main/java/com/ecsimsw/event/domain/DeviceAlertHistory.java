@@ -19,7 +19,7 @@ public class DeviceAlertHistory {
     private String deviceId;
     private String code;
     private Object value;
-    private Instant timestamp = Instant.now(); // ttl indexed : 3600s
+    private Instant timestamp = Instant.now(); // ttl index, 3600
 
     public DeviceAlertHistory(String deviceId, String code, Object value) {
         this.deviceId = deviceId;

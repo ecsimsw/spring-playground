@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>전구 밝기 제어 예제</title>
+    <style>
+        .bulb {
+            width: 100px; height: 100px;
+            margin: 20px auto;
+            border-radius: 50%;
+            background: yellow;
+            box-shadow: 0 0 50px 20px #ffd700;
+            transition: opacity 0.3s;
+            opacity: 1;
+        }
+        body {
+            text-align: center;
+            font-family: sans-serif;
+            margin-top: 50px;
+        }
+        #brightness {
+            width: 200px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="bulb" id="bulb"></div>
+<div>
+    <input type="range" id="brightness" min="0" max="100" step="1">
+    <span id="value"></span>
+</div>
+<script>
+    const bulb = document.getElementById('bulb');
+    const slider = document.getElementById('brightness');
+    const valueText = document.getElementById('value');
+    let lastSentBrightness = null;
+
+    const API_URL = 'http://localhost:8081/api/device/s8a2b2190271ee0eeed2wq';
+    const AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJhejE1NTI5ODY1OTU2MjRRaXQzNyIsInVzZXJuYW1lIjoiODItMDAwMDEwMjgwODg5MTIiLCJpYXQiOjE3NTEyNjQ4OTgsImV4cCI6MTc1MTI2NjY5OH0.JS7PeClJ8rZFV-RvpSSNAlUGm1-xWM50ID9oJezjL50";
+
+    function updateBulbVisual(brightness) {
+        const opacity = 0.2 + (brightness / 100) * 0.8;
+        bulb.style.opacity = opacity;
+        valueText.textContent = `${brightness}%`;
+    }
+
+    slider.addEventListener('input', (e) => {
+        const brightness = parseInt(e.target.value);
+        updateBulbVisual(brightness);
+    });
+
+    slider.addEventListener('change', async (e) => {
+        const brightness = parseInt(e.target.value);
+        if (lastSentBrightness !== brightness) {
+            await setBrightness(brightness);
+            lastSentBrightness = brightness;
+        }
+    });
+
+    async function setBrightness(brightness) {
+        await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + AUTH_TOKEN
+            },
+            body: JSON.stringify([
+                {
+                    "code": "bright",
+                    "value": brightness
+                }
+            ])
+        });
+    }
+
+    (function() {
+        const initial = 50;
+        slider.value = initial;
+        updateBulbVisual(initial);
+        lastSentBrightness = initial;
+    })();
+
+    const myInfo = {
+        token: AUTH_TOKEN,
+        type: "subscribe",
+        deviceId: "s8a2b2190271ee0eeed2wq"
+    };
+
+    const ws = new WebSocket("ws://localhost:8852/api/device/ws/device-events?username=jinhwan");
+
+    ws.onopen = function() {
+        ws.send(JSON.stringify(myInfo));
+        console.log("ws connected :", myInfo);
+    };
+
+    ws.onmessage = function(event) {
+        try {
+            const data = JSON.parse(event.data);
+            console.log("data from server :", data);
+            if (data.code === "bright" && typeof data.value === "number") {
+                slider.value = data.value;
+                updateBulbVisual(data.value);
+                lastSentBrightness = data.value;
+            }
+        } catch (e) {
+            console.warn("failed to handle event", event.data);
+        }
+    };
+
+    ws.onclose = function() {
+        console.warn("ws failed to connected");
+    };
+
+    ws.onerror = function(err) {
+        console.error("ws errors", err);
+    };
+</script>
+</body>
+</html>

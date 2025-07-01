@@ -1,7 +1,5 @@
 package com.ecsimsw.device.service;
 
-//import com.ecsimsw.common.domain.Products;
-import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;
 import com.ecsimsw.device.domain.BindDevice;
 import com.ecsimsw.device.domain.BindDeviceRepository;
@@ -36,13 +34,8 @@ public class DeviceService {
         bindDeviceRepository.deleteAllByUsername(username);
 
         var bindDevices = new ArrayList<BindDevice>();
-        for(var device : deviceList) {
-//            if(!Products.isSupported(device.productId())) {
-//                System.out.println(device.productId());
-//                continue;
-//            }
+        for (var device : deviceList) {
             try {
-//                var product = Products.getById(device.productId());
                 var bindDevice = new BindDevice(device.id(), username, device.productId(), device.name(), device.online());
                 var deviceStatus = device.status().stream()
                     .collect(Collectors.toMap(

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CONFIG_VERSION="1.0.1"
 ACCOUNT_VERSION="1.0.23"
 DEVICE_VERSION="1.0.32"
 NOTIFICATION_VERSION="1.0.17"
@@ -7,6 +8,7 @@ EVENT_VERSION="1.0.22"
 
 cp .env .env.bak
 
+sed -i "s/^CONFIG_VERSION=.*/CONFIG_VERSION=${CONFIG_VERSION}/" .env
 sed -i "s/^ACCOUNT_VERSION=.*/ACCOUNT_VERSION=${ACCOUNT_VERSION}/" .env
 sed -i "s/^DEVICE_VERSION=.*/DEVICE_VERSION=${DEVICE_VERSION}/" .env
 sed -i "s/^NOTIFICATION_VERSION=.*/NOTIFICATION_VERSION=${NOTIFICATION_VERSION}/" .env
@@ -22,10 +24,15 @@ echo "Restart containers"
 
 docker compose down
 docker compose pull
-docker compose up -d
 
-echo "Waiting 30 seconds for containers to become ready..."
-sleep 30
+docker compose up -d config
+
+echo "Waiting 10 seconds for config service to become ready..."
+sleep 10
+
+docker compose up -d account device notification event internal-lb
+echo "Waiting 20 seconds for containers to become ready..."
+sleep 20
 
 wget http://hejdev1.goqual.com:8080/api/account/api-docs -O ./apidocs/files/account.json
 wget http://hejdev1.goqual.com:8080/api/device/api-docs -O ./apidocs/files/device.json

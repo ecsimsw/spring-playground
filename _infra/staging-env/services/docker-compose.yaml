@@ -9,6 +9,16 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     restart: always
 
+  config:
+    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:config-${CONFIG_VERSION}"
+    pull_policy: always
+    network_mode: "host"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - VERSION=${CONFIG_VERSION}
+    volumes:
+      - /disk-A/logs/config:/logs/config
+
   account:
     image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:account-${ACCOUNT_VERSION}"
     pull_policy: always
@@ -16,6 +26,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - VERSION=${ACCOUNT_VERSION}
+    volumes:
+      - /disk-A/logs/account:/logs/account
 
   device:
     image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:device-${DEVICE_VERSION}"
@@ -24,6 +36,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - VERSION=${DEVICE_VERSION}
+    volumes:
+      - /disk-A/logs/device:/logs/device
 
   notification:
     image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:notification-${NOTIFICATION_VERSION}"
@@ -32,6 +46,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - VERSION=${NOTIFICATION_VERSION}
+    volumes:
+      - /disk-A/logs/notification:/logs/notification
 
   event:
     image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:event-${EVENT_VERSION}"
@@ -40,3 +56,5 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - VERSION=${EVENT_VERSION}
+    volumes:
+      - /disk-A/logs/event:/logs/event
