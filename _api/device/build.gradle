@@ -6,6 +6,7 @@ dependencies {
     implementation project(':_api:common')
     implementation project(':_sdk:platform-tb')
     implementation project(':_sdk:platform-ty')
+    implementation project(':_sdk:platform-ak')
     implementation project(':_sdk:platform-common')
 
     // Kafka
