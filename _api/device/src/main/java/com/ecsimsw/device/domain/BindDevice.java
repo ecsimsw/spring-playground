@@ -24,22 +24,10 @@ public class BindDevice {
     private String username;
     private boolean online;
     private String name;
-
-//        @Convert(converter = ProductConverter.class)
     private String productId;
 
     @Convert(converter = MapToJsonConverter.class)
     private Map<String, Object> status;
-
-    public BindDevice(
-        String deviceId,
-        String username,
-        String productId,
-        String name,
-        boolean online
-    ) {
-        this(deviceId, username, online, name, productId, new HashMap<>());
-    }
 
     public void addStatus(String code, Object value) {
         status.put(code, value);

@@ -32,22 +32,15 @@ public class DeviceBindService {
     @Transactional
     public void deleteAndSaveAll(String username, List<DeviceListResponse> deviceList) {
         bindDeviceRepository.deleteAllByUsername(username);
-
-        var bindDevices = new ArrayList<BindDevice>();
-        for (var device : deviceList) {
-            try {
-                var bindDevice = new BindDevice(device.id(), username, device.productId(), device.name(), device.online());
+        var bindDevices = deviceList.stream()
+            .map(device -> {
                 var deviceStatus = device.status().stream()
                     .collect(Collectors.toMap(
                         CommonDeviceStatus::code,
                         CommonDeviceStatus::value
                     ));
-                bindDevice.setStatus(deviceStatus);
-                bindDevices.add(bindDevice);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+                return new BindDevice(device.id(), username, device.online(), device.name(), device.productId(), deviceStatus);
+            }).toList();
         bindDeviceRepository.saveAll(bindDevices);
     }
 
