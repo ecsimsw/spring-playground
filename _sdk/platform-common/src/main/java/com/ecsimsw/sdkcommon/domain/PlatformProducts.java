@@ -7,33 +7,30 @@ import java.util.Map;
 
 public class PlatformProducts {
 
-    public static final Map<String, PlatformProduct> PRODUCTS = new HashMap<>();
+    private static final Map<String, PlatformProduct> PRODUCTS_TABLE = new HashMap<>();
+    private static final PlatformProduct[] SUPPORTED_PRODUCTS = new PlatformProduct[] {
+        new Ak_e16c186b2e2b(),
+        new Ty_3cwbcqiz8qixphvu(),
+        new Ty_mhf0rqd7uuvz6hf8(),
+        new Ty_o9a6at9cyfchb47y(),
+        new Ty_uxjr57hvapakd0io(),
+        new Ty_xxz2xizxhbkqnzhl(),
+    };
 
     static {
-        var brunt = new Ty_xxz2xizxhbkqnzhl();
-        PRODUCTS.put(brunt.id, new Ty_xxz2xizxhbkqnzhl());
-
-        var homeCameraProPlus = new Ty_3cwbcqiz8qixphvu();
-        PRODUCTS.put(homeCameraProPlus.id, homeCameraProPlus);
-
-        var plugMini = new Ty_uxjr57hvapakd0io();
-        PRODUCTS.put(plugMini.id, plugMini);
-
-        var presenceSensor = new Ty_o9a6at9cyfchb47y();
-        PRODUCTS.put(presenceSensor.id, presenceSensor);
-
-        var power = new Ty_mhf0rqd7uuvz6hf8();
-        PRODUCTS.put("hejspm_12C724", power);
+        for(var product : SUPPORTED_PRODUCTS) {
+            PRODUCTS_TABLE.put(product.id, product);
+        }
     }
 
     public static PlatformProduct getById(String productId) {
         if(!isSupported(productId)) {
             throw new IllegalArgumentException("Not a supported device");
         }
-        return PRODUCTS.get(productId);
+        return PRODUCTS_TABLE.get(productId);
     }
 
     public static boolean isSupported(String productId) {
-        return PRODUCTS.containsKey(productId);
+        return PRODUCTS_TABLE.containsKey(productId);
     }
 }

@@ -14,7 +14,8 @@ public class Ty_mhf0rqd7uuvz6hf8 extends PlatformProduct {
             SupportedCommonCodes.of("switch", "bright", "mode"),
             SupportedPlatformCodes.of("switch_led", "bright_value", "work_mode"),
             StatusCommonCodes.of("switch", "bright", "mode"),
-            AlertCommonCodes.of()
+            AlertCommonCodes.of(),
+            HistoryCommonCodes.of()
         );
     }
 

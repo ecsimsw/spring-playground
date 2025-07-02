@@ -1,6 +1,7 @@
 package com.ecsimsw.event.controller;
 
 import com.ecsimsw.event.service.DeviceEventHandler;
+import com.ecsimsw.sdkcommon.dto.event.DeviceEventMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,9 @@ public class AkDeviceEventController {
     private final DeviceEventHandler deviceEventHandler;
 
     @PutMapping("/api/event/ak/{deviceId}/logs")
-    public ResponseEntity<Void> uploadAkLog(@PathVariable String deviceId, @RequestBody String message) {
+    public ResponseEntity<Void> uploadAkLog(@PathVariable String deviceId, @RequestBody DeviceEventMessage message) {
         log.info(deviceId + " " + message);
+        deviceEventHandler.handleDeviceEvent(message);
         return ResponseEntity.ok().build();
     }
 }

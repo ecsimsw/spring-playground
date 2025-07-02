@@ -5,5 +5,6 @@ public enum ProductType {
     PLUG,
     CAMERA,
     POWER,
-    PRESENCE_SENSOR
+    PRESENCE_SENSOR,
+    INTERCOM
 }

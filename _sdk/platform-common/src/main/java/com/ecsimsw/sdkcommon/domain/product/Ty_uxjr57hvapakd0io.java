@@ -13,7 +13,8 @@ public class Ty_uxjr57hvapakd0io extends PlatformProduct {
             SupportedCommonCodes.of("switch", "cur_current", "cur_power"),
             SupportedPlatformCodes.of("switch_1", "cur_current", "cur_power", "cur_voltage"),
             StatusCommonCodes.of("switch", "cur_current", "cur_power", "cur_voltage"),
-            AlertCommonCodes.of()
+            AlertCommonCodes.of(),
+            HistoryCommonCodes.of()
         );
     }
 

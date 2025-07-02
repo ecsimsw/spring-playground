@@ -12,6 +12,7 @@ public abstract class PlatformProduct {
     public final SupportedPlatformCodes supportedPlatformCodes;
     public final StatusCommonCodes statusCommonCodes;
     public final AlertCommonCodes alertCommonCodes;
+    public final HistoryCommonCodes historyCommonCodes;
 
     public abstract CommonDeviceStatus toCommonStatus(PlatformDeviceStatus platformDeviceStatus);
 
@@ -31,6 +32,10 @@ public abstract class PlatformProduct {
 
     public boolean isAlertCode(String commonCode) {
         return alertCommonCodes.contains(commonCode);
+    }
+
+    public boolean isHistoryCode(String commonCode) {
+        return historyCommonCodes.contains(commonCode);
     }
 
     protected Object convertValueType(Object value, Class<?> type) {

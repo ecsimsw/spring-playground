@@ -9,19 +9,15 @@ import java.util.UUID;
 
 @Getter
 @RequiredArgsConstructor
-public class DeviceStatusEvent {
+public class DeviceHistoryEvent {
 
     private final String deviceId;
     private final String code;
     private final Object value;
-    private final LocalDateTime timestamp = LocalDateTime.now();
+    private final LocalDateTime timestamp;
     private final String messageHash = UUID.randomUUID().toString();
 
     public Map<String, Object> statusAsMap() {
         return Map.of(code, value);
-    }
-
-    public DeviceStatusUpdateEvent updateEvent() {
-        return new DeviceStatusUpdateEvent(deviceId, statusAsMap());
     }
 }

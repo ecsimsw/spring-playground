@@ -12,7 +12,7 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @Document(collection = "device_alert")
-public class DeviceAlertHistory {
+public class DeviceAlertEventHistory {
 
     @Id
     private String id;
@@ -21,7 +21,7 @@ public class DeviceAlertHistory {
     private Object value;
     private Instant timestamp = Instant.now(); // ttl index, 3600
 
-    public DeviceAlertHistory(String deviceId, String code, Object value) {
+    public DeviceAlertEventHistory(String deviceId, String code, Object value) {
         this.deviceId = deviceId;
         this.code = code;
         this.value = value;

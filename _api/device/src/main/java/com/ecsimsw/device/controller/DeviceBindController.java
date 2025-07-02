@@ -5,11 +5,13 @@ import com.ecsimsw.common.dto.AuthUser;
 import com.ecsimsw.common.support.annotation.InternalHandler;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceBindService;
+import com.ecsimsw.sdkcommon.dto.api.DeviceListResponse;
 import com.ecsimsw.sdkty.service.TyApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -23,8 +25,7 @@ public class DeviceBindController {
     @InternalHandler
     @PostMapping("/api/device/beta/refresh/{username}")
     public ApiResponse<Void> refresh(@PathVariable String username) {
-        var tyDeviceList = tyApiService.getDeviceListByUsername(username);
-        deviceBindService.deleteAndSaveAll(username, tyDeviceList);
+        bindTestDevices(username);
         log.info("Refresh succeed : {}", username);
         return ApiResponse.success();
     }
@@ -33,5 +34,18 @@ public class DeviceBindController {
     public ApiResponse<List<DeviceInfoResponse>> list(AuthUser authUser) {
         var result = deviceBindService.deviceList(authUser.username());
         return ApiResponse.success(result);
+    }
+
+    private void bindTestDevices(String username) {
+        var devices = new ArrayList<>(tyApiService.getDeviceListByUsername(username));
+        var akTestDevice = new DeviceListResponse(
+            "akf26e59904fd2",
+            "Main entrance",
+            "e16c186b2e2b",
+            true,
+            new ArrayList<>()
+        );
+        devices.add(akTestDevice);
+        deviceBindService.deleteAndSaveAll(username, devices);
     }
 }

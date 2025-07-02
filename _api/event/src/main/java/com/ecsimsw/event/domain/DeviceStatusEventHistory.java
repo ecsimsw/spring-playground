@@ -12,7 +12,7 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @Document(collection = "device_status")
-public class DeviceStatusHistory {
+public class DeviceStatusEventHistory {
 
     @Id
     private String id;
@@ -21,7 +21,7 @@ public class DeviceStatusHistory {
     private Object value;
     private Instant timestamp = Instant.now(); // ttl indexed : 3600s
 
-    public DeviceStatusHistory(String deviceId, String code, Object value) {
+    public DeviceStatusEventHistory(String deviceId, String code, Object value) {
         this.deviceId = deviceId;
         this.code = code;
         this.value = value;
@@ -29,7 +29,7 @@ public class DeviceStatusHistory {
 
     @Override
     public String toString() {
-        return "DeviceStatusHistory{" +
+        return "DeviceStatusEventHistory{" +
             "id='" + id + '\'' +
             ", deviceId='" + deviceId + '\'' +
             ", platformCode='" + code + '\'' +

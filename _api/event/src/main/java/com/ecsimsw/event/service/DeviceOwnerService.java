@@ -19,7 +19,7 @@ public class DeviceOwnerService {
     private final DeviceOwnerRepository deviceOwnerRepository;
 
     @Transactional
-    public void updateAll(String username, List<DeviceListResponse> deviceList) {
+    public void deleteAndSaveAll(String username, List<DeviceListResponse> deviceList) {
         deviceOwnerRepository.deleteAllByUsername(username);
 
         var deviceOwners = deviceList.stream()
