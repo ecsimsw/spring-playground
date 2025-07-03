@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -51,16 +52,31 @@ public class DeviceHistoryService {
                 Mono.just(contents.stream().map(DeviceHistoryResponse::of).toList()),
                 mongoTemplate.count(totalQuery(deviceId, historyCode), DeviceHistory.class),
                 mongoTemplate.exists(cursoredPagination(deviceId, historyCode, cursor, sort.reverse(), 1), DeviceHistory.class)
-            ).map(monos -> new DeviceHistoryPageResponse(
-                    monos.getT1(),
-                    monos.getT2(),
-                    new PageInfo(
-                        objectMapper.convertValue(monos.getT1().getFirst().historyValue(), Map.class).get(property),
-                        objectMapper.convertValue(monos.getT1().getLast().historyValue(), Map.class).get(property),
-                        contents.size() > size,
-                        monos.getT3()
-                    )
-                )
+            ).map(monos -> {
+                    var historyResponses = monos.getT1();
+                    if(historyResponses.isEmpty()) {
+                        return new DeviceHistoryPageResponse(
+                            List.of(),
+                            monos.getT2(),
+                            new PageInfo(
+                                null,
+                                null,
+                                contents.size() > size,
+                                monos.getT3()
+                            )
+                        );
+                    }
+                    return new DeviceHistoryPageResponse(
+                        historyResponses,
+                        monos.getT2(),
+                        new PageInfo(
+                            objectMapper.convertValue(historyResponses.get(0).historyValue(), Map.class).get(property),
+                            objectMapper.convertValue(historyResponses.get(historyResponses.size() - 1).historyValue(), Map.class).get(property),
+                            contents.size() > size,
+                            monos.getT3()
+                        )
+                    );
+                }
             ));
     }
 
