@@ -1,13 +1,11 @@
 package com.ecsimsw.event.service;
 
 import com.ecsimsw.common.dto.DeviceAlertEvent;
+import com.ecsimsw.common.dto.DeviceHistoryEvent;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.ecsimsw.common.support.client.DeviceClient;
 import com.ecsimsw.common.support.client.EventClient;
-import com.ecsimsw.event.domain.DeviceAlertEventHistory;
-import com.ecsimsw.event.domain.DeviceOwner;
 import com.ecsimsw.event.domain.DeviceOwnerRepository;
-import com.ecsimsw.event.domain.DeviceStatusEventHistory;
 import com.ecsimsw.event.support.DeviceEventBrokerClient;
 import com.ecsimsw.sdkcommon.domain.PlatformProducts;
 import com.ecsimsw.sdkcommon.dto.event.DeviceEventMessage;
@@ -25,7 +23,6 @@ public class DeviceEventHandler implements PlatformEventHandler {
 
     private final DeviceOwnerRepository deviceOwnerRepository;
     private final DeviceEventBrokerClient deviceEventBrokerClient;
-    private final DeviceEventHistoryService deviceEventHistoryService;
     private final TyUserIdRepository tyUserInfoRepository;
     private final DeviceClient deviceClient;
     private final EventClient eventClient;
@@ -52,36 +49,23 @@ public class DeviceEventHandler implements PlatformEventHandler {
         var deviceOwner = optDeviceOwner.get();
         log.info("Handle bind device : {} {}", deviceOwner.getDeviceId(), eventMessage.statuses());
 
-        eventMessage.statuses().forEach(commonDeviceStatus -> {
+        eventMessage.statuses().forEach(event -> {
             var product = PlatformProducts.getById(productId);
-            var code = commonDeviceStatus.code();
-            var value = commonDeviceStatus.value();
-            if (product.isStatusCode(code) || product.isHistoryCode(code)) {
-                handleStatusEvent(eventMessage, deviceOwner, code, value);
+            if (product.isStatusCode(event.code())) {
+                log.info("Handle device status event : {} {}", deviceOwner.getDeviceId(), event.code());
+                var statusEvent = new DeviceStatusEvent(eventMessage.deviceId(), event.code(), event.value(), eventMessage.timeStamp());
+                deviceEventBrokerClient.produceDeviceStatus(statusEvent);
             }
-            if (product.isAlertCode(code)) {
-                handleAlertEvent(eventMessage, deviceOwner, code, value);
+            if (product.isHistoryCode(event.code())) {
+                log.info("Handle device history event : {} {}", deviceOwner.getDeviceId(), event.code());
+                var historyEvent = new DeviceHistoryEvent(eventMessage.deviceId(), event.code(), event.value(), eventMessage.timeStamp());
+                deviceEventBrokerClient.produceDeviceHistory(historyEvent);
+            }
+            if (product.isAlertCode(event.code())) {
+                log.info("Handle device alert event : {} {}", deviceOwner.getDeviceId(), event.code());
+                var alertEvent = new DeviceAlertEvent(eventMessage.deviceId(), deviceOwner.getUsername(), event.code(), event.value());
+                deviceEventBrokerClient.produceDeviceAlert(alertEvent);
             }
         });
-    }
-
-    private void handleStatusEvent(DeviceEventMessage eventMessage, DeviceOwner deviceOwner, String code, Object value) {
-        log.info("Handle device status : {} {}", deviceOwner.getDeviceId(), code);
-
-        var statusEvent = new DeviceStatusEvent(eventMessage.deviceId(), code, value);
-        deviceEventBrokerClient.produceDeviceStatus(statusEvent);
-
-        var statusHistory = new DeviceStatusEventHistory(statusEvent.getDeviceId(), code, value);
-        deviceEventHistoryService.save(statusHistory);
-    }
-
-    private void handleAlertEvent(DeviceEventMessage eventMessage, DeviceOwner deviceOwner, String code, Object value) {
-        log.info("Handle device alert : {} {}", deviceOwner.getDeviceId(), code);
-
-        var alertEvent = new DeviceAlertEvent(eventMessage.deviceId(), deviceOwner.getUsername(), code, value);
-        deviceEventBrokerClient.produceDeviceAlert(alertEvent);
-
-        var alertHistory = new DeviceAlertEventHistory(alertEvent.getDeviceId(), code, value);
-        deviceEventHistoryService.save(alertHistory);
     }
 }

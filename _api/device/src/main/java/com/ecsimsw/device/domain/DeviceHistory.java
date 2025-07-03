@@ -1,31 +1,33 @@
 package com.ecsimsw.device.domain;
 
-import com.ecsimsw.common.support.converter.MapToJsonConverter;
-import jakarta.persistence.*;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Document(collection = "device_history")
 public class DeviceHistory {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long id;
-    private String deviceId;
-    @Convert(converter = MapToJsonConverter.class)
-    private Map<String, Object> history;
-    private LocalDateTime timestamp;  // ttl index
+    private String id;
 
-    public DeviceHistory(String deviceId, Map<String, Object> history, LocalDateTime timestamp) {
-        this(null, deviceId, history, timestamp);
+    private String deviceId;
+    private String historyCode;
+    private Object historyValue;
+
+    @Indexed(name = "timestamp_idx", expireAfterSeconds = 3600)
+    private LocalDateTime timestamp;
+
+    public DeviceHistory(String deviceId, String historyCode, Object historyValue, LocalDateTime timestamp) {
+        this(null, deviceId, historyCode, historyValue, timestamp);
     }
 }

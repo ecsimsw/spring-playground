@@ -6,21 +6,28 @@ dependencies {
     implementation project(':_api:common')
     implementation project(':_sdk:platform-tb')
     implementation project(':_sdk:platform-ty')
-    implementation project(':_sdk:platform-ak')
     implementation project(':_sdk:platform-common')
 
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
 
-    // web socket
+    // Websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-    // mqtt
+    // Mqtt
     implementation 'org.springframework.boot:spring-boot-starter-integration'
     implementation 'org.springframework.integration:spring-integration-mqtt'
 
-    // db
+    // WebFlux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Reactive MongoDB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+
+    // Mysql
     runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+
+    // H2
     runtimeOnly 'com.h2database:h2'
 }
 

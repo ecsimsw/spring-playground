@@ -1,6 +1,7 @@
 package com.ecsimsw.event.support;
 
 import com.ecsimsw.common.dto.DeviceAlertEvent;
+import com.ecsimsw.common.dto.DeviceHistoryEvent;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,14 @@ public class DeviceEventBrokerClient {
     @Value("${kafka.device.alert.topic}")
     private String deviceEventTopic;
 
+    @Value("${kafka.device.history.topic}")
+    private String deviceHistoryTopic;
+
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public void produceDeviceStatus(DeviceStatusEvent statusEvent) {
-        var jsonMessage = convertAsJson(statusEvent);
-        kafkaTemplate.send(deviceStatusTopic, statusEvent.getDeviceId(), jsonMessage)
+        kafkaTemplate.send(deviceStatusTopic, statusEvent.getDeviceId(), convertAsJson(statusEvent))
             .whenComplete((result, ex) -> {
                 if (ex != null) {
                     log.info("failed to produce device status event : {} ", (Thread.currentThread().getName()));
@@ -34,9 +37,18 @@ public class DeviceEventBrokerClient {
         log.info("produce device status event : {}", statusEvent.getDeviceId());
     }
 
+    public void produceDeviceHistory(DeviceHistoryEvent historyEvent) {
+        kafkaTemplate.send(deviceHistoryTopic, historyEvent.getDeviceId(), convertAsJson(historyEvent))
+            .whenComplete((result, ex) -> {
+                if (ex != null) {
+                    log.info("failed to produce device history event : {} ", (Thread.currentThread().getName()));
+                }
+            });
+        log.info("produce device history event : {}", historyEvent.getDeviceId());
+    }
+
     public void produceDeviceAlert(DeviceAlertEvent alertEvent) {
-        var jsonMessage = convertAsJson(alertEvent);
-        kafkaTemplate.send(deviceEventTopic, alertEvent.getDeviceId(), jsonMessage)
+        kafkaTemplate.send(deviceEventTopic, alertEvent.getDeviceId(), convertAsJson(alertEvent))
             .whenComplete((result, ex) -> {
                 if (ex != null) {
                     log.info("failed to produce device alert event : {} ", (Thread.currentThread().getName()));

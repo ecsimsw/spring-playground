@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    restart: always
+    ports:
+      - "8871:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "8872:3306"
+    environment:
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=admin
+
+  redis:
+    image: redis:7
+    restart: always
+    ports:
+      - "8873:6379"
+    command: ["redis-server", "--requirepass", "admin"]

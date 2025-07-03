@@ -14,7 +14,7 @@ public class Ak_e16c186b2e2b extends PlatformProduct {
             SupportedPlatformCodes.of("doorLog"),
             StatusCommonCodes.of(),
             AlertCommonCodes.of(),
-            HistoryCommonCodes.of(new HistoryCodeConfigs("doorLog", 30))
+            HistoryCommonCodes.of("doorLog")
         );
     }
 
