@@ -1,4 +1,4 @@
-package com.ecsimsw.common.support.client;
+package com.ecsimsw.common.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

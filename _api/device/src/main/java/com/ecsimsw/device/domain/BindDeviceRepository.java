@@ -14,4 +14,6 @@ public interface BindDeviceRepository extends JpaRepository<BindDevice, String> 
     Optional<BindDevice> findByUsernameAndDeviceId(String username, String deviceId);
 
     boolean existsByUsernameAndDeviceId(String username, String deviceId);
+
+    Optional<BindDevice> findByDeviceId(String deviceId);
 }

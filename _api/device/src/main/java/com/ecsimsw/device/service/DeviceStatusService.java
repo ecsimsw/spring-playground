@@ -21,13 +21,13 @@ public class DeviceStatusService {
 
     @Transactional
     public void updateStatus(DeviceStatusEvent statusEvent) {
-        var deviceId = statusEvent.getDeviceId();
+        var deviceId = statusEvent.deviceId();
         var optBindDevice = bindDeviceRepository.findById(deviceId);
         if (optBindDevice.isEmpty()) {
             return;
         }
         var bindDevice = optBindDevice.orElseThrow();
-        bindDevice.addStatus(statusEvent.getCode(), statusEvent.getValue());
+        bindDevice.addStatus(statusEvent.code(), statusEvent.value());
         bindDeviceRepository.save(bindDevice);
     }
 
@@ -40,7 +40,7 @@ public class DeviceStatusService {
 
     @SneakyThrows
     public void sendSocket(DeviceStatusEvent statusEvent) {
-        var optBindDevice = bindDeviceRepository.findById(statusEvent.getDeviceId());
+        var optBindDevice = bindDeviceRepository.findById(statusEvent.deviceId());
         optBindDevice.ifPresent(
             bindDevice -> deviceEventWebSocketService.sendStatus(bindDevice.getUsername(), statusEvent.updateEvent())
         );

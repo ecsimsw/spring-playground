@@ -50,7 +50,7 @@ public class DeviceStatusController {
     )
     public void listenStatus(String message) {
         var statusEvent = convertFromJson(message);
-        log.info("Handle device status event {} {}", statusEvent.getDeviceId(), statusEvent.statusAsMap());
+        log.info("Handle device status event {} {}", statusEvent.deviceId(), statusEvent.statusAsMap());
         deviceStatusService.updateStatus(statusEvent);
         deviceStatusService.sendSocket(statusEvent);
     }

@@ -29,6 +29,9 @@ dependencies {
 
     // H2
     runtimeOnly 'com.h2database:h2'
+
+    // FCM
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 tasks.named('test') {

@@ -1,4 +1,4 @@
-package com.ecsimsw.common.support.client;
+package com.ecsimsw.common.service;
 
 import com.ecsimsw.common.support.utils.ClientKeyUtils;
 import lombok.extern.slf4j.Slf4j;

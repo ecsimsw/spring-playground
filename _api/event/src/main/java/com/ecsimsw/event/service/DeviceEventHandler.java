@@ -3,8 +3,8 @@ package com.ecsimsw.event.service;
 import com.ecsimsw.common.dto.DeviceAlertEvent;
 import com.ecsimsw.common.dto.DeviceHistoryEvent;
 import com.ecsimsw.common.dto.DeviceStatusEvent;
-import com.ecsimsw.common.support.client.DeviceClient;
-import com.ecsimsw.common.support.client.EventClient;
+import com.ecsimsw.common.service.DeviceClient;
+import com.ecsimsw.common.service.EventClient;
 import com.ecsimsw.event.domain.DeviceOwnerRepository;
 import com.ecsimsw.event.support.DeviceEventBrokerClient;
 import com.ecsimsw.sdkcommon.domain.PlatformProducts;
@@ -51,19 +51,19 @@ public class DeviceEventHandler implements PlatformEventHandler {
 
         eventMessage.statuses().forEach(event -> {
             var product = PlatformProducts.getById(productId);
-            if (product.isStatusCode(event.code())) {
+            if (product.hasStatusCode(event.code())) {
                 log.info("Handle device status event : {} {}", deviceOwner.getDeviceId(), event.code());
                 var statusEvent = new DeviceStatusEvent(eventMessage.deviceId(), event.code(), event.value(), eventMessage.timeStamp());
                 deviceEventBrokerClient.produceDeviceStatus(statusEvent);
             }
-            if (product.isHistoryCode(event.code())) {
+            if (product.hasHistoryCode(event.code())) {
                 log.info("Handle device history event : {} {}", deviceOwner.getDeviceId(), event.code());
                 var historyEvent = new DeviceHistoryEvent(eventMessage.deviceId(), event.code(), event.value(), eventMessage.timeStamp());
                 deviceEventBrokerClient.produceDeviceHistory(historyEvent);
             }
-            if (product.isAlertCode(event.code())) {
+            if (product.hasAlertCode(event.code())) {
                 log.info("Handle device alert event : {} {}", deviceOwner.getDeviceId(), event.code());
-                var alertEvent = new DeviceAlertEvent(eventMessage.deviceId(), deviceOwner.getUsername(), event.code(), event.value());
+                var alertEvent = new DeviceAlertEvent(eventMessage.deviceId(), deviceOwner.getUsername(), product.id, event.code(), event.value());
                 deviceEventBrokerClient.produceDeviceAlert(alertEvent);
             }
         });

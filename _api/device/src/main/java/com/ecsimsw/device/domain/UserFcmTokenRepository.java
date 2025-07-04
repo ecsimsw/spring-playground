@@ -1,4 +1,4 @@
-package com.ecsimsw.notification.domain;
+package com.ecsimsw.device.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

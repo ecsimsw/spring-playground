@@ -1,4 +1,4 @@
-package com.ecsimsw.notification.error;
+package com.ecsimsw.device.error;
 
 import com.ecsimsw.common.error.ApiException;
 import com.ecsimsw.common.error.ErrorType;

@@ -30,12 +30,12 @@ public class DeviceHistoryService {
 
     // TODO :: Transaction?
     public void save(DeviceHistoryEvent event) {
-        var deviceId = event.getDeviceId();
+        var deviceId = event.deviceId();
         var optBindDevice = bindDeviceRepository.findById(deviceId);
         if (optBindDevice.isEmpty()) {
             return;
         }
-        var deviceHistory = new DeviceHistory(deviceId, event.getCode(), event.getValue(), event.getTimestamp());
+        var deviceHistory = new DeviceHistory(deviceId, event.code(), event.value(), event.timestamp());
         deviceHistoryRepository.save(deviceHistory).block();
     }
 

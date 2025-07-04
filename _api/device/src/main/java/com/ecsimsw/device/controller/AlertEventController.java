@@ -1,7 +1,7 @@
-package com.ecsimsw.notification.controller;
+package com.ecsimsw.device.controller;
 
 import com.ecsimsw.common.dto.DeviceAlertEvent;
-import com.ecsimsw.notification.service.DeviceAlertService;
+import com.ecsimsw.device.service.DeviceAlertService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

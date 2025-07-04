@@ -26,15 +26,15 @@ public abstract class PlatformProduct {
         return supportedCommonCodes.isSupport(commonCode);
     }
 
-    public boolean isStatusCode(String commonCode) {
+    public boolean hasStatusCode(String commonCode) {
         return statusCommonCodes.contains(commonCode);
     }
 
-    public boolean isAlertCode(String commonCode) {
+    public boolean hasAlertCode(String commonCode) {
         return alertCommonCodes.contains(commonCode);
     }
 
-    public boolean isHistoryCode(String commonCode) {
+    public boolean hasHistoryCode(String commonCode) {
         return historyCommonCodes.contains(commonCode);
     }
 

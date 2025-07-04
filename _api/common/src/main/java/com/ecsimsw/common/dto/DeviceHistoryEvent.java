@@ -1,21 +1,24 @@
 package com.ecsimsw.common.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
-@Getter
-@RequiredArgsConstructor
-public class DeviceHistoryEvent {
+public record DeviceHistoryEvent(
+    String deviceId,
+    String code,
+    Object value,
+    LocalDateTime timestamp,
+    String messageId
+) {
 
-    private final String deviceId;
-    private final String code;
-    private final Object value;
-    private final LocalDateTime timestamp;
-    private final String messageHash = UUID.randomUUID().toString();
+    public DeviceHistoryEvent(String deviceId, String code, Object value) {
+        this(deviceId, code, value, LocalDateTime.now(), UUID.randomUUID().toString());
+    }
+
+    public DeviceHistoryEvent(String deviceId, String code, Object value, LocalDateTime timestamp) {
+        this(deviceId, code, value, timestamp, UUID.randomUUID().toString());
+    }
 
     public Map<String, Object> statusAsMap() {
         return Map.of(code, value);

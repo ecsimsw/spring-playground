@@ -1,19 +1,19 @@
 package com.ecsimsw.common.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@RequiredArgsConstructor
-public class DeviceAlertEvent {
+public record DeviceAlertEvent(
+    String deviceId,
+    String username,
+    String productId,
+    String code,
+    Object value,
+    LocalDateTime timestamp,
+    String messageId
+) {
 
-    private final String deviceId;
-    private final String username;
-    private final String code;
-    private final Object value;
-    private final LocalDateTime timestamp = LocalDateTime.now();
-    private final String messageHash = UUID.randomUUID().toString();
+    public DeviceAlertEvent(String deviceId, String username, String productId, String code, Object value) {
+        this(deviceId, username, productId, code, value, LocalDateTime.now(), UUID.randomUUID().toString());
+    }
 }

@@ -1,9 +1,9 @@
-package com.ecsimsw.notification.service;
+package com.ecsimsw.device.service;
 
 import com.ecsimsw.common.error.ErrorType;
-import com.ecsimsw.notification.domain.UserFcmToken;
-import com.ecsimsw.notification.domain.UserFcmTokenRepository;
-import com.ecsimsw.notification.error.NotificationException;
+import com.ecsimsw.device.domain.UserFcmToken;
+import com.ecsimsw.device.domain.UserFcmTokenRepository;
+import com.ecsimsw.device.error.NotificationException;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -53,8 +53,7 @@ public class FcmService {
             firebaseMessaging.send(message);
             log.info("Message sent to target token: {}", targetToken);
         } catch (FirebaseMessagingException e) {
-            // TODO :: 알림 전송 실패 처리
-            e.printStackTrace();
+            log.error("failed to send message : {} {} {}", targetToken, body, e.getMessage());
             throw new NotificationException(ErrorType.UNHANDLED);
         }
     }

@@ -1,5 +1,6 @@
 package com.ecsimsw.sdkcommon.domain.product;
 
+import com.ecsimsw.sdkcommon.domain.AlertMessage;
 import com.ecsimsw.sdkcommon.domain.PlatformProduct;
 import com.ecsimsw.sdkcommon.domain.ProductType;
 import com.ecsimsw.sdkcommon.dto.*;
@@ -13,7 +14,9 @@ public class Ty_3cwbcqiz8qixphvu extends PlatformProduct {
             SupportedCommonCodes.of("indicator", "privateMode", "motionDetect"),
             SupportedPlatformCodes.of("basic_indicator", "basic_private", "motion_switch"),
             StatusCommonCodes.of("indicator", "privateMode", "motionDetect"),
-            AlertCommonCodes.of("linkage"),
+            AlertCommonCodes.of(
+                new AlertCommonCode("linkage", AlertMessage.CAMERA_MOTION_DETECTION)
+            ),
             HistoryCommonCodes.of()
         );
     }

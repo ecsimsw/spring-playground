@@ -28,33 +28,33 @@ public class DeviceEventBrokerClient {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public void produceDeviceStatus(DeviceStatusEvent statusEvent) {
-        kafkaTemplate.send(deviceStatusTopic, statusEvent.getDeviceId(), convertAsJson(statusEvent))
+        kafkaTemplate.send(deviceStatusTopic, statusEvent.deviceId(), convertAsJson(statusEvent))
             .whenComplete((result, ex) -> {
                 if (ex != null) {
                     log.info("failed to produce device status event : {} ", (Thread.currentThread().getName()));
                 }
             });
-        log.info("produce device status event : {}", statusEvent.getDeviceId());
+        log.info("produce device status event : {}", statusEvent.deviceId());
     }
 
     public void produceDeviceHistory(DeviceHistoryEvent historyEvent) {
-        kafkaTemplate.send(deviceHistoryTopic, historyEvent.getDeviceId(), convertAsJson(historyEvent))
+        kafkaTemplate.send(deviceHistoryTopic, historyEvent.deviceId(), convertAsJson(historyEvent))
             .whenComplete((result, ex) -> {
                 if (ex != null) {
                     log.info("failed to produce device history event : {} ", (Thread.currentThread().getName()));
                 }
             });
-        log.info("produce device history event : {}", historyEvent.getDeviceId());
+        log.info("produce device history event : {}", historyEvent.deviceId());
     }
 
     public void produceDeviceAlert(DeviceAlertEvent alertEvent) {
-        kafkaTemplate.send(deviceEventTopic, alertEvent.getDeviceId(), convertAsJson(alertEvent))
+        kafkaTemplate.send(deviceEventTopic, alertEvent.deviceId(), convertAsJson(alertEvent))
             .whenComplete((result, ex) -> {
                 if (ex != null) {
                     log.info("failed to produce device alert event : {} ", (Thread.currentThread().getName()));
                 }
             });
-        log.info("produce device alert event : {}", alertEvent.getDeviceId());
+        log.info("produce device alert event : {}", alertEvent.deviceId());
     }
 
     private String convertAsJson(Object objectMessage) {

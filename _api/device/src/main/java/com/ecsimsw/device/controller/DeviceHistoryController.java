@@ -36,7 +36,7 @@ public class DeviceHistoryController {
     )
     public void listenHistory(String message) {
         var statusEvent = convertFromJson(message);
-        log.info("Handle device history event {} {}", statusEvent.getDeviceId(), statusEvent.statusAsMap());
+        log.info("Handle device history event {} {}", statusEvent.deviceId(), statusEvent.statusAsMap());
         deviceHistoryService.save(statusEvent);
     }
 
