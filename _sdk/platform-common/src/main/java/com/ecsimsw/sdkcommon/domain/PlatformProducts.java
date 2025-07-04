@@ -11,6 +11,7 @@ public class PlatformProducts {
     private static final PlatformProduct[] SUPPORTED_PRODUCTS = new PlatformProduct[] {
         new Ak_e16c186b2e2b(),
         new Ty_3cwbcqiz8qixphvu(),
+        new Ty_goxlllmtaiuabwl8(),
         new Ty_mhf0rqd7uuvz6hf8(),
         new Ty_o9a6at9cyfchb47y(),
         new Ty_uxjr57hvapakd0io(),
