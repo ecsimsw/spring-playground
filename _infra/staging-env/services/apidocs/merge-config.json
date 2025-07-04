@@ -5,9 +5,6 @@
       "inputFile" : "./files/account.json"
     },
     {
-      "inputFile" : "./files/notification.json"
-    },
-    {
       "inputFile" : "./files/device.json"
     },
     {

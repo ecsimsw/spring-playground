@@ -39,16 +39,6 @@ services:
     volumes:
       - /disk-A/logs/device:/logs/device
 
-  notification:
-    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:notification-${NOTIFICATION_VERSION}"
-    pull_policy: always
-    network_mode: "host"
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - VERSION=${NOTIFICATION_VERSION}
-    volumes:
-      - /disk-A/logs/notification:/logs/notification
-
   event:
     image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:event-${EVENT_VERSION}"
     pull_policy: always

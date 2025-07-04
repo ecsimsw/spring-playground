@@ -11,8 +11,8 @@ public class Ty_3cwbcqiz8qixphvu extends PlatformProduct {
         super(
             "3cwbcqiz8qixphvu",
             ProductType.CAMERA,
-            SupportedCommonCodes.of("indicator", "privateMode", "motionDetect"),
-            SupportedPlatformCodes.of("basic_indicator", "basic_private", "motion_switch"),
+            SupportedCommonCodes.of("indicator", "privateMode", "motionDetect", "linkage"),
+            SupportedPlatformCodes.of("basic_indicator", "basic_private", "motion_switch", "linkage"),
             StatusCommonCodes.of("indicator", "privateMode", "motionDetect"),
             AlertCommonCodes.of(
                 new AlertCommonCode("linkage", AlertMessage.CAMERA_MOTION_DETECTION)

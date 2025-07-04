@@ -3,7 +3,6 @@
 CONFIG_VERSION="1.0.1"
 ACCOUNT_VERSION="1.0.23"
 DEVICE_VERSION="1.0.32"
-NOTIFICATION_VERSION="1.0.17"
 EVENT_VERSION="1.0.22"
 
 cp .env .env.bak
@@ -11,7 +10,6 @@ cp .env .env.bak
 sed -i "s/^CONFIG_VERSION=.*/CONFIG_VERSION=${CONFIG_VERSION}/" .env
 sed -i "s/^ACCOUNT_VERSION=.*/ACCOUNT_VERSION=${ACCOUNT_VERSION}/" .env
 sed -i "s/^DEVICE_VERSION=.*/DEVICE_VERSION=${DEVICE_VERSION}/" .env
-sed -i "s/^NOTIFICATION_VERSION=.*/NOTIFICATION_VERSION=${NOTIFICATION_VERSION}/" .env
 sed -i "s/^EVENT_VERSION=.*/EVENT_VERSION=${EVENT_VERSION}/" .env
 
 echo "Pull service container images"
@@ -30,13 +28,12 @@ docker compose up -d config
 echo "Waiting 10 seconds for config service to become ready..."
 sleep 10
 
-docker compose up -d account device notification event internal-lb
+docker compose up -d account device event internal-lb
 echo "Waiting 20 seconds for containers to become ready..."
 sleep 20
 
 wget http://hejdev1.goqual.com:8080/api/account/api-docs -O ./apidocs/files/account.json
 wget http://hejdev1.goqual.com:8080/api/device/api-docs -O ./apidocs/files/device.json
-wget http://hejdev1.goqual.com:8080/api/notification/api-docs -O ./apidocs/files/notification.json
 wget http://hejdev1.goqual.com:8080/api/event/api-docs -O ./apidocs/files/event.json
 
 cd ./apidocs

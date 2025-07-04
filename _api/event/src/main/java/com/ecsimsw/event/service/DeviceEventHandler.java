@@ -37,6 +37,9 @@ public class DeviceEventHandler implements PlatformEventHandler {
 
     @Override
     public void handleDeviceEvent(DeviceEventMessage eventMessage) {
+        if(eventMessage.statuses().isEmpty()) {
+            return;
+        }
         var productId = eventMessage.productId();
         if (!PlatformProducts.isSupported(productId)) {
             return;

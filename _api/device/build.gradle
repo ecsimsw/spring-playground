@@ -38,6 +38,12 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.guava:guava:31.1-jre'
+    }
+}
+
 task prepareKotlinBuildScriptModel {
 
 }

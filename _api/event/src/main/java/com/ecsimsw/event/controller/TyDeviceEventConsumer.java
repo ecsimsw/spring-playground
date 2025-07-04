@@ -4,12 +4,14 @@ import com.ecsimsw.event.service.DeviceEventHandler;
 import com.ecsimsw.sdkty.dto.TyEventMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.stereotype.Controller;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class TyDeviceEventConsumer {
