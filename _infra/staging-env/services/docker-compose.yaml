@@ -2,13 +2,6 @@ version: '3.8'
 
 services:
 
-  internal-lb:
-    image: nginx:latest
-    network_mode: "host"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    restart: always
-
   config:
     image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:config-${CONFIG_VERSION}"
     pull_policy: always

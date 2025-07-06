@@ -6,5 +6,4 @@
 ./build-and-deploy.sh account
 ./build-and-deploy.sh device
 ./build-and-deploy.sh event
-./build-and-deploy.sh notification
 ```

@@ -30,4 +30,15 @@ public class DeviceHistory {
     public DeviceHistory(String deviceId, String historyCode, Object historyValue, LocalDateTime timestamp) {
         this(null, deviceId, historyCode, historyValue, timestamp);
     }
+
+    @Override
+    public String toString() {
+        return "DeviceHistory{" +
+            "id='" + id + '\'' +
+            ", deviceId='" + deviceId + '\'' +
+            ", historyCode='" + historyCode + '\'' +
+            ", historyValue=" + historyValue +
+            ", timestamp=" + timestamp +
+            '}';
+    }
 }

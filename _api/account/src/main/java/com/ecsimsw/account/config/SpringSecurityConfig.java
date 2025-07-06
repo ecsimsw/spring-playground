@@ -33,6 +33,7 @@ public class SpringSecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests((auth) -> auth
+                .requestMatchers("/api/account/actuator/**").permitAll()
                 .requestMatchers("**").permitAll()
                 .anyRequest().authenticated());
         return http.build();
