@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'account-actuator'
+    metrics_path: /api/account/actuator/prometheus
+    static_configs:
+      - targets: ['localhost:8851']
+
+  - job_name: 'device-actuator'
+    metrics_path: /api/device/actuator/prometheus
+    static_configs:
+      - targets: ['localhost:8852']
+
+  - job_name: 'event-actuator'
+    metrics_path: /api/event/actuator/prometheus
+    static_configs:
+      - targets: ['localhost:8855']
