@@ -1,4 +1,4 @@
-package com.ecsimsw.event.support;
+package com.ecsimsw.common.support.utils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class EventThroughputCounter {
+public class ThroughputCounter {
 
     private final AtomicInteger counter = new AtomicInteger(0);
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -26,9 +26,5 @@ public class EventThroughputCounter {
 
     public void up() {
         counter.incrementAndGet();
-    }
-
-    public void end() {
-        scheduler.shutdown();
     }
 }

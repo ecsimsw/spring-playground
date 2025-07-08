@@ -28,7 +28,6 @@ public class DeviceHistoryService {
     private final ReactiveMongoTemplate mongoTemplate;
     private final ObjectMapper objectMapper;
 
-    // TODO :: Transaction?
     public void save(DeviceHistoryEvent event) {
         var deviceId = event.deviceId();
         var optBindDevice = bindDeviceRepository.findById(deviceId);
@@ -39,8 +38,6 @@ public class DeviceHistoryService {
         deviceHistoryRepository.save(deviceHistory).block();
     }
 
-    // TODO :: Flux나 Mono를 어디까지 가져가야 할까
-    // TODO :: MongoDB의 인덱스, 순서 명시
     public Mono<DeviceHistoryPageResponse> historiesByCursor(String deviceId, String historyCode, Sort sort, Object cursor, int size) {
         var order = sort.iterator().next();
         var property = order.getProperty();
@@ -58,12 +55,7 @@ public class DeviceHistoryService {
                         return new DeviceHistoryPageResponse(
                             List.of(),
                             monos.getT2(),
-                            new PageInfo(
-                                null,
-                                null,
-                                contents.size() > size,
-                                monos.getT3()
-                            )
+                            new PageInfo(null, null, contents.size() > size, monos.getT3())
                         );
                     }
                     return new DeviceHistoryPageResponse(

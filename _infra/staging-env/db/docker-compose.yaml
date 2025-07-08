@@ -32,3 +32,12 @@ services:
     command: ["redis-server", "--requirepass", "admin"]
     volumes:
       - /disk-A/data/redis:/data
+
+  mosquitto-hhp:
+    image: eclipse-mosquitto:latest
+    restart: always
+    ports:
+      - "8875:1883"
+    volumes:
+      - /disk-A/data/mosquitto/data:/mosquitto/data
+      - /disk-A/data/mosquitto/log:/mosquitto/log

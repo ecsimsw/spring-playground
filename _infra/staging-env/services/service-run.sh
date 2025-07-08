@@ -28,7 +28,7 @@ docker compose up -d config
 echo "Waiting 10 seconds for config service to become ready..."
 sleep 10
 
-docker compose up -d account device event internal-lb
+docker compose up -d account device event
 echo "Waiting 20 seconds for containers to become ready..."
 sleep 20
 
@@ -40,10 +40,6 @@ cd ./apidocs
 openapi-merge-cli --config ./merge-config.json
 cd -
 
-docker rm -f swagger-ui || true
-docker run -d --name swagger-ui -p 8874:8080 \
-  -e SWAGGER_JSON=/files/merged.json \
-  -v $PWD/apidocs/files:/files \
-  swaggerapi/swagger-ui
+docker compose up -d swagger
 
 echo "Finished CI/CD"
