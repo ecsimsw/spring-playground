@@ -1,6 +1,7 @@
 package com.ecsimsw.sdkcommon.domain;
 
 import com.ecsimsw.sdkcommon.domain.product.*;
+import com.ecsimsw.sdkcommon.error.DeviceNotSupportedException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -28,8 +29,7 @@ public class PlatformProducts {
 
     public static PlatformProduct getById(String productId) {
         if(!isSupported(productId)) {
-            log.info("Not a supported device : " + productId);
-            throw new IllegalArgumentException("Not a supported device");
+            throw new DeviceNotSupportedException("Not a supported device");
         }
         return PRODUCTS_TABLE.get(productId);
     }

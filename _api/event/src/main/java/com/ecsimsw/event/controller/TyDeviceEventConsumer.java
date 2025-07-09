@@ -1,6 +1,7 @@
 package com.ecsimsw.event.controller;
 
 import com.ecsimsw.event.service.DeviceEventHandler;
+import com.ecsimsw.sdkcommon.error.DeviceNotSupportedException;
 import com.ecsimsw.sdkty.dto.TyEventMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class TyDeviceEventConsumer {
                 var deviceEventMessage = eventMessage.asDeviceMessage(objectMapper, secretKey);
                 deviceEventHandler.handleDeviceEvent(deviceEventMessage);
             }
+        } catch (DeviceNotSupportedException ignored) {
         } catch (Exception e) {
             e.fillInStackTrace();
         }
