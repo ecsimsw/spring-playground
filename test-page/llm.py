@@ -1,7 +1,7 @@
 import gradio as gr
 import requests
 
-API_KEY = "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"
+API_KEY = {API_KEY}
 
 def chat_gpt4_1(message, history):
     url = "https://openrouter.ai/api/v1/chat/completions"
