@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>기기 대시보드</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+      background: #f7f9fb;
+      box-sizing: border-box;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    .device-board {
+      flex: 1.5;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 24px;
+      padding: 40px 40px 40px 48px;
+      background: #f0f3fa;
+      min-width: 530px;
+    }
+    .device {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      border-radius: 18px;
+      box-shadow: 0 6px 36px 0 rgba(30,42,94,0.13);
+      padding: 24px 20px 20px 24px;
+      min-width: 120px;
+      min-height: 120px;
+      position: relative;
+      transition: box-shadow 0.18s, transform 0.11s;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .device:hover {
+      box-shadow: 0 12px 42px 0 rgba(45,70,180,0.17);
+      transform: translateY(-4px) scale(1.03);
+      border: 2.5px solid #537af7;
+    }
+    .device-name {
+      font-size: 1.13rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 10px;
+      letter-spacing: 0.03em;
+    }
+    .device-latency {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #818ba3;
+      padding: 3px 10px;
+      border-radius: 8px;
+      background: #f6f8fb;
+      border: 1px solid #eef2fb;
+      display: inline-block;
+    }
+    .status-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 10px;
+      vertical-align: middle;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.09);
+    }
+    .green { background: linear-gradient(135deg, #34efb5 50%, #37b274 100%); }
+    .red { background: linear-gradient(135deg, #fe6b7c 60%, #f24336 100%); }
+    .orange { background: linear-gradient(135deg, #fec96b 50%, #f89c33 100%); }
+
+    /* 로그 패널 */
+    .log-panel {
+      flex: 1;
+      background: #fff;
+      border-left: 1.5px solid #ecedf1;
+      padding: 48px 38px 44px 40px;
+      min-width: 340px;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      height: 100vh;
+    }
+    .log-header {
+      font-weight: bold;
+      font-size: 1.32rem;
+      color: #545b74;
+      margin-bottom: 7px;
+    }
+    .log-divider {
+      border-top: 1.5px solid #e4e8f0;
+      margin: 18px 0 14px 0;
+    }
+    .log-list {
+      margin-top: 7px;
+    }
+    .log-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 1.04rem;
+      margin-bottom: 15px;
+      background: #f8f9fb;
+      padding: 10.5px 13px;
+      border-radius: 8px;
+      border-left: 5px solid;
+      box-shadow: 0 2px 12px 0 rgba(180,204,219,0.06);
+    }
+    .log-item.error { border-color: #fe6b7c; }
+    .log-item.warning { border-color: #fec96b; }
+    .log-type {
+      font-weight: 700;
+      min-width: 65px;
+      text-align: right;
+    }
+    .error .log-type { color: #fe6b7c;}
+    .warning .log-type { color: #f7aa34;}
+    .log-device {
+      font-size: 0.96em;
+      color: #537af7;
+      font-weight: 600;
+      margin-right: 7px;
+      flex-shrink: 0;
+    }
+    .log-content {
+      flex: 1;
+      color: #232b41;
+    }
+    .log-time {
+      color: #bbbfd2;
+      font-size: 0.98em;
+      margin-left: 12px;
+      font-weight: 500;
+      height: 50px;
+      flex-shrink: 0;
+    }
+    @media (max-width: 1100px) {
+      .container {flex-direction: column;}
+      .device-board {grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr);}
+      .log-panel {max-width: none; min-width: 220px; height: auto;}
+    }
+    @media (max-width: 850px) {
+      .container {flex-direction: column;}
+      .device-board {grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr);}
+      .log-panel {max-width: none;}
+    }
+    @media (max-width: 650px) {
+      .device-board {grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(6, 1fr);}
+      .device {min-width: 80px;}
+      .log-panel {padding: 25px 10px;}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="device-board" id="device-board"></div>
+  <div class="log-panel">
+    <div class="log-header">전체 기기 에러/워닝 로그</div>
+    <div class="log-divider"></div>
+    <div class="log-list" id="log-list">
+      <!-- 로그가 여기에 표시됩니다 -->
+    </div>
+  </div>
+</div>
+<script>
+  // 기기 및 로그 샘플 데이터
+  const deviceInfos = [
+    {name: '무드등 A'}, {name: '무드등 B'}, {name: '무드등 C'},
+    {name: '카메라 A'}, {name: '카메라 B'}, {name: '카메라 C'},
+    {name: '플러그 A'}, {name: '플러그 B'}, {name: '플러그 C'},
+    {name: '도어락 A'}, {name: '도어락 B'}, {name: '도어락 C'}
+  ];
+  const colors = ['green','red','orange'];
+
+  // 로그 샘플
+  function randomLogs(device, idx) {
+    const logs = [];
+    const errorSamples = [
+      "네트워크 연결 오류", "센서 오작동", "오버로드 감지", "비정상 동작 감지"
+    ];
+    const warnSamples = [
+      "배터리 부족", "신호 세기 약함", "업데이트 필요", "일시적 통신지연"
+    ];
+    const count = Math.floor(Math.random() * 2) + 3; // 3~4개
+    for(let i = 0; i < count; i++){
+      const type = Math.random() > 0.5 ? 'warning' : 'error';
+      logs.push({
+        type,
+        device: device.name,
+        deviceIdx: idx,
+        content: (type === 'error'? errorSamples : warnSamples)[Math.floor(Math.random()*4)],
+        // 최근 순서대로 timestamp 생성
+        time: new Date(Date.now() - Math.floor(Math.random()*3500000)).toISOString()
+      });
+    }
+    return logs;
+  }
+
+  // device data 생성
+  const devices = deviceInfos.map((info, idx) => ({
+    ...info,
+    latency: Math.floor(100 + Math.random() * 1200), // 100~1300 ms
+    color: colors[idx % colors.length],
+    logs: randomLogs(info, idx)
+  }));
+
+  // --- 왼쪽 device board ---
+  const board = document.getElementById('device-board');
+  devices.forEach((d) => {
+    const el = document.createElement('div');
+    el.className = `device`;
+    el.innerHTML = `
+        <div style="display:flex;align-items:center;">
+          <span class="status-dot ${d.color}"></span>
+          <span class="device-name">${d.name}</span>
+        </div>
+        <div class="device-latency">${d.latency} ms</div>
+      `;
+    board.appendChild(el);
+  });
+
+  // --- 오른쪽 전체 로그 영역 ---
+  // 모든 로그를 하나의 배열로 취합, 최신순 정렬
+  let allLogs = [];
+  devices.forEach((d, idx) => {
+    d.logs.forEach(l => allLogs.push({
+      ...l,
+      device: d.name,
+      color: d.color
+    }));
+  });
+  // 최신순 정렬
+  allLogs.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+  const logList = document.getElementById('log-list');
+  if (allLogs.length === 0) {
+    logList.innerHTML = `<div style="color:#adb4c9; text-align:center; margin-top:50px; font-size:1.02rem;">
+        시스템 에러 및 워닝 로그가 여기에 표시됩니다.
+      </div>`;
+  } else {
+    logList.innerHTML = allLogs
+            .map(
+                    l => `<div class="log-item ${l.type}">
+                  <div class="log-type">${l.type === 'error' ? 'ERROR' : 'WARNING'}</div>
+                  <div class="log-device">[${l.device}]</div>
+                  <div class="log-content">${l.content}</div>
+                  <div class="log-time">${new Date(l.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                </div>`
+            )
+            .join('');
+  }
+</script>
+</body>
+</html>
