@@ -1,46 +1,43 @@
-version: '3.8'
-
 services:
-
   config:
-    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:config-${CONFIG_VERSION}"
+    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:config-latest"
     pull_policy: always
     network_mode: "host"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - VERSION=${CONFIG_VERSION}
+      - VERSION=1.0.0
     volumes:
-      - /disk-A/logs/config:/logs/config
+      - /disk-A/logs/hejpro/config:/logs/config
 
   account:
-    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:account-${ACCOUNT_VERSION}"
+    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:account-latest"
     pull_policy: always
     network_mode: "host"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - VERSION=${ACCOUNT_VERSION}
+      - VERSION=1.0.0
     volumes:
-      - /disk-A/logs/account:/logs/account
+      - /disk-A/logs/hejpro/account:/logs/account
 
   device:
-    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:device-${DEVICE_VERSION}"
+    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:device-latest"
     pull_policy: always
     network_mode: "host"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - VERSION=${DEVICE_VERSION}
+      - VERSION=1.0.0
     volumes:
-      - /disk-A/logs/device:/logs/device
+      - /disk-A/logs/hejpro/device:/logs/device
 
   event:
-    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:event-${EVENT_VERSION}"
+    image: "674959984960.dkr.ecr.ap-northeast-2.amazonaws.com/hejhome-pro:event-latest"
     pull_policy: always
     network_mode: "host"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - VERSION=${EVENT_VERSION}
+      - VERSION=1.0.0
     volumes:
-      - /disk-A/logs/event:/logs/event
+      - /disk-A/logs/hejpro/event:/logs/event
 
   swagger:
     image: swaggerapi/swagger-ui

@@ -29,7 +29,7 @@ public class UserFcmController {
         return ApiResponse.success();
     }
 
-    @DeleteMapping("/api/notification/fcm/token")
+    @DeleteMapping("/api/device/notification/fcm/token")
     public ApiResponse<Void> delete(AuthUser authUser, @RequestBody FcmTokenRequest request) {
         fcmService.remove(authUser.username(), request.token());
         return ApiResponse.success();
