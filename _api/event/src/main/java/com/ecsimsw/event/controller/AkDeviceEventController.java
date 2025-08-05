@@ -19,7 +19,6 @@ public class AkDeviceEventController {
 
     @PutMapping("/api/event/ak/{deviceId}/logs")
     public ResponseEntity<Void> uploadAkLog(@PathVariable String deviceId, @RequestBody DeviceEventMessage message) {
-        log.info(deviceId + " " + message);
         deviceEventHandler.handleDeviceEvent(message);
         return ResponseEntity.ok().build();
     }

@@ -18,7 +18,7 @@ public class DeviceAlertService {
     private final FcmService fcmService;
 
     public void alert(DeviceAlertEvent alertEvent) {
-        log.info("Handle alert event : {} {}", alertEvent.deviceId(), alertEvent.code());
+        log.info("Handle alert event : {} {} {}", alertEvent.deviceId(), alertEvent.code(), alertEvent.productId());
         var bindOwner = alertEvent.username();
         var product = PlatformProducts.getById(alertEvent.productId());
         var alertMessage = product.alertCommonCodes.fromCommonCode(alertEvent.code()).alertMessage();

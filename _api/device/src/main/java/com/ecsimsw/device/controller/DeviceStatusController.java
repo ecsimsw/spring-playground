@@ -6,6 +6,7 @@ import com.ecsimsw.common.dto.DeviceStatusEvent;
 import com.ecsimsw.device.dto.DeviceInfoResponse;
 import com.ecsimsw.device.service.DeviceBindService;
 import com.ecsimsw.device.service.DeviceStatusService;
+import com.ecsimsw.sdktb.service.TbApiService;
 import com.ecsimsw.sdkty.service.TyApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +50,14 @@ public class DeviceStatusController {
         concurrency = "${kafka.device.status.partitionCount}"
     )
     public void listenStatus(String message) {
-        var statusEvent = convertFromJson(message);
-        log.info("Handle device status event {} {}", statusEvent.deviceId(), statusEvent.statusAsMap());
-        deviceStatusService.updateStatus(statusEvent);
-        deviceStatusService.sendSocket(statusEvent);
+        try {
+            var statusEvent = convertFromJson(message);
+            log.info("Handle device status event {} {}", statusEvent.deviceId(), statusEvent.statusAsMap());
+            deviceStatusService.updateStatus(statusEvent);
+            deviceStatusService.sendSocket(statusEvent);
+        } catch (Exception e) {
+//            log.error(e.getMessage());
+        }
     }
 
     private DeviceStatusEvent convertFromJson(String statusEvent) {

@@ -9,6 +9,7 @@ import com.ecsimsw.device.domain.BindDeviceRepository;
 import com.ecsimsw.device.dto.DeviceHistoryPageResponse;
 import com.ecsimsw.device.service.DeviceHistoryService;
 import com.ecsimsw.device.support.ConverterUtils;
+import com.ecsimsw.sdktb.service.TbApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +30,7 @@ public class DeviceHistoryController {
 
     private final DeviceHistoryService deviceHistoryService;
     private final BindDeviceRepository bindDeviceRepository;
+    private final TbApiService tbApiService;
     private final ObjectMapper objectMapper;
 
     @KafkaListener(
@@ -35,9 +39,14 @@ public class DeviceHistoryController {
         concurrency = "${kafka.device.history.partitionCount}"
     )
     public void listenHistory(String message) {
-        var statusEvent = convertFromJson(message);
-        log.info("Handle device history event {} {}", statusEvent.deviceId(), statusEvent.statusAsMap());
-        deviceHistoryService.save(statusEvent);
+        try {
+            var statusEvent = convertFromJson(message);
+            log.info("Handle device history event {} {}", statusEvent.deviceId(), statusEvent.statusAsMap());
+
+            deviceHistoryService.save(statusEvent);
+        } catch ( Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @GetMapping("/api/device/{deviceId}/history/{historyCode}")

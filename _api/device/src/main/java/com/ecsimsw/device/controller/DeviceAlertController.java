@@ -22,8 +22,11 @@ public class DeviceAlertController {
         concurrency = "${kafka.device.alert.partitionCount}"
     )
     public void listenDeviceAlert(String event) {
-        var deviceAlertEvent = convertFromJson(event);
-        deviceAlertService.alert(deviceAlertEvent);
+        try {
+            var deviceAlertEvent = convertFromJson(event);
+            deviceAlertService.alert(deviceAlertEvent);
+        } catch (Exception e) {
+        }
     }
 
     private DeviceAlertEvent convertFromJson(String alertEvent) {

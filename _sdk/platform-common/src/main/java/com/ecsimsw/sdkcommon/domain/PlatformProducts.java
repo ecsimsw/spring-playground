@@ -29,7 +29,7 @@ public class PlatformProducts {
 
     public static PlatformProduct getById(String productId) {
         if(!isSupported(productId)) {
-            throw new DeviceNotSupportedException("Not a supported device");
+            throw new DeviceNotSupportedException("Not a supported device : " + productId);
         }
         return PRODUCTS_TABLE.get(productId);
     }

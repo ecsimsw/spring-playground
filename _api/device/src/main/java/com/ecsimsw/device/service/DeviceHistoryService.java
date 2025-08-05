@@ -7,6 +7,7 @@ import com.ecsimsw.device.domain.DeviceHistoryRepository;
 import com.ecsimsw.device.dto.DeviceHistoryPageResponse;
 import com.ecsimsw.device.dto.DeviceHistoryResponse;
 import com.ecsimsw.device.dto.PageInfo;
+import com.ecsimsw.sdktb.service.TbApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,7 @@ public class DeviceHistoryService {
     private final DeviceHistoryRepository deviceHistoryRepository;
     private final BindDeviceRepository bindDeviceRepository;
     private final ReactiveMongoTemplate mongoTemplate;
+    private final TbApiService tbApiService;
     private final ObjectMapper objectMapper;
 
     public void save(DeviceHistoryEvent event) {
@@ -33,6 +35,9 @@ public class DeviceHistoryService {
         var optBindDevice = bindDeviceRepository.findById(deviceId);
         if (optBindDevice.isEmpty()) {
             return;
+        }
+        if(event.code().equals("doorLog")) {
+            tbApiService.updateDeviceTelemetry("f26e5990-4fd2-11f0-8d2b-e12311044961", (Map) event.value());
         }
         var deviceHistory = new DeviceHistory(deviceId, event.code(), event.value(), event.timestamp());
         deviceHistoryRepository.save(deviceHistory).block();

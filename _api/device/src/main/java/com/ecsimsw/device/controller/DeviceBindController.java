@@ -38,13 +38,10 @@ public class DeviceBindController {
 
     private void bindTestDevices(String username) {
         var devices = new ArrayList<DeviceListResponse>();
-
         var tyDevices = tyApiService.getDeviceListByUsername(username);
-        devices.addAll(tyDevices);
-
         var akDevices = List.of(new DeviceListResponse("akf26e59904fd2", "Main entrance", "e16c186b2e2b", true, new ArrayList<>()));
+        devices.addAll(tyDevices);
         devices.addAll(akDevices);
-
         deviceBindService.deleteAndSaveAll(username, devices);
     }
 }
