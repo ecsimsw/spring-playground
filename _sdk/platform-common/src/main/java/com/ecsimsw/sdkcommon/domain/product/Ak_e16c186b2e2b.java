@@ -10,11 +10,11 @@ public class Ak_e16c186b2e2b extends PlatformProduct {
         super(
             "e16c186b2e2b",
             ProductType.INTERCOM,
-            SupportedCommonCodes.of("doorLog"),
-            SupportedPlatformCodes.of("doorLog"),
+            SupportedCommonCodes.of("doorLog", "motionDetected"),
+            SupportedPlatformCodes.of("doorLog", "motionDetected"),
             StatusCommonCodes.of(),
             AlertCommonCodes.of(),
-            HistoryCommonCodes.of("doorLog")
+            HistoryCommonCodes.of("doorLog", "motionDetected")
         );
     }
 

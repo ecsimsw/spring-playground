@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -36,7 +37,7 @@ public class DeviceHistoryService {
         if (optBindDevice.isEmpty()) {
             return;
         }
-        if(event.code().equals("doorLog")) {
+        if(Set.of("doorLog", "motionDetected").contains(event.code())) {
             tbApiService.updateDeviceTelemetry("f26e5990-4fd2-11f0-8d2b-e12311044961", (Map) event.value());
         }
         var deviceHistory = new DeviceHistory(deviceId, event.code(), event.value(), event.timestamp());

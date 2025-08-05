@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,15 +31,15 @@ public class DeviceOwnerController {
     }
 
     private void bindTestDevices(String username) {
-        var devices = new ArrayList<>(tyApiService.getDeviceListByUsername(username));
-        var akTestDevice = new DeviceListResponse(
-            "akf26e59904fd2",
-            "Main entrance",
-            "e16c186b2e2b",
-            true,
-            new ArrayList<>()
+        var devices = new ArrayList<DeviceListResponse>();
+        var tyDevices = tyApiService.getDeviceListByUsername(username);
+        var akDevices = List.of(
+            new DeviceListResponse("akf26e59904fd1", "Main entrance", "e16c186b2e2b", true, new ArrayList<>()),
+            new DeviceListResponse("akf26e59904fd2", "Sub1 entrance", "e16c186b2e2b", true, new ArrayList<>()),
+            new DeviceListResponse("akf26e59904fd3", "Sub2 entrance", "e16c186b2e2b", true, new ArrayList<>())
         );
-        devices.add(akTestDevice);
+        devices.addAll(tyDevices);
+        devices.addAll(akDevices);
         deviceOwnerService.deleteAndSaveAll(username, devices);
-    };
+    }
 }
