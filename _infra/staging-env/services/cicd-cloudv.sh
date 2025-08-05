@@ -106,4 +106,4 @@ ssh ${SERVER_USER}@${SERVER_IP} bash -c "'
   fi
 '"
 
-echo "=== ✅ [$MODULE_NAME:$VERSION] 배포 완료! ==="
+echo "=== Published [$MODULE_NAME:$VERSION] ! ==="
