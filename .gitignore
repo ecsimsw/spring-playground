@@ -20,3 +20,4 @@ build
 _api-notification/src/main/resources/secret/fcm-account.json
 **/fcm-account.json
 fcm-account.json
+.env

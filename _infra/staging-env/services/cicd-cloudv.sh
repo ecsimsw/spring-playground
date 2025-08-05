@@ -6,7 +6,8 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-REPO_NAME="hejhome-pro"
+source .env
+
 MODULE_NAME="$1"
 ROOT_DIR="../../.."
 MODULE_GRADLE_FILE="${ROOT_DIR}/_api/$MODULE_NAME/build.gradle"
@@ -68,10 +69,6 @@ docker push "${ECR_IMAGE}"
 
 docker rmi "${REPO_NAME}:${IMAGE_TAG}" 2>/dev/null || true
 docker rmi "${ECR_IMAGE}" 2>/dev/null || true
-
-SERVER_USER=
-SERVER_IP=
-SERVER_DIR=
 
 ssh ${SERVER_USER}@${SERVER_IP} bash -c "'
   set -e
